@@ -1,0 +1,25 @@
+[package]
+name = "shino"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = { version = "4.0.0-beta.8", features = [ "rustls" ] }
+astro-dnssd = { version = "0.3.0", features = [] }
+chrono = "0.4.19"
+image =  "0.23.14"
+jsonwebtoken = "7.2.0"
+juniper = "0.15.7"
+juniper_actix = "0.4.0"
+log = "0.4.14"
+pretty_env_logger = "0.4.0"
+qrcode = "0.12.0"
+rand = "0.8.4"
+rustls = "0.20.2"
+rustls-pemfile = "0.2.1"
+serde = "1.0.132"
+serde_json = "1.0.73"
+sha256 = "1.0.3"
+sysinfo = "0.22.4"
