@@ -1,0 +1,51 @@
+PODS:
+  - bonsoir (1.0.1):
+    - Flutter
+  - connectivity_plus (0.0.1):
+    - Flutter
+    - Reachability
+  - Flutter (1.0.0)
+  - MTBBarcodeScanner (5.0.11)
+  - path_provider_ios (0.0.1):
+    - Flutter
+  - qr_code_scanner (0.2.0):
+    - Flutter
+    - MTBBarcodeScanner
+  - Reachability (3.2)
+
+DEPENDENCIES:
+  - bonsoir (from `.symlinks/plugins/bonsoir/ios`)
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
+  - Flutter (from `Flutter`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MTBBarcodeScanner
+    - Reachability
+
+EXTERNAL SOURCES:
+  bonsoir:
+    :path: ".symlinks/plugins/bonsoir/ios"
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
+  Flutter:
+    :path: Flutter
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
+  qr_code_scanner:
+    :path: ".symlinks/plugins/qr_code_scanner/ios"
+
+SPEC CHECKSUMS:
+  bonsoir: c97724f65041a4068af8ab5f3449ae7f58b725b1
+  connectivity_plus: 5f0eb61093bec56935f21a1699dd2758bc895587
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
+  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
+  qr_code_scanner: 89eb012f742a8f5326fc497f9a461ee2e57c53cc
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+
+COCOAPODS: 1.10.2
