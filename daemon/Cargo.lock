@@ -1755,29 +1755,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shino"
-version = "0.1.0"
-dependencies = [
- "actix-web",
- "astro-dnssd",
- "chrono",
- "image",
- "jsonwebtoken",
- "juniper",
- "juniper_actix",
- "log",
- "pretty_env_logger",
- "qrcode",
- "rand 0.8.4",
- "rustls",
- "rustls-pemfile",
- "serde",
- "serde_json",
- "sha256",
- "sysinfo",
-]
-
-[[package]]
 name = "signal-hook-registry"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1873,6 +1850,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2dfed899f0eb03f32ee8c6a0aabdb8a7949659e3466561fc0adf54e26d88c5f4"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "tetsu"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "astro-dnssd",
+ "chrono",
+ "image",
+ "jsonwebtoken",
+ "juniper",
+ "juniper_actix",
+ "log",
+ "pretty_env_logger",
+ "qrcode",
+ "rand 0.8.4",
+ "rustls",
+ "rustls-pemfile",
+ "serde",
+ "serde_json",
+ "sha256",
+ "sysinfo",
 ]
 
 [[package]]

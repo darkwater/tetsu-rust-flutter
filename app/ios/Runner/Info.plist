@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>shino</string>
+	<string>tetsu</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -49,7 +49,7 @@
 	<string>This app needs to access your local network to connect to your PC.</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_shino._tcp</string>
+		<string>_tetsu._tcp</string>
 		<string>_dartobservatory._tcp</string>
 	</array>
 	<key>NSAppTransportSecurity</key>

@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:shino/consts.dart';
+import 'package:tetsu/consts.dart';
 
 import 'remote.dart';
 
 class RemoteManager extends ChangeNotifier {
-  final BonsoirDiscovery discovery = BonsoirDiscovery(type: "_shino._tcp");
+  final BonsoirDiscovery discovery = BonsoirDiscovery(type: "_tetsu._tcp");
   final List<ResolvedBonsoirService> discoveredServices = [];
   final Map<int, Remote> remotes = {};
 

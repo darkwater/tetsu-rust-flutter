@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:shino/remote_manager.dart';
+import 'package:tetsu/remote_manager.dart';
 
 class AddRemotePage extends StatefulWidget {
   const AddRemotePage({Key? key}) : super(key: key);

@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tetsu/settings.dart';
 
 import 'consts.dart';
-import 'dashboard/dashboard.dart';
 import 'remote.dart';
 import 'remote_manager.dart';
 
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Shino",
+      title: "Tetsu",
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -35,7 +34,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
       ),
-      home: const DashboardPage(),
+      home: const SettingsPage(),
     );
   }
 }

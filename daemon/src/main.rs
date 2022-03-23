@@ -46,7 +46,7 @@ fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
 }
 
 fn register_service(port: u16, fingerprint: &str) {
-    let service = DNSServiceBuilder::new("_shino._tcp", port)
+    let service = DNSServiceBuilder::new("_tetsu._tcp", port)
         .with_key_value("fingerprint".to_string(), fingerprint.to_string())
         .register();
 

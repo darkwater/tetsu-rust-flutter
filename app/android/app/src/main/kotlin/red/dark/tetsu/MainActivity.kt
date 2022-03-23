@@ -1,4 +1,4 @@
-package com.example.shino
+package red.dark.tetsu
 
 import io.flutter.embedding.android.FlutterActivity
 
