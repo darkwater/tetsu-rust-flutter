@@ -1,11 +1,13 @@
+use std::ops::Deref;
+
 use crate::{
     auth,
     gql::{self, Schema},
-    DataAccess,
 };
 use actix_web::{get, http, web, HttpResponse, Responder};
 use jsonwebtoken::DecodingKey;
 use juniper_actix::playground_handler;
+use sqlx::SqlitePool;
 
 #[get("/info")]
 pub async fn info(
@@ -36,7 +38,7 @@ pub async fn graphql(
     req: actix_web::HttpRequest,
     payload: actix_web::web::Payload,
     decoding_key: web::Data<DecodingKey<'static>>,
-    data_access: web::Data<DataAccess>,
+    db: web::Data<SqlitePool>,
     schema: web::Data<Schema>,
 ) -> impl Responder {
     let authed = req
@@ -51,5 +53,5 @@ pub async fn graphql(
         return Ok(HttpResponse::Unauthorized().finish());
     }
 
-    gql::handle(&schema, data_access.into_inner(), payload, req).await
+    gql::handle(&schema, db.into_inner().deref().clone(), payload, req).await
 }

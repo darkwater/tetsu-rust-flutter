@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = { version = "4.0.0-beta.8", features = [ "rustls" ] }
+actix-web = { version = "4.0.1", features = [ "rustls" ] }
 astro-dnssd = { version = "0.3.0", features = [] }
 chrono = "0.4.19"
 image =  "0.23.14"
@@ -14,12 +14,18 @@ jsonwebtoken = "7.2.0"
 juniper = "0.15.7"
 juniper_actix = "0.4.0"
 log = "0.4.14"
+md4 = "0.9.0"
+memmap = "0.7.0"
 pretty_env_logger = "0.4.0"
 qrcode = "0.12.0"
 rand = "0.8.4"
+ranidb = { path = "../../ranidb" } #{ git = "https://github.com/darkwater/ranidb" }
+rayon = "1.5.0"
 rustls = "0.20.2"
 rustls-pemfile = "0.2.1"
 serde = "1.0.132"
 serde_json = "1.0.73"
 sha256 = "1.0.3"
+sqlx = { version = "0.5.11", features = ["runtime-actix-rustls", "sqlite"] }
 sysinfo = "0.22.4"
+tokio = { version = "1.17.0", features = [ "rt", "net", "time" ] }

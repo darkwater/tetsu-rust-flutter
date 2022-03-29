@@ -1,26 +1,25 @@
-#![allow(clippy::new_without_default)]
-
+mod anidb_indexer;
 mod auth;
 mod gql;
 mod routes;
 
 use crate::{
     auth::render_auth_qr,
-    gql::{DataAccess, GqlContext, Schema},
+    gql::{GqlContext, Schema},
 };
 use actix_web::{
     middleware,
     web::{self, Data},
     App, HttpServer,
 };
-use astro_dnssd::DNSServiceBuilder;
+// use astro_dnssd::DNSServiceBuilder;
 use jsonwebtoken::{DecodingKey, EncodingKey};
 use juniper::{EmptyMutation, EmptySubscription};
 use rustls::{Certificate, PrivateKey};
-use std::{fs::File, io::{BufReader, Read}};
+use std::{fs::File, io::{BufReader, Read}, process::{Command, Child}, time::Duration, path::Path};
 
 fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
-    let mut certfile = BufReader::new(File::open("../cert.pem")?);
+    let mut certfile = BufReader::new(File::open("cert.pem")?);
     let certs = rustls_pemfile::certs(&mut certfile)?
         .into_iter()
         .map(Certificate)
@@ -29,7 +28,7 @@ fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
     let cert = certs.first().unwrap();
     let fingerprint = sha256::digest_bytes(&cert.0);
 
-    let mut keyfile = BufReader::new(File::open("../key.pem")?);
+    let mut keyfile = BufReader::new(File::open("key.pem")?);
     let key = rustls_pemfile::pkcs8_private_keys(&mut keyfile)?
         .into_iter()
         .map(PrivateKey)
@@ -45,15 +44,23 @@ fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
     Ok((ssl, fingerprint))
 }
 
-fn register_service(port: u16, fingerprint: &str) {
-    let service = DNSServiceBuilder::new("_tetsu._tcp", port)
-        .with_key_value("fingerprint".to_string(), fingerprint.to_string())
-        .register();
+fn register_service(port: u16, fingerprint: &str) -> Child {
+    // // scuffed
+    // let service = DNSServiceBuilder::new("_tetsu._tcp", port)
+    //     .with_key_value("fingerprint".to_string(), fingerprint.to_string())
+    //     .register();
 
-    if let Err(e) = service {
-        log::error!("failed to register service: {}", e);
-    } else {
-        std::mem::forget(service);
+    let service = Command::new("avahi-publish")
+        .arg("-s")
+        .arg(std::fs::read_to_string("/etc/hostname").unwrap().trim_end_matches('\n'))
+        .arg("_tetsu._tcp")
+        .arg(port.to_string())
+        .arg(format!("fingerprint={}", fingerprint))
+        .spawn();
+
+    match service {
+        Err(e) => panic!("failed to register service: {}", e),
+        Ok(service) => service,
     }
 }
 
@@ -62,18 +69,22 @@ async fn main() -> std::io::Result<()> {
     pretty_env_logger::init();
 
     let mut secret_key = String::new();
-    File::open("../key.hmac")?.read_to_string(&mut secret_key)?;
+    File::open("key.hmac")?.read_to_string(&mut secret_key)?;
     let encoding_key = EncodingKey::from_base64_secret(&secret_key).expect("invalid hmac key");
     let decoding_key = DecodingKey::from_base64_secret(&secret_key)
         .expect("invalid hmac key")
         .into_static();
+
+    let db = sqlx::SqlitePool::connect("tetsu.db").await.unwrap();
+
+    // tokio::spawn(anidb_indexer::index(Path::new("/data/torrents/anime"), db.clone()));
 
     // set up https server
     let (ssl, fingerprint) = ssl_config()?;
     let server = HttpServer::new(move || {
         App::new()
             .app_data(Data::new(decoding_key.clone()))
-            .app_data(Data::new(DataAccess::new()))
+            .app_data(Data::new(db.clone()))
             .app_data(Data::new(Schema::new(
                 gql::Query,
                 EmptyMutation::<GqlContext>::new(),
@@ -89,20 +100,22 @@ async fn main() -> std::io::Result<()> {
                     .route(web::get().to(routes::graphql)),
             )
     })
-    .keep_alive(120)
-    .bind_rustls("0.0.0.0:0", ssl)?;
+    .keep_alive(Duration::from_secs(120))
+    .bind_rustls("0.0.0.0:39547", ssl)?;
 
     let listen_port = server.addrs().first().unwrap().port();
     log::info!("listening on port {}", listen_port);
 
     // register service with bonjour
-    register_service(listen_port, &fingerprint);
+    let mut service = register_service(listen_port, &fingerprint);
 
     render_auth_qr(encoding_key, fingerprint);
 
     log::info!("running");
 
     server.run().await?;
+
+    service.kill()?;
 
     Ok(())
 }

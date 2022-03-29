@@ -1,3 +1,4 @@
-*.pem
+*.db
 *.hmac
-/daemon/qrcode.png
+*.pem
+qrcode.png
