@@ -1,13 +1,25 @@
+use crate::{
+    gql::{
+        anime::AnimeQuery,
+        player::{PlayerMutation, PlayerQuery},
+    },
+    mpv::MpvAddress,
+};
 use actix_web::{web, Error, HttpRequest, HttpResponse};
-use juniper::{graphql_object, EmptyMutation, EmptySubscription, RootNode};
+use juniper::{
+    graphql_object, graphql_value, EmptySubscription, FieldError, FieldResult, RootNode,
+};
 use juniper_actix::graphql_handler;
 use sqlx::SqlitePool;
-use crate::gql::anime::AnimeQuery;
 
 mod anime;
+mod player;
+
+pub type Schema = RootNode<'static, Query, Mutation, EmptySubscription<GqlContext>>;
 
 pub struct GqlContext {
     pub db: SqlitePool,
+    pub mpv: MpvAddress,
 }
 
 impl juniper::Context for GqlContext {}
@@ -48,17 +60,67 @@ impl Query {
             })
             .collect()
     }
+
+    async fn player(context: &mut GqlContext) -> FieldResult<PlayerQuery> {
+        context
+            .mpv
+            .connect()
+            .await
+            .map(PlayerQuery::new)
+            .map_err(|e| {
+                FieldError::new(
+                    "Could not connect to mpv",
+                    graphql_value!({ "error": (e.to_string()) }),
+                )
+            })
+    }
 }
 
-pub type Schema = RootNode<'static, Query, EmptyMutation<GqlContext>, EmptySubscription<GqlContext>>;
+pub struct Mutation;
+
+#[graphql_object(context = GqlContext)]
+impl Mutation {
+    async fn player(context: &mut GqlContext) -> FieldResult<PlayerMutation> {
+        context
+            .mpv
+            .connect()
+            .await
+            .map(PlayerMutation::new)
+            .map_err(|e| {
+                FieldError::new(
+                    "Could not connect to mpv",
+                    graphql_value!({ "error": (e.to_string()) }),
+                )
+            })
+    }
+}
+
+// pub struct Subscription;
+
+// #[graphql_subscription(Context = GqlContext)]
+// impl Subscription {
+//     async fn player(
+//         context: &mut GqlContext,
+//         executor: &Executor,
+//     ) -> FieldResult<PlayerSubscription> {
+//         let children = executor.look_ahead().child_names();
+//         let mpv = context.mpv.connect().await?;
+
+//         dbg!(children);
+
+//         todo!()
+//     }
+// }
+
+// type PlayerSubscription = Pin<Box<dyn Stream<Item = String> + Send>>;
 
 pub async fn handle(
     schema: &Schema,
     db: SqlitePool,
+    mpv: MpvAddress,
     payload: web::Payload,
     req: HttpRequest,
 ) -> Result<HttpResponse, Error> {
-    let context = GqlContext { db };
-
+    let context = GqlContext { db, mpv };
     graphql_handler(schema, &context, req, payload).await
 }

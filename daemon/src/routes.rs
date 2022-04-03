@@ -3,6 +3,7 @@ use std::ops::Deref;
 use crate::{
     auth,
     gql::{self, Schema},
+    mpv::MpvAddress,
 };
 use actix_web::{get, http, web, HttpResponse, Responder};
 use jsonwebtoken::DecodingKey;
@@ -39,6 +40,7 @@ pub async fn graphql(
     payload: actix_web::web::Payload,
     decoding_key: web::Data<DecodingKey<'static>>,
     db: web::Data<SqlitePool>,
+    mpv: web::Data<MpvAddress>,
     schema: web::Data<Schema>,
 ) -> impl Responder {
     let authed = req
@@ -53,5 +55,12 @@ pub async fn graphql(
         return Ok(HttpResponse::Unauthorized().finish());
     }
 
-    gql::handle(&schema, db.into_inner().deref().clone(), payload, req).await
+    gql::handle(
+        &schema,
+        db.into_inner().deref().clone(),
+        mpv.into_inner().deref().clone(),
+        payload,
+        req,
+    )
+    .await
 }

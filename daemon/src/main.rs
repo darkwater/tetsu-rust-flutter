@@ -1,11 +1,13 @@
 mod anidb_indexer;
 mod auth;
 mod gql;
+mod mpv;
 mod routes;
 
 use crate::{
     auth::render_auth_qr,
     gql::{GqlContext, Schema},
+    mpv::MpvAddress,
 };
 use actix_web::{
     middleware,
@@ -14,9 +16,15 @@ use actix_web::{
 };
 // use astro_dnssd::DNSServiceBuilder;
 use jsonwebtoken::{DecodingKey, EncodingKey};
-use juniper::{EmptyMutation, EmptySubscription};
+use juniper::EmptySubscription;
 use rustls::{Certificate, PrivateKey};
-use std::{fs::File, io::{BufReader, Read}, process::{Command, Child}, time::Duration, path::Path};
+use std::{
+    fs::File,
+    io::{BufReader, Read},
+    path::Path,
+    process::{Child, Command},
+    time::Duration,
+};
 
 fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
     let mut certfile = BufReader::new(File::open("cert.pem")?);
@@ -45,14 +53,18 @@ fn ssl_config() -> std::io::Result<(rustls::ServerConfig, String)> {
 }
 
 fn register_service(port: u16, fingerprint: &str) -> Child {
-    // // scuffed
+    // // scuffed on linux/avahi
     // let service = DNSServiceBuilder::new("_tetsu._tcp", port)
     //     .with_key_value("fingerprint".to_string(), fingerprint.to_string())
     //     .register();
 
     let service = Command::new("avahi-publish")
         .arg("-s")
-        .arg(std::fs::read_to_string("/etc/hostname").unwrap().trim_end_matches('\n'))
+        .arg(
+            std::fs::read_to_string("/etc/hostname")
+                .unwrap()
+                .trim_end_matches('\n'),
+        )
         .arg("_tetsu._tcp")
         .arg(port.to_string())
         .arg(format!("fingerprint={}", fingerprint))
@@ -77,7 +89,17 @@ async fn main() -> std::io::Result<()> {
 
     let db = sqlx::SqlitePool::connect("tetsu.db").await.unwrap();
 
-    // tokio::spawn(anidb_indexer::index(Path::new("/data/torrents/anime"), db.clone()));
+    let mut mpv = Command::new("mpv")
+        .arg("--input-ipc-server=/tmp/mpv.sock")
+        .arg("--idle")
+        .arg("--fullscreen")
+        .spawn()
+        .unwrap();
+
+    tokio::spawn(anidb_indexer::index(
+        Path::new("/data/torrents/anime"),
+        db.clone(),
+    ));
 
     // set up https server
     let (ssl, fingerprint) = ssl_config()?;
@@ -85,9 +107,10 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new(decoding_key.clone()))
             .app_data(Data::new(db.clone()))
+            .app_data(Data::new(MpvAddress("/tmp/mpv.sock".to_string())))
             .app_data(Data::new(Schema::new(
                 gql::Query,
-                EmptyMutation::<GqlContext>::new(),
+                gql::Mutation,
                 EmptySubscription::<GqlContext>::new(),
             )))
             .wrap(middleware::Compress::default())
@@ -116,6 +139,7 @@ async fn main() -> std::io::Result<()> {
     server.run().await?;
 
     service.kill()?;
+    mpv.kill()?;
 
     Ok(())
 }

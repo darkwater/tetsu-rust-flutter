@@ -2,7 +2,7 @@ use md4::{Digest, Md4};
 use memmap::Mmap;
 use ranidb::AniDb;
 use rayon::{iter::ParallelIterator, slice::ParallelSlice};
-use sqlx::{Executor, Sqlite, Pool, Row};
+use sqlx::{Executor, Pool, Row, Sqlite};
 use std::{fs::File, path::Path};
 use tokio::fs;
 
@@ -127,12 +127,12 @@ async fn init_database(conn: &Pool<Sqlite>) {
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_indexed_files (
-            path                TEXT PRIMARY KEY,
+            path                TEXT PRIMARY KEY ON CONFLICT REPLACE,
             filename            TEXT,
             filesize            INTEGER,
             fid                 INTEGER,
+            ed2k                TEXT
 
-            UNIQUE (filename, filesize) ON CONFLICT REPLACE
             -- FOREIGN KEY (fid) REFERENCES anidb_files (fid)
         )",
     )
@@ -268,29 +268,27 @@ impl<'a> CachedFacade<'a> {
                 .bind(&fid)
                 .fetch_one(self.conn)
                 .await
-                .map(|row| {
-                    ranidb::File {
-                        fid: row.get(0),
-                        aid: row.get(1),
-                        eid: row.get(2),
-                        gid: row.get(3),
-                        state: row.get(4),
-                        size: row.get(5),
-                        ed2k: row.get(6),
-                        colour_depth: row.get(7),
-                        quality: row.get(8),
-                        source: row.get(9),
-                        audio_codec_list: row.get(10),
-                        audio_bitrate_list: row.get(11),
-                        video_codec: row.get(12),
-                        video_bitrate: row.get(13),
-                        video_resolution: row.get(14),
-                        dub_language: row.get(15),
-                        sub_language: row.get(16),
-                        length_in_seconds: row.get(17),
-                        description: row.get(18),
-                        aired_date: row.get(19),
-                    }
+                .map(|row| ranidb::File {
+                    fid: row.get(0),
+                    aid: row.get(1),
+                    eid: row.get(2),
+                    gid: row.get(3),
+                    state: row.get(4),
+                    size: row.get(5),
+                    ed2k: row.get(6),
+                    colour_depth: row.get(7),
+                    quality: row.get(8),
+                    source: row.get(9),
+                    audio_codec_list: row.get(10),
+                    audio_bitrate_list: row.get(11),
+                    video_codec: row.get(12),
+                    video_bitrate: row.get(13),
+                    video_resolution: row.get(14),
+                    dub_language: row.get(15),
+                    sub_language: row.get(16),
+                    length_in_seconds: row.get(17),
+                    description: row.get(18),
+                    aired_date: row.get(19),
                 })
                 .ok()
         } else {
@@ -304,68 +302,76 @@ impl<'a> CachedFacade<'a> {
                 u128::from_be_bytes(ed2k_hash(&file).expect("failed to hash"))
             );
 
-            let file = match self.anidb.file_by_ed2k(size, &ed2k).await {
-                Ok(file) => file,
-                Err(ranidb::Error::AniDb(ranidb::responses::Error::Other(320, _))) => return None,
-                e => panic!("failed to get file info: {:?}", e),
-            };
+            let file = self
+                .anidb
+                .file_by_ed2k(size, &ed2k)
+                .await
+                .map(Some)
+                .unwrap_or_else(|e| match e {
+                    ranidb::Error::AniDb(ranidb::responses::Error::Other(320, _)) => None,
+                    e => panic!("failed to get file info: {:?}", e),
+                });
 
-            sqlx::query(
-                "INSERT OR REPLACE INTO anidb_files VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            )
-            .bind(&file.fid)
-            .bind(&file.aid)
-            .bind(&file.eid)
-            .bind(&file.gid)
-            .bind(&file.state)
-            .bind(&file.size)
-            .bind(&file.ed2k)
-            .bind(&file.colour_depth)
-            .bind(&file.quality)
-            .bind(&file.source)
-            .bind(&file.audio_codec_list)
-            .bind(&file.audio_bitrate_list)
-            .bind(&file.video_codec)
-            .bind(&file.video_bitrate)
-            .bind(&file.video_resolution)
-            .bind(&file.dub_language)
-            .bind(&file.sub_language)
-            .bind(&file.length_in_seconds)
-            .bind(&file.description)
-            .bind(&file.aired_date)
-            .execute(self.conn)
-            .await
-            .unwrap();
+            if let Some(file) = &file {
+                sqlx::query(
+                    "INSERT OR REPLACE INTO anidb_files VALUES
+                            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                )
+                .bind(&file.fid)
+                .bind(&file.aid)
+                .bind(&file.eid)
+                .bind(&file.gid)
+                .bind(&file.state)
+                .bind(&file.size)
+                .bind(&file.ed2k)
+                .bind(&file.colour_depth)
+                .bind(&file.quality)
+                .bind(&file.source)
+                .bind(&file.audio_codec_list)
+                .bind(&file.audio_bitrate_list)
+                .bind(&file.video_codec)
+                .bind(&file.video_bitrate)
+                .bind(&file.video_resolution)
+                .bind(&file.dub_language)
+                .bind(&file.sub_language)
+                .bind(&file.length_in_seconds)
+                .bind(&file.description)
+                .bind(&file.aired_date)
+                .execute(self.conn)
+                .await
+                .unwrap();
+            }
 
+            sqlx::query("INSERT OR REPLACE INTO anidb_indexed_files VALUES (?, ?, ?, ?, ?)")
+                .bind(&*path.to_string_lossy())
+                .bind(&*path.file_name().unwrap_or_default().to_string_lossy())
+                .bind(
+                    path.metadata()
+                        .map(|f| {
+                            #[cfg(unix)]
+                            {
+                                use std::os::unix::fs::MetadataExt;
+                                f.size() as i64
+                            }
 
-            sqlx::query(
-                "INSERT OR REPLACE INTO anidb_indexed_files VALUES (?, ?, ?, ?)",
-            )
-            .bind(&*path.to_string_lossy())
-            .bind(&*path.file_name().unwrap_or_default().to_string_lossy())
-            .bind(path.metadata().map(|f| {
-                #[cfg(unix)]
-                {
-                    use std::os::unix::fs::MetadataExt;
-                    f.size() as i64
-                }
+                            #[cfg(windows)]
+                            {
+                                use std::os::windows::fs::MetadataExt;
+                                f.file_size() as i64
+                            }
 
-                #[cfg(windows)]
-                {
-                    use std::os::windows::fs::MetadataExt;
-                    f.file_size() as i64
-                }
+                            #[cfg(not(any(unix, windows)))]
+                            -1
+                        })
+                        .unwrap_or_default(),
+                )
+                .bind(&file.as_ref().map(|f| f.fid))
+                .bind(&ed2k)
+                .execute(self.conn)
+                .await
+                .expect("failed to store indexed file");
 
-                #[cfg(not(any(unix, windows)))]
-                -1
-            }).unwrap_or_default())
-            .bind(&file.fid)
-            .execute(self.conn)
-            .await
-            .expect("failed to store indexed file");
-
-            Some(file)
+            file
         }
     }
 }
@@ -391,8 +397,7 @@ pub async fn index(path: &Path, pool: Pool<Sqlite>) {
             let path = entry.path();
             if path.is_dir() {
                 dirs.push(path);
-            }
-            else {
+            } else {
                 log::debug!("indexing {}...", path.display());
 
                 if let Some(file) = facade.get_file(&path).await {
