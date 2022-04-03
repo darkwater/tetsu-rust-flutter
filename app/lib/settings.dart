@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tetsu/cubit/remote_selection_cubit.dart';
+import 'package:tetsu/cubit/remote_cubit.dart';
+import 'package:tetsu/pages/home/home.dart';
 
 import 'addremote.dart';
 import 'remote.dart';
@@ -59,7 +60,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           subtitle: Text(remote.fingerprint),
                           isThreeLine: true,
                           onTap: () {
-                            context.read<RemoteSelectionCubit>().select(remote);
+                            context.read<RemoteCubit>().select(remote);
+                            Navigator.push(context, HomePage.route());
                           },
                         );
                       },

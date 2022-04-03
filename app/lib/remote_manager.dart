@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class RemoteManager extends ChangeNotifier {
 
           for (final remote
               in remotes.values.where((r) => r.fingerprint == fingerprint)) {
-            remote.connect(service.name, host, service.port);
+            remote.connect(service.name, "$host:${service.port}");
           }
 
           notifyListeners();
@@ -66,7 +67,10 @@ class RemoteManager extends ChangeNotifier {
     for (final service in services) {
       final host = service.name.split(" ").first + ".local";
 
-      if (await remotes[id]!.connect(service.name, host, service.port)) {
+      if (await remotes[id]!.connect(
+        service.name,
+        "$host:${service.port.toString()}",
+      )) {
         break;
       }
     }
@@ -88,6 +92,8 @@ class RemoteManager extends ChangeNotifier {
 
     for (final remote in box.values) {
       remotes[remote.id] = remote;
+
+      if (remote.addr != null) remote.connect(remote.name, remote.addr);
     }
 
     notifyListeners();

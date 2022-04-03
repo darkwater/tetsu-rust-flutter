@@ -13,84 +13,55 @@ impl PlayerQuery {
         Self { mpv }
     }
 
-    async fn prop(&self, name: &str) -> FieldResult<serde_json::Value> {
+    async fn prop(&self, name: &str) -> PropResult<serde_json::Value> {
         let res = self
             .mpv
             .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
             .await;
 
         if let Some(error) = res.error() {
-            Err(FieldError::new(error, graphql_value!(None)))
+            match error {
+                "property unavailable" => Ok(None),
+                _ => Err(FieldError::new(error, graphql_value!(None))),
+            }
+        } else if res.data.is_null() {
+            Ok(None)
         } else {
-            Ok(res.data)
+            Ok(Some(res.data))
         }
     }
 
     async fn prop_bool(&self, name: &str) -> PropResult<bool> {
-        let res = self
-            .mpv
-            .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
-            .await;
-
-        if let Some(error) = res.error() {
-            Err(FieldError::new(error, graphql_value!(None)))
-        } else if res.data.is_null() {
-            Ok(None)
-        } else {
-            Ok(Some(res.data.as_bool().unwrap()))
-        }
+        self.prop(name)
+            .await
+            .map(|r| r.map(|o| o.as_bool().unwrap()))
     }
 
     async fn prop_i32(&self, name: &str) -> PropResult<i32> {
-        let res = self
-            .mpv
-            .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
-            .await;
-
-        if let Some(error) = res.error() {
-            Err(FieldError::new(error, graphql_value!(None)))
-        } else if res.data.is_null() {
-            Ok(None)
-        } else {
-            Ok(Some(res.data.as_i64().unwrap() as i32))
-        }
+        self.prop(name)
+            .await
+            .map(|r| r.map(|o| o.as_i64().unwrap() as i32))
     }
 
     async fn prop_f64(&self, name: &str) -> PropResult<f64> {
-        let res = self
-            .mpv
-            .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
-            .await;
-
-        if let Some(error) = res.error() {
-            Err(FieldError::new(error, graphql_value!(None)))
-        } else if res.data.is_null() {
-            Ok(None)
-        } else {
-            Ok(Some(res.data.as_f64().unwrap()))
-        }
+        self.prop(name)
+            .await
+            .map(|r| r.map(|o| o.as_f64().unwrap()))
     }
 
     async fn prop_string(&self, name: &str) -> PropResult<String> {
-        let res = self
-            .mpv
-            .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
-            .await;
-
-        if let Some(error) = res.error() {
-            Err(FieldError::new(error, graphql_value!(None)))
-        } else if res.data.is_null() {
-            Ok(None)
-        } else {
-            Ok(Some(res.data.as_str().unwrap().to_string()))
-        }
+        self.prop(name)
+            .await
+            .map(|r| r.map(|o| o.as_str().unwrap().to_string()))
     }
 }
 
 #[graphql_object(Context = GqlContext)]
 impl PlayerQuery {
-    async fn property(&self, name: String) -> FieldResult<String> {
-        self.prop(&name).await.map(|res| res.to_string())
+    async fn property(&self, name: String) -> PropResult<String> {
+        self.prop(&name)
+            .await
+            .map(|res| res.map(|opt| opt.to_string()))
     }
 
     async fn paused(&self) -> PropResult<bool> {

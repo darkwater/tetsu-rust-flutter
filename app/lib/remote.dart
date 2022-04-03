@@ -20,6 +20,8 @@ class Remote {
   final String jwt;
   @HiveField(3)
   String name;
+  @HiveField(4)
+  String? addr;
 
   final Completer<_RemoteConnection> _remoteConn = Completer();
   Future<GraphQLClient> get gqlClient async =>
@@ -32,6 +34,7 @@ class Remote {
     this.fingerprint,
     this.jwt, {
     this.name = "<unknown>",
+    this.addr = "sinon.fbk.red:39547",
   });
 
   IOClient _initHttpClient() {
@@ -46,11 +49,11 @@ class Remote {
     return IOClient(inner);
   }
 
-  Future<bool> connect(String name, String host, int port) async {
+  Future<bool> connect(String name, String? addr) async {
     await _attemptingConnection?.future;
     _attemptingConnection = Completer();
 
-    final authority = "$host:$port";
+    final authority = addr ?? this.addr!;
     final url = Uri.https(authority, "/info");
 
     final res = await _initHttpClient().get(url, headers: {

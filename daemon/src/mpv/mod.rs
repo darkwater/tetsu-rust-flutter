@@ -182,16 +182,21 @@ pub struct MpvEvent {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MpvResponse {
+    #[serde(default = "null")]
     pub data: serde_json::Value,
-    pub error: Option<String>,
+    pub error: String,
     pub request_id: Option<i64>,
+}
+
+fn null() -> serde_json::Value {
+    serde_json::Value::Null
 }
 
 impl MpvResponse {
     pub fn error(&self) -> Option<&str> {
-        match self.error {
-            Some(ref err) if err != "success" => Some(err.as_str()),
-            _ => None,
+        match self.error.as_ref() {
+            "success" => None,
+            error => Some(error),
         }
     }
 }

@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tetsu/cubit/remote_selection_cubit.dart';
+import 'package:tetsu/cubit/remote_cubit.dart';
 import 'package:tetsu/pages/home/home.dart';
-import 'package:tetsu/settings.dart';
 
 import 'consts.dart';
 import 'remote.dart';
@@ -16,14 +18,44 @@ void main() async {
 
   await Hive.openBox<Remote>(BoxNames.remotes);
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => RemoteManager(),
-    child: BlocProvider(
-      create: (context) => RemoteSelectionCubit(),
-      child: const MyApp(),
+  final remoteManager = RemoteManager();
+
+  final remotes = remoteManager.remotes.values;
+  final selectedRemote = remotes.isNotEmpty ? remotes.first : null;
+
+  ValueNotifier<GraphQLClient> gqlClientNotifier = ValueNotifier(
+    GraphQLClient(
+      link: Link.function((_, [__]) async* {}),
+      cache: GraphQLCache(),
     ),
-    lazy: false,
-  ));
+  );
+
+  final remoteCubit = RemoteCubit();
+  remoteCubit.stream.forEach((state) {
+    if (state.remote != null) {
+      state.remote!.gqlClient.then((value) {
+        log(value.toString());
+        return gqlClientNotifier.value = value;
+      });
+    }
+  });
+
+  if (selectedRemote != null) {
+    remoteCubit.select(selectedRemote);
+  }
+
+  runApp(
+    GraphQLProvider(
+      client: gqlClientNotifier,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: remoteManager),
+          BlocProvider.value(value: remoteCubit),
+        ],
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,37 +63,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteSelectionCubit, RemoteSelectionState>(
-      builder: (context, state) {
-        if (state is! RemoteSelectionSome) {
-          return MaterialApp(
-            title: "Tetsu",
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              primarySwatch: Colors.blue,
-            ),
-            home: const SettingsPage(),
-          );
-        }
-
-        return MaterialApp(
-          title: "Tetsu",
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: Colors.blue,
-          ),
-          home: Provider<Remote>.value(
-            value: state.remote,
-            child: const HomePage(),
-          ),
-        );
-      },
+    return MaterialApp(
+      title: "Tetsu",
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blue,
+      ),
+      home: const HomePage(),
     );
   }
 }
