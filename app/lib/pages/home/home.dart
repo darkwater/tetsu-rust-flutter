@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tetsu/cubit/remote_cubit.dart';
+import 'package:tetsu/pages/anime/details/anime_details.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -45,9 +47,9 @@ class AnimeGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String getShowsQuery = """
+    const getShowsQuery = """
       query(\$limit: Int!, \$offset: Int!) {
-        anime(limit: \$limit, offset: \$offset) {
+        animes(limit: \$limit, offset: \$offset) {
           aid
           romajiName
           picname
@@ -59,7 +61,7 @@ class AnimeGallery extends StatelessWidget {
     final opts = QueryOptions(
       document: gql(getShowsQuery),
       variables: {
-        "limit": 200,
+        "limit": 9999,
         "offset": 0,
       },
     );
@@ -67,15 +69,33 @@ class AnimeGallery extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 16,
-            left: 32,
-            bottom: 16,
-          ),
-          child: Text(
-            "Anime",
-            style: Theme.of(context).textTheme.headlineLarge,
+        InkWell(
+          onTap: () => print("anime"),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              left: 32,
+              bottom: 16,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  "Anime",
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    top: 6,
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Theme.of(context).textTheme.headlineLarge?.color,
+                    size: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
@@ -94,80 +114,77 @@ class AnimeGallery extends StatelessWidget {
                 );
               }
 
-              // return ListView(
-              //   scrollDirection: Axis.horizontal,
-              //   children: [
-              //     for (final anime in result.data!["anime"])
-              //       SizedBox(
-              //         width: 200,
-              //         child: Card(
-              //           child: Column(
-              //             crossAxisAlignment: CrossAxisAlignment.stretch,
-              //             children: [
-              //               Expanded(
-              //                 child: Image.network(
-              //                   "https://cdn.anidb.net/pics/anime/${anime["picname"]}",
-              //                   fit: BoxFit.cover,
-              //                 ),
-              //               ),
-              //               SizedBox(
-              //                 height: 48,
-              //                 child: Center(
-              //                   child: Text(
-              //                     anime["romajiName"],
-              //                     textAlign: TextAlign.center,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //           clipBehavior: Clip.antiAlias,
-              //         ),
-              //       ),
-              //   ],
-              // );
-
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: result.data!["anime"].length,
+                itemCount: result.data!["animes"].length,
                 itemExtent: 200,
                 itemBuilder: (context, index) {
-                  final anime = result.data!["anime"][index];
+                  final anime = result.data!["animes"][index];
 
-                  return SizedBox(
-                    child: Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: Image.network(
-                              "https://cdn.anidb.net/pics/anime/${anime["picname"]}",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 48,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                anime["romajiName"],
-                                maxLines: 2,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                    ),
-                  );
+                  return MediaCard(anime: anime);
                 },
               );
             },
           ),
         ),
       ],
+    );
+  }
+}
+
+class MediaCard extends StatelessWidget {
+  final dynamic anime;
+
+  const MediaCard({
+    Key? key,
+    required this.anime,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Hero(
+                  tag: "anime-cover-${anime["aid"]}",
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://cdn.anidb.net/pics/anime/${anime["picname"]}",
+                    fit: BoxFit.cover,
+                    fadeInDuration: const Duration(milliseconds: 100),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    anime["romajiName"],
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                AnimeDetailsPage.route(anime),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
-use crate::gql::{GqlContext, anime::episode::EpisodeQuery};
-use juniper::{graphql_object, GraphQLObject, GraphQLEnum};
+use crate::gql::{anime::episode::EpisodeQuery, GqlContext};
+use juniper::{graphql_object, GraphQLEnum, GraphQLObject};
 
 pub struct AnimeQuery {
     pub aid: i32,
@@ -129,26 +129,36 @@ impl AnimeQuery {
         self.parody_count
     }
 
-    pub async fn episodes(&self, context: &GqlContext, limit: i32, offset: i32) -> Vec<EpisodeQuery> {
-        sqlx::query!("SELECT * FROM anidb_episodes WHERE aid = ? LIMIT ? OFFSET ?", self.aid, limit, offset)
-            .fetch_all(&context.db)
-            .await
-            .unwrap()
-            .into_iter()
-            .map(|row| EpisodeQuery {
-                eid: row.eid as i32,
-                aid: row.aid.unwrap() as i32,
-                length: row.length.unwrap() as i32,
-                rating: row.rating.unwrap() as i32,
-                votes: row.votes.unwrap() as i32,
-                epno: row.epno.unwrap(),
-                eng: row.eng.unwrap(),
-                romaji: row.romaji.unwrap(),
-                kanji: row.kanji.unwrap(),
-                aired: row.aired.unwrap(),
-                etype: row.etype.unwrap() as i32,
-            })
-            .collect()
+    pub async fn episodes(
+        &self,
+        context: &GqlContext,
+        limit: i32,
+        offset: i32,
+    ) -> Vec<EpisodeQuery> {
+        sqlx::query!(
+            "SELECT * FROM anidb_episodes WHERE aid = ? LIMIT ? OFFSET ?",
+            self.aid,
+            limit,
+            offset
+        )
+        .fetch_all(&context.db)
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|row| EpisodeQuery {
+            eid: row.eid as i32,
+            aid: row.aid.unwrap() as i32,
+            length: row.length.unwrap() as i32,
+            rating: row.rating.unwrap() as i32,
+            votes: row.votes.unwrap() as i32,
+            epno: row.epno.unwrap(),
+            eng: row.eng.unwrap(),
+            romaji: row.romaji.unwrap(),
+            kanji: row.kanji.unwrap(),
+            aired: row.aired.unwrap(),
+            etype: row.etype.unwrap() as i32,
+        })
+        .collect()
     }
 }
 
