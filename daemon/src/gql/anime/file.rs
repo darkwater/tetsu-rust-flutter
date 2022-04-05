@@ -1,4 +1,4 @@
-use crate::gql::GqlContext;
+use crate::gql::{anime::GroupQuery, GqlContext};
 use juniper::{graphql_object, GraphQLObject};
 
 pub struct FileQuery {
@@ -109,7 +109,10 @@ impl FileQuery {
         let audio_bitrate_list = self.audio_bitrate_list.split('\'');
         let dub_language_list = self.dub_language.split('\'');
 
-        for ((ac, ab), dl) in audio_codec_list.zip(audio_bitrate_list).zip(dub_language_list) {
+        for ((ac, ab), dl) in audio_codec_list
+            .zip(audio_bitrate_list)
+            .zip(dub_language_list)
+        {
             tracks.push(AudioTrack {
                 codec: ac.to_string(),
                 bitrate: ab.to_string(),
@@ -132,14 +135,43 @@ impl FileQuery {
         self.aired_date as i32 // solve y2k38
     }
 
-    pub async fn on_disk(&self, context: &GqlContext) -> Vec<String> {
-        sqlx::query!("SELECT path FROM anidb_indexed_files WHERE fid = ?", self.fid)
-            .fetch_all(&context.db)
+    pub async fn group(&self, context: &GqlContext) -> Option<GroupQuery> {
+        sqlx::query!("SELECT * FROM anidb_groups WHERE gid = ?", self.gid)
+            .fetch_optional(&context.db)
             .await
             .unwrap()
-            .into_iter()
-            .map(|row| row.path.unwrap())
-            .collect()
+            .map(|row| GroupQuery {
+                gid: row.gid as i32,
+                rating: row.rating.unwrap() as i32,
+                votes: row.votes.unwrap() as i32,
+                acount: row.acount.unwrap() as i32,
+                fcount: row.fcount.unwrap() as i32,
+                name: row.name.unwrap(),
+                short: row.short.unwrap(),
+                irc_channel: row.irc_channel.unwrap(),
+                irc_server: row.irc_server.unwrap(),
+                url: row.url.unwrap(),
+                picname: row.picname.unwrap(),
+                foundeddate: row.foundeddate.unwrap() as i32,
+                disbandeddate: row.disbandeddate.unwrap() as i32,
+                dateflags: row.dateflags.unwrap() as i32,
+                lastreleasedate: row.lastreleasedate.unwrap() as i32,
+                lastactivitydate: row.lastactivitydate.unwrap() as i32,
+                grouprelations: row.grouprelations.unwrap(),
+            })
+    }
+
+    pub async fn on_disk(&self, context: &GqlContext) -> Vec<String> {
+        sqlx::query!(
+            "SELECT path FROM anidb_indexed_files WHERE fid = ?",
+            self.fid
+        )
+        .fetch_all(&context.db)
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|row| row.path.unwrap())
+        .collect()
     }
 }
 

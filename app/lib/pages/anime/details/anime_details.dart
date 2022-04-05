@@ -171,7 +171,28 @@ class AnimeDetailsPage extends StatelessWidget {
               lengthInSeconds
               description
               airedDate
+
               onDisk
+
+              group {
+                gid
+                rating
+                votes
+                acount
+                fcount
+                name
+                short
+                ircChannel
+                ircServer
+                url
+                picname
+                foundeddate
+                disbandeddate
+                dateflags
+                lastreleasedate
+                lastactivitydate
+                grouprelations
+              }
             }
           }
         }
@@ -239,7 +260,8 @@ class AnimeDetailsPage extends StatelessWidget {
                       const SizedBox(width: 10),
                       for (final dub in file["audioTracks"] as List<dynamic>)
                         Text("Dub ${dub["language"]}"),
-                      Text(file["onDisk"].toString()),
+                      const SizedBox(width: 10),
+                      Text(file["group"]["name"]),
                     ],
                   );
                 },
