@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:ferry/ferry.dart' as ferry;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -25,25 +24,22 @@ void main() async {
 
   final remoteCubit = RemoteCubit();
 
-  ValueNotifier<GraphQLClient> gqlClientNotifier = ValueNotifier(
-    GraphQLClient(
-      link: Link.from([
-        DedupeLink(),
-        Link.function((request, [forward]) async* {
-          Remote? selectedRemote;
-          while (true) {
-            selectedRemote = remoteCubit.state.remote;
-            if (selectedRemote != null) break;
+  ferry.Client gqlClient = ferry.Client(
+    link: Link.from([
+      DedupeLink(),
+      Link.function((request, [forward]) async* {
+        Remote? selectedRemote;
+        while (true) {
+          selectedRemote = remoteCubit.state.remote;
+          if (selectedRemote != null) break;
 
-            await Future.delayed(const Duration(milliseconds: 200));
-          }
+          await Future.delayed(const Duration(milliseconds: 200));
+        }
 
-          final link = await selectedRemote.gqlLink;
-          yield* link.request(request, forward);
-        }),
-      ]),
-      cache: GraphQLCache(),
-    ),
+        final link = await selectedRemote.gqlLink;
+        yield* link.request(request, forward);
+      }),
+    ]),
   );
 
   if (selectedRemote != null) {
@@ -51,15 +47,13 @@ void main() async {
   }
 
   runApp(
-    GraphQLProvider(
-      client: gqlClientNotifier,
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: remoteManager),
-          BlocProvider.value(value: remoteCubit),
-        ],
-        child: const MyApp(),
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: remoteManager),
+        BlocProvider.value(value: remoteCubit),
+        Provider.value(value: gqlClient),
+      ],
+      child: const MyApp(),
     ),
   );
 }

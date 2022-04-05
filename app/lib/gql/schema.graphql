@@ -1,0 +1,151 @@
+type AnimeQuery {
+  aid: Int!
+  dateflags: Int!
+  year: String!
+  atype: String!
+  relatedAnime: RelatedAnimeQuery!
+  romajiName: String!
+  kanjiName: String!
+  englishName: String!
+  shortNameList: [String!]!
+  episodeCount: Int!
+  specialEpCount: Int!
+  airDate: Int!
+  endDate: Int!
+  picname: String!
+  nsfw: Boolean!
+  characteridList: [Int!]!
+  specialsCount: Int!
+  creditsCount: Int!
+  otherCount: Int!
+  trailerCount: Int!
+  parodyCount: Int!
+  episodes(limit: Int!, offset: Int!): [EpisodeQuery!]!
+}
+
+type AudioTrack {
+  codec: String!
+  bitrate: String!
+  language: String!
+}
+
+type EpisodeQuery {
+  eid: Int!
+  aid: Int!
+  length: Int!
+  rating: Int!
+  votes: Int!
+  epno: String!
+  eng: String!
+  romaji: String!
+  kanji: String!
+  aired: Int!
+  etype: Int!
+  files(limit: Int!, offset: Int!): [FileQuery!]!
+}
+
+type FileQuery {
+  fid: Int!
+  eid: Int!
+  aid: Int!
+  gid: Int!
+  state: Int!
+
+  """File size in kilobytes"""
+  size: Int!
+  ed2k: String!
+  quality: String!
+  source: String!
+  subLanguages: [String!]!
+  videoTracks: [VideoTrack!]!
+  audioTracks: [AudioTrack!]!
+  lengthInSeconds: Int!
+  description: String!
+  airedDate: Int!
+  group: GroupQuery
+  onDisk: [String!]!
+}
+
+type GroupQuery {
+  gid: Int!
+  rating: Int!
+  votes: Int!
+  acount: Int!
+  fcount: Int!
+  name: String!
+  short: String!
+  ircChannel: String!
+  ircServer: String!
+  url: String!
+  picname: String!
+  foundeddate: Int!
+  disbandeddate: Int!
+  dateflags: Int!
+  lastreleasedate: Int!
+  lastactivitydate: Int!
+  grouprelations: String!
+}
+
+type Mutation {
+  player: PlayerMutation!
+}
+
+type PlayerMutation {
+  sendCommand(command: [String!]!): String!
+}
+
+type PlayerQuery {
+  property(name: String!): String
+  paused: Boolean
+  mediaTitle: String
+  playlistPos: Int
+  playlistCount: Int
+  chapter: Int
+  chapters: Int
+  timePos: Float
+  timeRemaining: Float
+  seekable: Boolean
+  seeking: Boolean
+}
+
+type Query {
+  animes(limit: Int!, offset: Int!): [AnimeQuery!]!
+  anime(aid: Int!): AnimeQuery
+  player: PlayerQuery!
+}
+
+type RelatedAnime {
+  type: RelatedAnimeType!
+  node: RelatedAnimeShim!
+}
+
+type RelatedAnimeQuery {
+  edges: [RelatedAnime!]!
+}
+
+type RelatedAnimeShim {
+  aid: Int!
+}
+
+enum RelatedAnimeType {
+  SEQUEL
+  PREQUEL
+  SAME_SETTING
+  ALTERNATIVE_SETTING
+  ALTERNATIVE_VERSION
+  MUSIC_VIDEO
+  CHARACTER
+  SIDE_STORY
+  PARENT_STORY
+  SUMMARY
+  FULL_STORY
+  OTHER
+  UNKNOWN
+}
+
+type VideoTrack {
+  colourDepth: String
+  codec: String!
+  bitrate: String!
+}
+

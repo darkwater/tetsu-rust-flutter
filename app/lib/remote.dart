@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bonsoir/bonsoir.dart';
 import 'package:crypto/crypto.dart';
 import 'package:graphql/client.dart';
 import 'package:hive/hive.dart';
@@ -77,9 +76,10 @@ class Remote {
       authority: authority,
       httpClient: httpClient,
       gqlLink: Link.from([
-        DedupeLink(),
         AuthLink(
-          getToken: () => "Bearer $jwt",
+          getToken: () {
+            return "Bearer $jwt";
+          },
         ),
         HttpLink(
           Uri.https(authority, "/graphql").toString(),
@@ -103,6 +103,8 @@ class Remote {
     if (res.statusCode == 200) {
       return res.body;
     }
+
+    return null;
   }
 }
 

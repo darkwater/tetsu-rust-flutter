@@ -1,0 +1,80 @@
+query GetAnimeDetails($aid: Int!) {
+    anime(aid: $aid) {
+        aid
+        year
+        atype
+        romajiName
+        kanjiName
+        englishName
+        shortNameList
+        episodeCount
+        specialEpCount
+        airDate
+        endDate
+        picname
+        nsfw
+        characteridList
+        specialsCount
+        creditsCount
+        otherCount
+        trailerCount
+        parodyCount
+
+        episodes(limit: 999, offset: 0) {
+            eid
+            length
+            rating
+            votes
+            epno
+            eng
+            romaji
+            kanji
+            aired
+            etype
+
+            files(limit: 20, offset: 0) {
+                fid
+                state
+                size
+                quality
+                source
+                subLanguages
+                videoTracks {
+                    colourDepth
+                    codec
+                    bitrate
+                }
+                audioTracks {
+                    codec
+                    bitrate
+                    language
+                }
+                lengthInSeconds
+                description
+                airedDate
+
+                onDisk
+
+                group {
+                    gid
+                    rating
+                    votes
+                    acount
+                    fcount
+                    name
+                    short
+                    ircChannel
+                    ircServer
+                    url
+                    picname
+                    foundeddate
+                    disbandeddate
+                    dateflags
+                    lastreleasedate
+                    lastactivitydate
+                    grouprelations
+                }
+            }
+        }
+    }
+}

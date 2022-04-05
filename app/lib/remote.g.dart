@@ -21,13 +21,14 @@ class RemoteAdapter extends TypeAdapter<Remote> {
       fields[1] as String,
       fields[2] as String,
       name: fields[3] as String,
+      addr: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Remote obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class RemoteAdapter extends TypeAdapter<Remote> {
       ..writeByte(2)
       ..write(obj.jwt)
       ..writeByte(3)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(4)
+      ..write(obj.addr);
   }
 
   @override

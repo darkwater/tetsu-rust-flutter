@@ -1,0 +1,8 @@
+query GetAnimeShows($limit: Int!, $offset: Int!) {
+    animes(limit: $limit, offset: $offset) {
+        aid
+        romajiName
+        picname
+        year
+    }
+}

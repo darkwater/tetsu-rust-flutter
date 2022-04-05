@@ -2,11 +2,17 @@ import 'dart:math' show max;
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ferry/ferry.dart' as ferry;
+import 'package:ferry_flutter/ferry_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:tetsu/gql/get_anime_details.data.gql.dart';
+import 'package:tetsu/gql/get_anime_details.req.gql.dart';
+import 'package:tetsu/gql/get_anime_details.var.gql.dart';
+import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
 
 class AnimeDetailsPage extends StatelessWidget {
-  final dynamic initialData;
+  final GGetAnimeShowsData_animes initialData;
 
   const AnimeDetailsPage({
     Key? key,
@@ -55,10 +61,9 @@ class AnimeDetailsPage extends StatelessWidget {
         width: sidebarWidth - mainPadding * 2,
         height: coverHeight,
         child: Hero(
-          tag: "anime-cover-${initialData["aid"]}",
+          tag: "anime-cover-${initialData.aid}",
           child: CachedNetworkImage(
-            imageUrl:
-                "https://cdn.anidb.net/pics/anime/${initialData["picname"]}",
+            imageUrl: "https://cdn.anidb.net/pics/anime/${initialData.picname}",
             fit: BoxFit.cover,
             fadeInDuration: const Duration(milliseconds: 100),
           ),
@@ -76,8 +81,7 @@ class AnimeDetailsPage extends StatelessWidget {
             tileMode: TileMode.mirror,
           ),
           child: CachedNetworkImage(
-            imageUrl:
-                "https://cdn.anidb.net/pics/anime/${initialData["picname"]}",
+            imageUrl: "https://cdn.anidb.net/pics/anime/${initialData.picname}",
             fit: BoxFit.fill,
             fadeInDuration: const Duration(milliseconds: 100),
           ),
@@ -95,7 +99,7 @@ class AnimeDetailsPage extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomLeft,
         child: Text(
-          initialData["romajiName"],
+          initialData.romajiName,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headline1,
@@ -116,111 +120,28 @@ class AnimeDetailsPage extends StatelessWidget {
       ),
     );
 
-    const query = """
-      query(\$aid: Int!) {
-        anime(aid: \$aid) {
-          aid
-          year
-          atype
-          romajiName
-          kanjiName
-          englishName
-          shortNameList
-          episodeCount
-          specialEpCount
-          airDate
-          endDate
-          picname
-          nsfw
-          characteridList
-          specialsCount
-          creditsCount
-          otherCount
-          trailerCount
-          parodyCount
-
-          episodes(limit: 999, offset: 0) {
-            eid
-            length
-            rating
-            votes
-            epno
-            eng
-            romaji
-            kanji
-            aired
-            etype
-
-            files(limit: 20, offset: 0) {
-              fid
-              state
-              size
-              quality
-              source
-              subLanguages
-              videoTracks {
-                colourDepth
-                codec
-                bitrate
-              }
-              audioTracks {
-                codec
-                bitrate
-                language
-              }
-              lengthInSeconds
-              description
-              airedDate
-
-              onDisk
-
-              group {
-                gid
-                rating
-                votes
-                acount
-                fcount
-                name
-                short
-                ircChannel
-                ircServer
-                url
-                picname
-                foundeddate
-                disbandeddate
-                dateflags
-                lastreleasedate
-                lastactivitydate
-                grouprelations
-              }
-            }
-          }
-        }
-      }
-    """;
-
-    final gqlOpts = QueryOptions(
-      document: gql(query),
-      variables: {
-        "aid": initialData["aid"],
-      },
-    );
-
-    final contents = Query(
-      options: gqlOpts,
-      builder: (result, {fetchMore, refetch}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
+    final contents = Operation<GGetAnimeDetailsData, GGetAnimeDetailsVars>(
+      client: context.read<ferry.Client>(),
+      operationRequest: GGetAnimeDetailsReq(
+        (b) => b..vars.aid = initialData.aid,
+      ),
+      builder: (result, res, error) {
+        if (error != null) {
+          return Text(error.toString());
         }
 
-        if (result.data == null) {
+        if (res?.hasErrors ?? false) {
+          return Text(res!.graphqlErrors.toString());
+        }
+
+        if (res == null || res.data == null) {
           return const LinearProgressIndicator();
         }
 
-        final anime = result.data!["anime"];
-        final episodes = anime["episodes"] as List<dynamic>;
+        final anime = res.data!.anime;
+        final episodes = anime!.episodes.toList();
 
-        episodes.sort((a, b) => a["epno"].compareTo(b["epno"]));
+        episodes.sort((a, b) => a.epno.compareTo(b.epno));
 
         final sidebar = Column(
           children: [
@@ -233,35 +154,34 @@ class AnimeDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: coverBottomPadding),
-            Text(anime["year"]),
-            Text(anime["atype"]),
-            Text("${anime["episodeCount"]} episodes"),
-            Text("${anime["specialEpCount"]} specials"),
-            Text("${anime["parodyCount"]} parodies"),
-            Text("${anime["creditsCount"]} credits"),
-            Text("${anime["otherCount"]} other"),
-            Text("${anime["trailerCount"]} trailers"),
-            Text(anime["nsfw"] ? "NSFW" : "SFW"),
+            Text(anime.year),
+            Text(anime.atype),
+            Text("${anime.episodeCount} episodes"),
+            Text("${anime.specialEpCount} specials"),
+            Text("${anime.parodyCount} parodies"),
+            Text("${anime.creditsCount} credits"),
+            Text("${anime.otherCount} other"),
+            Text("${anime.trailerCount} trailers"),
+            Text(anime.nsfw ? "NSFW" : "SFW"),
           ],
         );
 
         final episodeWidgets = episodes
             .map(
-              (episode) => episode["files"].map(
+              (episode) => episode.files.map(
                 (file) {
                   return Row(
                     children: [
-                      Text(episode["epno"]),
+                      Text(episode.epno),
                       const SizedBox(width: 10),
-                      Text(episode["romaji"]),
+                      Text(episode.romaji),
                       const SizedBox(width: 10),
-                      for (final sub in file["subLanguages"] as List<dynamic>)
-                        Text("Sub $sub"),
+                      for (final sub in file.subLanguages) Text("Sub $sub"),
                       const SizedBox(width: 10),
-                      for (final dub in file["audioTracks"] as List<dynamic>)
-                        Text("Dub ${dub["language"]}"),
+                      for (final dub in file.audioTracks)
+                        Text("Dub ${dub.language}"),
                       const SizedBox(width: 10),
-                      Text(file["group"]["name"]),
+                      Text(file.group?.name ?? "(??)"),
                     ],
                   );
                 },
@@ -318,7 +238,7 @@ class AnimeDetailsPage extends StatelessWidget {
 
   Widget buildPhoneLayout(BuildContext context) {
     return Center(
-      child: Text("Anime ${initialData["id"]} Details Page"),
+      child: Text("Anime ${initialData.aid} Details Page"),
     );
   }
 }

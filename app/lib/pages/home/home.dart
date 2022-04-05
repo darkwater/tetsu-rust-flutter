@@ -1,10 +1,12 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ferry/ferry.dart' as ferry;
+import 'package:ferry_flutter/ferry_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tetsu/cubit/remote_cubit.dart';
+import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
+import 'package:tetsu/gql/get_anime_shows.req.gql.dart';
+import 'package:tetsu/gql/get_anime_shows.var.gql.dart';
 import 'package:tetsu/pages/anime/details/anime_details.dart';
 
 class HomePage extends StatelessWidget {
@@ -47,25 +49,6 @@ class AnimeGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const getShowsQuery = """
-      query(\$limit: Int!, \$offset: Int!) {
-        animes(limit: \$limit, offset: \$offset) {
-          aid
-          romajiName
-          picname
-          year
-        }
-      }
-    """;
-
-    final opts = QueryOptions(
-      document: gql(getShowsQuery),
-      variables: {
-        "limit": 9999,
-        "offset": 0,
-      },
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -100,15 +83,23 @@ class AnimeGallery extends StatelessWidget {
         ),
         SizedBox(
           height: 300,
-          child: Query(
-            options: opts,
-            builder: (result, {fetchMore, refetch}) {
-              if (result.hasException) {
-                // log(result.exception.toString());
-                return Text(result.exception.toString());
+          child: Operation<GGetAnimeShowsData, GGetAnimeShowsVars>(
+            client: context.read<ferry.Client>(),
+            operationRequest: GGetAnimeShowsReq(
+              (b) => b
+                ..vars.limit = 9999
+                ..vars.offset = 0,
+            ),
+            builder: (context, res, error) {
+              if (error != null) {
+                return Text(error.toString());
               }
 
-              if (result.data == null) {
+              if (res?.hasErrors ?? false) {
+                return Text(res!.graphqlErrors.toString());
+              }
+
+              if (res == null || res.data == null) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -116,10 +107,10 @@ class AnimeGallery extends StatelessWidget {
 
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: result.data!["animes"].length,
+                itemCount: res.data!.animes.length,
                 itemExtent: 200,
                 itemBuilder: (context, index) {
-                  final anime = result.data!["animes"][index];
+                  final anime = res.data!.animes[index];
 
                   return MediaCard(anime: anime);
                 },
@@ -133,7 +124,7 @@ class AnimeGallery extends StatelessWidget {
 }
 
 class MediaCard extends StatelessWidget {
-  final dynamic anime;
+  final GGetAnimeShowsData_animes anime;
 
   const MediaCard({
     Key? key,
@@ -151,10 +142,10 @@ class MediaCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Hero(
-                  tag: "anime-cover-${anime["aid"]}",
+                  tag: "anime-cover-${anime.aid}",
                   child: CachedNetworkImage(
                     imageUrl:
-                        "https://cdn.anidb.net/pics/anime/${anime["picname"]}",
+                        "https://cdn.anidb.net/pics/anime/${anime.picname}",
                     fit: BoxFit.cover,
                     fadeInDuration: const Duration(milliseconds: 100),
                   ),
@@ -165,7 +156,7 @@ class MediaCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
-                    anime["romajiName"],
+                    anime.romajiName,
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
