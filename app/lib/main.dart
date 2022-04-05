@@ -23,22 +23,28 @@ void main() async {
   final remotes = remoteManager.remotes.values;
   final selectedRemote = remotes.isNotEmpty ? remotes.first : null;
 
+  final remoteCubit = RemoteCubit();
+
   ValueNotifier<GraphQLClient> gqlClientNotifier = ValueNotifier(
     GraphQLClient(
-      link: Link.function((_, [__]) async* {}),
+      link: Link.from([
+        DedupeLink(),
+        Link.function((request, [forward]) async* {
+          Remote? selectedRemote;
+          while (true) {
+            selectedRemote = remoteCubit.state.remote;
+            if (selectedRemote != null) break;
+
+            await Future.delayed(const Duration(milliseconds: 200));
+          }
+
+          final link = await selectedRemote.gqlLink;
+          yield* link.request(request, forward);
+        }),
+      ]),
       cache: GraphQLCache(),
     ),
   );
-
-  final remoteCubit = RemoteCubit();
-  remoteCubit.stream.forEach((state) {
-    if (state.remote != null) {
-      state.remote!.gqlClient.then((value) {
-        log(value.toString());
-        return gqlClientNotifier.value = value;
-      });
-    }
-  });
 
   if (selectedRemote != null) {
     remoteCubit.select(selectedRemote);

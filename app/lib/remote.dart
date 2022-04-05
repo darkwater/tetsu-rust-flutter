@@ -24,8 +24,7 @@ class Remote {
   String? addr;
 
   final Completer<_RemoteConnection> _remoteConn = Completer();
-  Future<GraphQLClient> get gqlClient async =>
-      (await _remoteConn.future).gqlClient;
+  Future<Link> get gqlLink async => (await _remoteConn.future).gqlLink;
 
   Completer<void>? _attemptingConnection;
 
@@ -77,19 +76,16 @@ class Remote {
     _remoteConn.complete(_RemoteConnection(
       authority: authority,
       httpClient: httpClient,
-      gqlClient: GraphQLClient(
-        link: Link.from([
-          DedupeLink(),
-          AuthLink(
-            getToken: () => "Bearer $jwt",
-          ),
-          HttpLink(
-            Uri.https(authority, "/graphql").toString(),
-            httpClient: httpClient,
-          ),
-        ]),
-        cache: GraphQLCache(),
-      ),
+      gqlLink: Link.from([
+        DedupeLink(),
+        AuthLink(
+          getToken: () => "Bearer $jwt",
+        ),
+        HttpLink(
+          Uri.https(authority, "/graphql").toString(),
+          httpClient: httpClient,
+        ),
+      ]),
     ));
 
     return true;
@@ -113,11 +109,11 @@ class Remote {
 class _RemoteConnection {
   final String authority;
   final IOClient httpClient;
-  final GraphQLClient gqlClient;
+  final Link gqlLink;
 
   _RemoteConnection({
     required this.authority,
     required this.httpClient,
-    required this.gqlClient,
+    required this.gqlLink,
   });
 }
