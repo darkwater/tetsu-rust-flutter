@@ -312,8 +312,9 @@ class _$GGetAnimeDetailsData_anime_episodesSerializer
           specifiedType: const FullType(String)),
       'aired',
       serializers.serialize(object.aired, specifiedType: const FullType(int)),
-      'etype',
-      serializers.serialize(object.etype, specifiedType: const FullType(int)),
+      'episodeType',
+      serializers.serialize(object.episodeType,
+          specifiedType: const FullType(_i2.GEpisodeType)),
       'files',
       serializers.serialize(object.files,
           specifiedType: const FullType(BuiltList, const [
@@ -376,9 +377,10 @@ class _$GGetAnimeDetailsData_anime_episodesSerializer
           result.aired = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'etype':
-          result.etype = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+        case 'episodeType':
+          result.episodeType = serializers.deserialize(value,
+                  specifiedType: const FullType(_i2.GEpisodeType))
+              as _i2.GEpisodeType;
           break;
         case 'files':
           result.files.replace(serializers.deserialize(value,
@@ -1410,7 +1412,7 @@ class _$GGetAnimeDetailsData_anime_episodes
   @override
   final int aired;
   @override
-  final int etype;
+  final _i2.GEpisodeType episodeType;
   @override
   final BuiltList<GGetAnimeDetailsData_anime_episodes_files> files;
 
@@ -1431,7 +1433,7 @@ class _$GGetAnimeDetailsData_anime_episodes
       required this.romaji,
       required this.kanji,
       required this.aired,
-      required this.etype,
+      required this.episodeType,
       required this.files})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
@@ -1455,7 +1457,7 @@ class _$GGetAnimeDetailsData_anime_episodes
     BuiltValueNullFieldError.checkNotNull(
         aired, 'GGetAnimeDetailsData_anime_episodes', 'aired');
     BuiltValueNullFieldError.checkNotNull(
-        etype, 'GGetAnimeDetailsData_anime_episodes', 'etype');
+        episodeType, 'GGetAnimeDetailsData_anime_episodes', 'episodeType');
     BuiltValueNullFieldError.checkNotNull(
         files, 'GGetAnimeDetailsData_anime_episodes', 'files');
   }
@@ -1483,7 +1485,7 @@ class _$GGetAnimeDetailsData_anime_episodes
         romaji == other.romaji &&
         kanji == other.kanji &&
         aired == other.aired &&
-        etype == other.etype &&
+        episodeType == other.episodeType &&
         files == other.files;
   }
 
@@ -1509,7 +1511,7 @@ class _$GGetAnimeDetailsData_anime_episodes
                         romaji.hashCode),
                     kanji.hashCode),
                 aired.hashCode),
-            etype.hashCode),
+            episodeType.hashCode),
         files.hashCode));
   }
 
@@ -1526,7 +1528,7 @@ class _$GGetAnimeDetailsData_anime_episodes
           ..add('romaji', romaji)
           ..add('kanji', kanji)
           ..add('aired', aired)
-          ..add('etype', etype)
+          ..add('episodeType', episodeType)
           ..add('files', files))
         .toString();
   }
@@ -1578,9 +1580,10 @@ class GGetAnimeDetailsData_anime_episodesBuilder
   int? get aired => _$this._aired;
   set aired(int? aired) => _$this._aired = aired;
 
-  int? _etype;
-  int? get etype => _$this._etype;
-  set etype(int? etype) => _$this._etype = etype;
+  _i2.GEpisodeType? _episodeType;
+  _i2.GEpisodeType? get episodeType => _$this._episodeType;
+  set episodeType(_i2.GEpisodeType? episodeType) =>
+      _$this._episodeType = episodeType;
 
   ListBuilder<GGetAnimeDetailsData_anime_episodes_files>? _files;
   ListBuilder<GGetAnimeDetailsData_anime_episodes_files> get files =>
@@ -1606,7 +1609,7 @@ class GGetAnimeDetailsData_anime_episodesBuilder
       _romaji = $v.romaji;
       _kanji = $v.kanji;
       _aired = $v.aired;
-      _etype = $v.etype;
+      _episodeType = $v.episodeType;
       _files = $v.files.toBuilder();
       _$v = null;
     }
@@ -1648,7 +1651,7 @@ class GGetAnimeDetailsData_anime_episodesBuilder
               romaji: BuiltValueNullFieldError.checkNotNull(romaji, 'GGetAnimeDetailsData_anime_episodes', 'romaji'),
               kanji: BuiltValueNullFieldError.checkNotNull(kanji, 'GGetAnimeDetailsData_anime_episodes', 'kanji'),
               aired: BuiltValueNullFieldError.checkNotNull(aired, 'GGetAnimeDetailsData_anime_episodes', 'aired'),
-              etype: BuiltValueNullFieldError.checkNotNull(etype, 'GGetAnimeDetailsData_anime_episodes', 'etype'),
+              episodeType: BuiltValueNullFieldError.checkNotNull(episodeType, 'GGetAnimeDetailsData_anime_episodes', 'episodeType'),
               files: files.build());
     } catch (_) {
       late String _$failedField;

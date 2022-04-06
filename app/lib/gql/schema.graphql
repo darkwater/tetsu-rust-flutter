@@ -40,8 +40,18 @@ type EpisodeQuery {
   romaji: String!
   kanji: String!
   aired: Int!
-  etype: Int!
+  episodeType: EpisodeType!
   files(limit: Int!, offset: Int!): [FileQuery!]!
+}
+
+enum EpisodeType {
+  REGULAR
+  SPECIAL
+  CREDIT
+  TRAILER
+  PARODY
+  OTHER
+  UNKNOWN
 }
 
 type FileQuery {

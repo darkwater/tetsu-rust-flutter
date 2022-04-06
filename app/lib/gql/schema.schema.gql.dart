@@ -6,6 +6,28 @@ import 'package:built_value/serializer.dart';
 
 part 'schema.schema.gql.g.dart';
 
+class GEpisodeType extends EnumClass {
+  const GEpisodeType._(String name) : super(name);
+
+  static const GEpisodeType REGULAR = _$gEpisodeTypeREGULAR;
+
+  static const GEpisodeType SPECIAL = _$gEpisodeTypeSPECIAL;
+
+  static const GEpisodeType CREDIT = _$gEpisodeTypeCREDIT;
+
+  static const GEpisodeType TRAILER = _$gEpisodeTypeTRAILER;
+
+  static const GEpisodeType PARODY = _$gEpisodeTypePARODY;
+
+  static const GEpisodeType OTHER = _$gEpisodeTypeOTHER;
+
+  static const GEpisodeType UNKNOWN = _$gEpisodeTypeUNKNOWN;
+
+  static Serializer<GEpisodeType> get serializer => _$gEpisodeTypeSerializer;
+  static BuiltSet<GEpisodeType> get values => _$gEpisodeTypeValues;
+  static GEpisodeType valueOf(String name) => _$gEpisodeTypeValueOf(name);
+}
+
 class GRelatedAnimeType extends EnumClass {
   const GRelatedAnimeType._(String name) : super(name);
 

@@ -30,7 +30,7 @@ query GetAnimeDetails($aid: Int!) {
             romaji
             kanji
             aired
-            etype
+            episodeType
 
             files(limit: 20, offset: 0) {
                 fid

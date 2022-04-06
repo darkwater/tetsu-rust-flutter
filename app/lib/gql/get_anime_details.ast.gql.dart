@@ -207,7 +207,7 @@ const GetAnimeDetails = _i1.OperationDefinitionNode(
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'etype'),
+                      name: _i1.NameNode(value: 'episodeType'),
                       alias: null,
                       arguments: [],
                       directives: [],

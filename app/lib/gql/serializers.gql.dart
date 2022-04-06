@@ -20,7 +20,8 @@ import 'package:tetsu/gql/get_anime_shows.data.gql.dart'
     show GGetAnimeShowsData, GGetAnimeShowsData_animes;
 import 'package:tetsu/gql/get_anime_shows.req.gql.dart' show GGetAnimeShowsReq;
 import 'package:tetsu/gql/get_anime_shows.var.gql.dart' show GGetAnimeShowsVars;
-import 'package:tetsu/gql/schema.schema.gql.dart' show GRelatedAnimeType;
+import 'package:tetsu/gql/schema.schema.gql.dart'
+    show GEpisodeType, GRelatedAnimeType;
 
 part 'serializers.gql.g.dart';
 
@@ -28,6 +29,7 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   ..add(OperationSerializer())
   ..addPlugin(StandardJsonPlugin());
 @SerializersFor([
+  GEpisodeType,
   GGetAnimeDetailsData,
   GGetAnimeDetailsData_anime,
   GGetAnimeDetailsData_anime_episodes,

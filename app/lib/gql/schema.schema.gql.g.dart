@@ -6,6 +6,46 @@ part of 'schema.schema.gql.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const GEpisodeType _$gEpisodeTypeREGULAR = const GEpisodeType._('REGULAR');
+const GEpisodeType _$gEpisodeTypeSPECIAL = const GEpisodeType._('SPECIAL');
+const GEpisodeType _$gEpisodeTypeCREDIT = const GEpisodeType._('CREDIT');
+const GEpisodeType _$gEpisodeTypeTRAILER = const GEpisodeType._('TRAILER');
+const GEpisodeType _$gEpisodeTypePARODY = const GEpisodeType._('PARODY');
+const GEpisodeType _$gEpisodeTypeOTHER = const GEpisodeType._('OTHER');
+const GEpisodeType _$gEpisodeTypeUNKNOWN = const GEpisodeType._('UNKNOWN');
+
+GEpisodeType _$gEpisodeTypeValueOf(String name) {
+  switch (name) {
+    case 'REGULAR':
+      return _$gEpisodeTypeREGULAR;
+    case 'SPECIAL':
+      return _$gEpisodeTypeSPECIAL;
+    case 'CREDIT':
+      return _$gEpisodeTypeCREDIT;
+    case 'TRAILER':
+      return _$gEpisodeTypeTRAILER;
+    case 'PARODY':
+      return _$gEpisodeTypePARODY;
+    case 'OTHER':
+      return _$gEpisodeTypeOTHER;
+    case 'UNKNOWN':
+      return _$gEpisodeTypeUNKNOWN;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<GEpisodeType> _$gEpisodeTypeValues =
+    new BuiltSet<GEpisodeType>(const <GEpisodeType>[
+  _$gEpisodeTypeREGULAR,
+  _$gEpisodeTypeSPECIAL,
+  _$gEpisodeTypeCREDIT,
+  _$gEpisodeTypeTRAILER,
+  _$gEpisodeTypePARODY,
+  _$gEpisodeTypeOTHER,
+  _$gEpisodeTypeUNKNOWN,
+]);
+
 const GRelatedAnimeType _$gRelatedAnimeTypeSEQUEL =
     const GRelatedAnimeType._('SEQUEL');
 const GRelatedAnimeType _$gRelatedAnimeTypePREQUEL =
@@ -83,8 +123,27 @@ final BuiltSet<GRelatedAnimeType> _$gRelatedAnimeTypeValues =
   _$gRelatedAnimeTypeUNKNOWN,
 ]);
 
+Serializer<GEpisodeType> _$gEpisodeTypeSerializer =
+    new _$GEpisodeTypeSerializer();
 Serializer<GRelatedAnimeType> _$gRelatedAnimeTypeSerializer =
     new _$GRelatedAnimeTypeSerializer();
+
+class _$GEpisodeTypeSerializer implements PrimitiveSerializer<GEpisodeType> {
+  @override
+  final Iterable<Type> types = const <Type>[GEpisodeType];
+  @override
+  final String wireName = 'GEpisodeType';
+
+  @override
+  Object serialize(Serializers serializers, GEpisodeType object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  GEpisodeType deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      GEpisodeType.valueOf(serialized as String);
+}
 
 class _$GRelatedAnimeTypeSerializer
     implements PrimitiveSerializer<GRelatedAnimeType> {

@@ -249,11 +249,11 @@ const EpisodeQuery = _i1.ObjectTypeDefinitionNode(
           type: _i1.NamedTypeNode(
               name: _i1.NameNode(value: 'Int'), isNonNull: true)),
       _i1.FieldDefinitionNode(
-          name: _i1.NameNode(value: 'etype'),
+          name: _i1.NameNode(value: 'episodeType'),
           directives: [],
           args: [],
           type: _i1.NamedTypeNode(
-              name: _i1.NameNode(value: 'Int'), isNonNull: true)),
+              name: _i1.NameNode(value: 'EpisodeType'), isNonNull: true)),
       _i1.FieldDefinitionNode(
           name: _i1.NameNode(value: 'files'),
           directives: [],
@@ -275,6 +275,25 @@ const EpisodeQuery = _i1.ObjectTypeDefinitionNode(
               type: _i1.NamedTypeNode(
                   name: _i1.NameNode(value: 'FileQuery'), isNonNull: true),
               isNonNull: true))
+    ]);
+const EpisodeType = _i1.EnumTypeDefinitionNode(
+    name: _i1.NameNode(value: 'EpisodeType'),
+    directives: [],
+    values: [
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'REGULAR'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'SPECIAL'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'CREDIT'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'TRAILER'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'PARODY'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'OTHER'), directives: []),
+      _i1.EnumValueDefinitionNode(
+          name: _i1.NameNode(value: 'UNKNOWN'), directives: [])
     ]);
 const FileQuery = _i1.ObjectTypeDefinitionNode(
     name: _i1.NameNode(value: 'FileQuery'),
@@ -761,6 +780,7 @@ const document = _i1.DocumentNode(definitions: [
   AnimeQuery,
   AudioTrack,
   EpisodeQuery,
+  EpisodeType,
   FileQuery,
   GroupQuery,
   Mutation,

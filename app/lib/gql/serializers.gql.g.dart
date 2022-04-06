@@ -7,6 +7,7 @@ part of 'serializers.gql.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(GEpisodeType.serializer)
       ..add(GGetAnimeDetailsData.serializer)
       ..add(GGetAnimeDetailsData_anime.serializer)
       ..add(GGetAnimeDetailsData_anime_episodes.serializer)

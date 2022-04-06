@@ -3,6 +3,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:tetsu/gql/schema.schema.gql.dart' as _i2;
 import 'package:tetsu/gql/serializers.gql.dart' as _i1;
 
 part 'get_anime_details.data.gql.g.dart';
@@ -95,7 +96,7 @@ abstract class GGetAnimeDetailsData_anime_episodes
   String get romaji;
   String get kanji;
   int get aired;
-  int get etype;
+  _i2.GEpisodeType get episodeType;
   BuiltList<GGetAnimeDetailsData_anime_episodes_files> get files;
   static Serializer<GGetAnimeDetailsData_anime_episodes> get serializer =>
       _$gGetAnimeDetailsDataAnimeEpisodesSerializer;
