@@ -8,6 +8,7 @@ import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.req.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.var.gql.dart';
 import 'package:tetsu/pages/anime/details/anime_details.dart';
+import 'package:tetsu/widgets/player_popup_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class HomePage extends StatelessWidget {
           AnimeGallery(),
         ],
       ),
+      floatingActionButton: const PlayerPopupButton(),
     );
   }
 }
@@ -82,7 +84,7 @@ class AnimeGallery extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 300,
+          height: 500,
           child: Operation<GGetAnimeShowsData, GGetAnimeShowsVars>(
             client: context.read<ferry.Client>(),
             operationRequest: GGetAnimeShowsReq(
@@ -105,12 +107,19 @@ class AnimeGallery extends StatelessWidget {
                 );
               }
 
-              return ListView.builder(
+              final animes = res.data!.animes.toList();
+
+              animes.sort((a, b) => b.aid.compareTo(a.aid));
+
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 2,
+                ),
                 scrollDirection: Axis.horizontal,
-                itemCount: res.data!.animes.length,
-                itemExtent: 200,
+                itemCount: animes.length,
                 itemBuilder: (context, index) {
-                  final anime = res.data!.animes[index];
+                  final anime = animes[index];
 
                   return MediaCard(anime: anime);
                 },
@@ -151,15 +160,19 @@ class MediaCard extends StatelessWidget {
                   ),
                 ),
               ),
+              LinearProgressIndicator(
+                value: anime.watchProgress?.progress ?? 0,
+              ),
               SizedBox(
-                height: 48,
+                height: 44,
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   child: Text(
                     anime.romajiName,
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
+                    textScaleFactor: 0.9,
                   ),
                 ),
               ),

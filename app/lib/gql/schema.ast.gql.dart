@@ -157,7 +157,14 @@ const AnimeQuery = _i1.ObjectTypeDefinitionNode(
           type: _i1.ListTypeNode(
               type: _i1.NamedTypeNode(
                   name: _i1.NameNode(value: 'EpisodeQuery'), isNonNull: true),
-              isNonNull: true))
+              isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'watchProgress'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'WatchProgressQuery'),
+              isNonNull: false))
     ]);
 const AudioTrack = _i1.ObjectTypeDefinitionNode(
     name: _i1.NameNode(value: 'AudioTrack'),
@@ -274,7 +281,14 @@ const EpisodeQuery = _i1.ObjectTypeDefinitionNode(
           type: _i1.ListTypeNode(
               type: _i1.NamedTypeNode(
                   name: _i1.NameNode(value: 'FileQuery'), isNonNull: true),
-              isNonNull: true))
+              isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'watchProgress'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'WatchProgressQuery'),
+              isNonNull: false))
     ]);
 const EpisodeType = _i1.EnumTypeDefinitionNode(
     name: _i1.NameNode(value: 'EpisodeType'),
@@ -529,7 +543,14 @@ const Mutation = _i1.ObjectTypeDefinitionNode(
           directives: [],
           args: [],
           type: _i1.NamedTypeNode(
-              name: _i1.NameNode(value: 'PlayerMutation'), isNonNull: true))
+              name: _i1.NameNode(value: 'PlayerMutation'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'watchProgress'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'WatchProgressMutation'),
+              isNonNull: true))
     ]);
 const PlayerMutation = _i1.ObjectTypeDefinitionNode(
     name: _i1.NameNode(value: 'PlayerMutation'),
@@ -542,6 +563,21 @@ const PlayerMutation = _i1.ObjectTypeDefinitionNode(
           args: [
             _i1.InputValueDefinitionNode(
                 name: _i1.NameNode(value: 'command'),
+                directives: [],
+                type: _i1.ListTypeNode(
+                    type: _i1.NamedTypeNode(
+                        name: _i1.NameNode(value: 'String'), isNonNull: true),
+                    isNonNull: true),
+                defaultValue: null)
+          ],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'String'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'loadPlaylist'),
+          directives: [],
+          args: [
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'playlist'),
                 directives: [],
                 type: _i1.ListTypeNode(
                     type: _i1.NamedTypeNode(
@@ -776,6 +812,86 @@ const VideoTrack = _i1.ObjectTypeDefinitionNode(
           type: _i1.NamedTypeNode(
               name: _i1.NameNode(value: 'String'), isNonNull: true))
     ]);
+const WatchProgressMutation = _i1.ObjectTypeDefinitionNode(
+    name: _i1.NameNode(value: 'WatchProgressMutation'),
+    directives: [],
+    interfaces: [],
+    fields: [
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'anime'),
+          directives: [],
+          args: [
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'aid'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Int'), isNonNull: true),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'progress'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Float'), isNonNull: true),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'increaseOnly'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Boolean'), isNonNull: false),
+                defaultValue: _i1.BooleanValueNode(value: true))
+          ],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'Float'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'episode'),
+          directives: [],
+          args: [
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'eid'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Int'), isNonNull: true),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'progress'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Float'), isNonNull: true),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'increaseOnly'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Boolean'), isNonNull: false),
+                defaultValue: _i1.BooleanValueNode(value: true))
+          ],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'Float'), isNonNull: true))
+    ]);
+const WatchProgressQuery = _i1.ObjectTypeDefinitionNode(
+    name: _i1.NameNode(value: 'WatchProgressQuery'),
+    directives: [],
+    interfaces: [],
+    fields: [
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'mediaId'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'String'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'progress'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'Float'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'lastUpdate'),
+          directives: [],
+          args: [],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'Int'), isNonNull: true))
+    ]);
 const document = _i1.DocumentNode(definitions: [
   AnimeQuery,
   AudioTrack,
@@ -791,5 +907,7 @@ const document = _i1.DocumentNode(definitions: [
   RelatedAnimeQuery,
   RelatedAnimeShim,
   RelatedAnimeType,
-  VideoTrack
+  VideoTrack,
+  WatchProgressMutation,
+  WatchProgressQuery
 ]);

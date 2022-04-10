@@ -45,6 +45,7 @@ abstract class GGetAnimeShowsData_animes
   String get romajiName;
   String get picname;
   String get year;
+  GGetAnimeShowsData_animes_watchProgress? get watchProgress;
   static Serializer<GGetAnimeShowsData_animes> get serializer =>
       _$gGetAnimeShowsDataAnimesSerializer;
   Map<String, dynamic> toJson() =>
@@ -53,4 +54,31 @@ abstract class GGetAnimeShowsData_animes
   static GGetAnimeShowsData_animes? fromJson(Map<String, dynamic> json) =>
       _i1.serializers
           .deserializeWith(GGetAnimeShowsData_animes.serializer, json);
+}
+
+abstract class GGetAnimeShowsData_animes_watchProgress
+    implements
+        Built<GGetAnimeShowsData_animes_watchProgress,
+            GGetAnimeShowsData_animes_watchProgressBuilder> {
+  GGetAnimeShowsData_animes_watchProgress._();
+
+  factory GGetAnimeShowsData_animes_watchProgress(
+      [Function(GGetAnimeShowsData_animes_watchProgressBuilder b)
+          updates]) = _$GGetAnimeShowsData_animes_watchProgress;
+
+  static void _initializeBuilder(
+          GGetAnimeShowsData_animes_watchProgressBuilder b) =>
+      b..G__typename = 'WatchProgressQuery';
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  double get progress;
+  static Serializer<GGetAnimeShowsData_animes_watchProgress> get serializer =>
+      _$gGetAnimeShowsDataAnimesWatchProgressSerializer;
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+          GGetAnimeShowsData_animes_watchProgress.serializer, this)
+      as Map<String, dynamic>);
+  static GGetAnimeShowsData_animes_watchProgress? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+          GGetAnimeShowsData_animes_watchProgress.serializer, json);
 }

@@ -21,6 +21,7 @@ type AnimeQuery {
   trailerCount: Int!
   parodyCount: Int!
   episodes(limit: Int!, offset: Int!): [EpisodeQuery!]!
+  watchProgress: WatchProgressQuery
 }
 
 type AudioTrack {
@@ -42,6 +43,7 @@ type EpisodeQuery {
   aired: Int!
   episodeType: EpisodeType!
   files(limit: Int!, offset: Int!): [FileQuery!]!
+  watchProgress: WatchProgressQuery
 }
 
 enum EpisodeType {
@@ -98,10 +100,12 @@ type GroupQuery {
 
 type Mutation {
   player: PlayerMutation!
+  watchProgress: WatchProgressMutation!
 }
 
 type PlayerMutation {
   sendCommand(command: [String!]!): String!
+  loadPlaylist(playlist: [String!]!): String!
 }
 
 type PlayerQuery {
@@ -157,5 +161,16 @@ type VideoTrack {
   colourDepth: String
   codec: String!
   bitrate: String!
+}
+
+type WatchProgressMutation {
+  anime(aid: Int!, progress: Float!, increaseOnly: Boolean = true): Float!
+  episode(eid: Int!, progress: Float!, increaseOnly: Boolean = true): Float!
+}
+
+type WatchProgressQuery {
+  mediaId: String!
+  progress: Float!
+  lastUpdate: Int!
 }
 

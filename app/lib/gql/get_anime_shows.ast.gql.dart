@@ -57,7 +57,20 @@ const GetAnimeShows = _i1.OperationDefinitionNode(
                 alias: null,
                 arguments: [],
                 directives: [],
-                selectionSet: null)
+                selectionSet: null),
+            _i1.FieldNode(
+                name: _i1.NameNode(value: 'watchProgress'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: _i1.SelectionSetNode(selections: [
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'progress'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null)
+                ]))
           ]))
     ]));
 const document = _i1.DocumentNode(definitions: [GetAnimeShows]);

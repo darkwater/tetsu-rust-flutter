@@ -1,40 +1,44 @@
-use crate::gql::{anime::file::FileQuery, GqlContext};
+use crate::gql::{
+    anime::{file::FileQuery, WatchProgressQuery},
+    watch_progress::WatchProgressId,
+    GqlContext,
+};
 use juniper::{graphql_object, GraphQLEnum};
 
 pub struct EpisodeQuery {
-    pub eid: i32,
-    pub aid: i32,
-    pub length: i32,
-    pub rating: i32,
-    pub votes: i32,
+    pub eid: i64,
+    pub aid: i64,
+    pub length: i64,
+    pub rating: i64,
+    pub votes: i64,
     pub epno: String,
     pub eng: String,
     pub romaji: String,
     pub kanji: String,
     pub aired: i64,
-    pub etype: i32,
+    pub etype: i64,
 }
 
 #[graphql_object(context = GqlContext)]
 impl EpisodeQuery {
     pub fn eid(&self) -> i32 {
-        self.eid
+        self.eid as i32
     }
 
     pub fn aid(&self) -> i32 {
-        self.aid
+        self.aid as i32
     }
 
     pub fn length(&self) -> i32 {
-        self.length
+        self.length as i32
     }
 
     pub fn rating(&self) -> i32 {
-        self.rating
+        self.rating as i32
     }
 
     pub fn votes(&self) -> i32 {
-        self.votes
+        self.votes as i32
     }
 
     pub fn epno(&self) -> String {
@@ -62,7 +66,8 @@ impl EpisodeQuery {
     }
 
     pub async fn files(&self, context: &GqlContext, limit: i32, offset: i32) -> Vec<FileQuery> {
-        sqlx::query!(
+        sqlx::query_as!(
+            FileQuery,
             "SELECT * FROM anidb_files WHERE eid = ? LIMIT ? OFFSET ?",
             self.eid,
             limit,
@@ -71,30 +76,19 @@ impl EpisodeQuery {
         .fetch_all(&context.db)
         .await
         .unwrap()
-        .into_iter()
-        .map(|row| FileQuery {
-            fid: row.fid as i32,
-            aid: row.aid.unwrap() as i32,
-            eid: row.eid.unwrap() as i32,
-            gid: row.gid.unwrap() as i32,
-            state: row.state.unwrap() as i32,
-            size: (row.size.unwrap() / 1024) as i32,
-            ed2k: row.ed2k.unwrap(),
-            colour_depth: row.colour_depth.unwrap(),
-            quality: row.quality.unwrap(),
-            source: row.source.unwrap(),
-            audio_codec_list: row.audio_codec_list.unwrap(),
-            audio_bitrate_list: row.audio_bitrate_list.unwrap(),
-            video_codec: row.video_codec.unwrap(),
-            video_bitrate: row.video_bitrate.unwrap(),
-            video_resolution: row.video_resolution.unwrap(),
-            dub_language: row.dub_language.unwrap(),
-            sub_language: row.sub_language.unwrap(),
-            length_in_seconds: row.length_in_seconds.unwrap() as i32,
-            description: row.description.unwrap(),
-            aired_date: row.aired_date.unwrap(),
-        })
-        .collect()
+    }
+
+    pub async fn watch_progress(&self, context: &GqlContext) -> Option<WatchProgressQuery> {
+        let media_id = WatchProgressId::AnidbEpisode(self.eid).to_string();
+
+        sqlx::query_as!(
+            WatchProgressQuery,
+            "SELECT * FROM watch_progress WHERE media_id = ?",
+            media_id,
+        )
+        .fetch_optional(&context.db)
+        .await
+        .unwrap()
     }
 }
 
@@ -109,8 +103,8 @@ pub enum EpisodeType {
     Unknown,
 }
 
-impl From<i32> for EpisodeType {
-    fn from(value: i32) -> Self {
+impl From<i64> for EpisodeType {
+    fn from(value: i64) -> Self {
         match value {
             1 => EpisodeType::Regular,
             2 => EpisodeType::Special,

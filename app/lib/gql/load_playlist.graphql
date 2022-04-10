@@ -1,0 +1,5 @@
+mutation LoadPlaylist($playlist: [String!]!) {
+    player {
+      loadPlaylist(playlist: $playlist)
+    }
+}

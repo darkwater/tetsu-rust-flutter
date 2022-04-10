@@ -11,7 +11,9 @@ import 'package:tetsu/gql/get_anime_details.data.gql.dart';
 import 'package:tetsu/gql/get_anime_details.req.gql.dart';
 import 'package:tetsu/gql/get_anime_details.var.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
+import 'package:tetsu/gql/load_playlist.req.gql.dart';
 import 'package:tetsu/gql/schema.schema.gql.dart';
+import 'package:tetsu/widgets/player_popup_button.dart';
 
 const _subColor = Color(0xAF3F51B5); // indigo
 const _videoColor = Color(0xAF9C27B0); // purple
@@ -47,14 +49,15 @@ class AnimeDetailsPage extends StatelessWidget {
           }
         },
       ),
+      floatingActionButton: const PlayerPopupButton(),
     );
   }
 
   Widget buildTabletLayout(BuildContext context) {
     const mainPadding = 40.0;
     const sidebarWidth = 350.0;
-    const headerHeight = 400.0;
-    const coverTop = 70.0;
+    final headerHeight = 380.0 + MediaQuery.of(context).viewPadding.top;
+    final coverTop = 40.0 + MediaQuery.of(context).viewPadding.top;
     const coverAspect = 2 / 3;
     const coverBottomPadding = 30.0;
 
@@ -67,17 +70,13 @@ class AnimeDetailsPage extends StatelessWidget {
     final coverImage = Positioned(
       top: coverTop,
       left: mainPadding,
-      child: SizedBox(
+      child: Container(
         width: sidebarWidth - mainPadding * 2,
         height: coverHeight,
-        child: Hero(
-          tag: "anime-cover-${initialData.aid}",
-          child: CachedNetworkImage(
-            imageUrl: "https://cdn.anidb.net/pics/anime/${initialData.picname}",
-            fit: BoxFit.cover,
-            fadeInDuration: const Duration(milliseconds: 100),
-          ),
+        decoration: BoxDecoration(
+          boxShadow: kElevationToShadow[12],
         ),
+        child: buildHeroCoverImage(),
       ),
     );
 
@@ -130,49 +129,30 @@ class AnimeDetailsPage extends StatelessWidget {
       ),
     );
 
-    final contents = Operation<GGetAnimeDetailsData, GGetAnimeDetailsVars>(
-      client: context.read<ferry.Client>(),
-      operationRequest: GGetAnimeDetailsReq(
-        (b) => b..vars.aid = initialData.aid,
-      ),
-      builder: (result, res, error) {
-        if (error != null) {
-          return Text(error.toString());
-        }
-
-        if (res?.hasErrors ?? false) {
-          return Text(res!.graphqlErrors.toString());
-        }
-
-        if (res == null || res.data == null) {
-          return const LinearProgressIndicator();
-        }
-
-        final anime = res.data!.anime;
-        final episodes = anime!.episodes.toList();
-
-        episodes.sort((a, b) => a.epno.compareTo(b.epno));
-
+    final contents = _DetailsBuilder(
+      initialData: initialData,
+      loadingBuilder: (context) => const LinearProgressIndicator(),
+      builder: (result, anime, episodes) {
         final sidebar = Column(
           children: [
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.play_arrow),
-                label: const Text("Watch"),
-                onPressed: () {},
-              ),
+              child: buildWatchButton(context, episodes),
             ),
             const SizedBox(height: coverBottomPadding),
-            Text(anime.year),
-            Text(anime.atype),
-            Text("${anime.episodeCount} episodes"),
-            Text("${anime.specialEpCount} specials"),
-            Text("${anime.parodyCount} parodies"),
-            Text("${anime.creditsCount} credits"),
-            Text("${anime.otherCount} other"),
-            Text("${anime.trailerCount} trailers"),
-            Text(anime.nsfw ? "NSFW" : "SFW"),
+            Column(
+              children: [
+                Text(anime.year),
+                Text(anime.atype),
+                Text("${anime.episodeCount} episodes"),
+                Text("${anime.specialEpCount} specials"),
+                Text("${anime.parodyCount} parodies"),
+                Text("${anime.creditsCount} credits"),
+                Text("${anime.otherCount} other"),
+                Text("${anime.trailerCount} trailers"),
+                Text(anime.nsfw ? "NSFW" : "SFW"),
+              ],
+            ),
           ],
         );
 
@@ -242,8 +222,140 @@ class AnimeDetailsPage extends StatelessWidget {
   }
 
   Widget buildPhoneLayout(BuildContext context) {
-    return Center(
-      child: Text("Anime ${initialData.aid} Details Page"),
+    return _DetailsBuilder(
+      initialData: initialData,
+      loadingBuilder: (context) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: 1.0,
+                child: buildHeroCoverImage(),
+              ),
+            ),
+          ],
+        );
+      },
+      builder: (context, anime, episodes) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: 0.08,
+                child: buildHeroCoverImage(),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  ElevatedButton buildWatchButton(
+    BuildContext context,
+    List<GGetAnimeDetailsData_anime_episodes> episodes,
+  ) {
+    return ElevatedButton.icon(
+      icon: const Icon(Icons.play_arrow),
+      label: const Text("Watch"),
+      onPressed: () async {
+        final request = GLoadPlaylistReq(
+          (b) => b
+            ..vars.playlist.addAll(
+              episodes.expand(
+                (ep) {
+                  if (ep.episodeType == GEpisodeType.CREDIT) {
+                    return [];
+                  }
+
+                  return ep.files.map((f) => f.onDisk.first);
+                },
+              ),
+            ),
+        );
+
+        await context.read<ferry.Client>().request(request).first;
+      },
+    );
+  }
+
+  Hero buildHeroCoverImage() {
+    return Hero(
+      tag: "anime-cover-${initialData.aid}",
+      child: CachedNetworkImage(
+        imageUrl: "https://cdn.anidb.net/pics/anime/${initialData.picname}",
+        fit: BoxFit.cover,
+        fadeInDuration: const Duration(milliseconds: 100),
+      ),
+    );
+  }
+}
+
+class _DetailsBuilder extends StatelessWidget {
+  final GGetAnimeShowsData_animes initialData;
+
+  final Widget Function(
+    BuildContext context,
+    GGetAnimeDetailsData_anime data,
+    List<GGetAnimeDetailsData_anime_episodes> episodes,
+  ) builder;
+
+  final Widget Function(
+    BuildContext context,
+  ) loadingBuilder;
+
+  const _DetailsBuilder({
+    Key? key,
+    required this.initialData,
+    required this.builder,
+    required this.loadingBuilder,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Operation<GGetAnimeDetailsData, GGetAnimeDetailsVars>(
+      client: context.read<ferry.Client>(),
+      operationRequest: GGetAnimeDetailsReq(
+        (b) => b..vars.aid = initialData.aid,
+      ),
+      builder: (result, res, error) {
+        if (error != null) {
+          return Text(error.toString());
+        }
+
+        if (res?.hasErrors ?? false) {
+          return Text(res!.graphqlErrors.toString());
+        }
+
+        if (res == null || res.data == null) {
+          return loadingBuilder(context);
+        }
+
+        final anime = res.data!.anime;
+        final episodes = anime!.episodes.toList();
+
+        episodes.sort(
+          (a, b) =>
+              a.files.first.onDisk.first.compareTo(b.files.first.onDisk.first),
+        );
+
+        // episodes.sort((a, b) => a.epno.compareTo(b.epno));
+
+        // episodes.sort((a, b) {
+        //   final aEpno = int.parse(a.epno.replaceAll(RegExp("[^0-9]"), ""));
+        //   final bEpno = int.parse(b.epno.replaceAll(RegExp("[^0-9]"), ""));
+
+        //   return (a.aired + aEpno).compareTo(b.aired + bEpno);
+        // });
+
+        // episodes.sort((a, b) =>
+        //     int.parse(a.epno.replaceAll(RegExp("[^0-9]"), ""))
+        //         .compareTo(int.parse(b.epno.replaceAll(RegExp("[^0-9]"), ""))));
+
+        return builder(context, anime, episodes);
+      },
     );
   }
 }
@@ -288,7 +400,9 @@ class _EpisodeRow extends StatelessWidget {
                 child: ImageFiltered(
                   imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
                   child: Text(
-                    episode.romaji,
+                    episode.romaji.isNotEmpty
+                        ? episode.romaji
+                        : file.onDisk.first.split("/").last,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -343,48 +457,6 @@ class _EpisodeRow extends StatelessWidget {
       builder: buildFileDetails,
     );
   }
-
-  // "eid": 230108,
-  // "length": 30,
-  // "rating": 630,
-  // "votes": 16,
-  // "epno": "01",
-  // "eng": "Each One`s Promise",
-  // "romaji": "Sorezore no Chikai",
-  // "kanji": "それぞれの誓い",
-  // "aired": 1594166400,
-  // "episodeType": "REGULAR",
-  // "files": [
-  //   {
-  //     "fid": 2771953,
-  //     "state": 1,
-  //     "size": 1706456,
-  //     "quality": "high",
-  //     "source": "www",
-  //     "subLanguages": [
-  //       "english"
-  //     ],
-  //     "videoTracks": [
-  //       {
-  //         "colourDepth": "",
-  //         "codec": "H264/AVC",
-  //         "bitrate": "7970"
-  //       }
-  //     ],
-  //     "audioTracks": [
-  //       {
-  //         "codec": "(HE-)AAC",
-  //         "bitrate": "128",
-  //         "language": "japanese"
-  //       }
-  //     ],
-  //     "lengthInSeconds": 1720,
-  //     "description": "",
-  //     "airedDate": 1594166400,
-  //     "onDisk": [
-  //       "/data/torrents/anime/[SubsPlease] Re Zero kara Hajimeru Isekai Seikatsu (26-50) (1080p) [Batch]/[SubsPlease] Re Zero kara Hajimeru Isekai Seikatsu - 26 (1080p) [801C6194].mkv"
-  //     ]
-  //   }
 
   Widget buildFileDetails(BuildContext context) {
     final details = [

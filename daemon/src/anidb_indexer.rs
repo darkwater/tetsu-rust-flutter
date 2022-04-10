@@ -24,27 +24,27 @@ async fn init_database(conn: &Pool<Sqlite>) {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_anime (
             aid                 INTEGER PRIMARY KEY,
-            dateflags           INTEGER,
-            year                TEXT,
-            atype               TEXT,
-            related_aid_list    TEXT,
-            related_aid_type    TEXT,
-            romaji_name         TEXT,
-            kanji_name          TEXT,
-            english_name        TEXT,
-            short_name_list     TEXT,
-            episodes            INTEGER,
-            special_ep_count    INTEGER,
-            air_date            INTEGER,
-            end_date            INTEGER,
-            picname             TEXT,
-            nsfw                BOOLEAN,
-            characterid_list    TEXT,
-            specials_count      INTEGER,
-            credits_count       INTEGER,
-            other_count         INTEGER,
-            trailer_count       INTEGER,
-            parody_count        INTEGER
+            dateflags           INTEGER NOT NULL,
+            year                TEXT NOT NULL,
+            atype               TEXT NOT NULL,
+            related_aid_list    TEXT NOT NULL,
+            related_aid_type    TEXT NOT NULL,
+            romaji_name         TEXT NOT NULL,
+            kanji_name          TEXT NOT NULL,
+            english_name        TEXT NOT NULL,
+            short_name_list     TEXT NOT NULL,
+            episodes            INTEGER NOT NULL,
+            special_ep_count    INTEGER NOT NULL,
+            air_date            INTEGER NOT NULL,
+            end_date            INTEGER NOT NULL,
+            picname             TEXT NOT NULL,
+            nsfw                BOOLEAN NOT NULL,
+            characterid_list    TEXT NOT NULL,
+            specials_count      INTEGER NOT NULL,
+            credits_count       INTEGER NOT NULL,
+            other_count         INTEGER NOT NULL,
+            trailer_count       INTEGER NOT NULL,
+            parody_count        INTEGER NOT NULL
         )",
     )
     .await
@@ -53,16 +53,16 @@ async fn init_database(conn: &Pool<Sqlite>) {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_episodes (
             eid                 INTEGER PRIMARY KEY,
-            aid                 INTEGER,
-            length              INTEGER,
-            rating              INTEGER,
-            votes               INTEGER,
-            epno                TEXT,
-            eng                 TEXT,
-            romaji              TEXT,
-            kanji               TEXT,
-            aired               INTEGER,
-            etype               INTEGER
+            aid                 INTEGER NOT NULL,
+            length              INTEGER NOT NULL,
+            rating              INTEGER NOT NULL,
+            votes               INTEGER NOT NULL,
+            epno                TEXT NOT NULL,
+            eng                 TEXT NOT NULL,
+            romaji              TEXT NOT NULL,
+            kanji               TEXT NOT NULL,
+            aired               INTEGER NOT NULL,
+            etype               INTEGER NOT NULL
 
             -- FOREIGN KEY (aid) REFERENCES anidb_anime (aid)
         )",
@@ -73,25 +73,25 @@ async fn init_database(conn: &Pool<Sqlite>) {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_files (
             fid                 INTEGER PRIMARY KEY,
-            aid                 INTEGER,
-            eid                 INTEGER,
-            gid                 INTEGER,
-            state               INTEGER,
-            size                INTEGER,
-            ed2k                TEXT,
-            colour_depth        TEXT,
-            quality             TEXT,
-            source              TEXT,
-            audio_codec_list    TEXT,
-            audio_bitrate_list  TEXT,
-            video_codec         TEXT,
-            video_bitrate       TEXT,
-            video_resolution    TEXT,
-            dub_language        TEXT,
-            sub_language        TEXT,
-            length_in_seconds   INTEGER,
-            description         TEXT,
-            aired_date          INTEGER
+            aid                 INTEGER NOT NULL,
+            eid                 INTEGER NOT NULL,
+            gid                 INTEGER NOT NULL,
+            state               INTEGER NOT NULL,
+            size                INTEGER NOT NULL,
+            ed2k                TEXT NOT NULL,
+            colour_depth        TEXT NOT NULL,
+            quality             TEXT NOT NULL,
+            source              TEXT NOT NULL,
+            audio_codec_list    TEXT NOT NULL,
+            audio_bitrate_list  TEXT NOT NULL,
+            video_codec         TEXT NOT NULL,
+            video_bitrate       TEXT NOT NULL,
+            video_resolution    TEXT NOT NULL,
+            dub_language        TEXT NOT NULL,
+            sub_language        TEXT NOT NULL,
+            length_in_seconds   INTEGER NOT NULL,
+            description         TEXT NOT NULL,
+            aired_date          INTEGER NOT NULL
 
             -- FOREIGN KEY (aid) REFERENCES anidb_anime (aid),
             -- FOREIGN KEY (eid) REFERENCES anidb_episodes (eid),
@@ -104,22 +104,22 @@ async fn init_database(conn: &Pool<Sqlite>) {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_groups (
             gid                 INTEGER PRIMARY KEY,
-            rating              INTEGER,
-            votes               INTEGER,
-            acount              INTEGER,
-            fcount              INTEGER,
-            name                TEXT,
-            short               TEXT,
-            irc_channel         TEXT,
-            irc_server          TEXT,
-            url                 TEXT,
-            picname             TEXT,
-            foundeddate         INTEGER,
-            disbandeddate       INTEGER,
-            dateflags           INTEGER,
-            lastreleasedate     INTEGER,
-            lastactivitydate    INTEGER,
-            grouprelations      TEXT
+            rating              INTEGER NOT NULL,
+            votes               INTEGER NOT NULL,
+            acount              INTEGER NOT NULL,
+            fcount              INTEGER NOT NULL,
+            name                TEXT NOT NULL,
+            short               TEXT NOT NULL,
+            irc_channel         TEXT NOT NULL,
+            irc_server          TEXT NOT NULL,
+            url                 TEXT NOT NULL,
+            picname             TEXT NOT NULL,
+            foundeddate         INTEGER NOT NULL,
+            disbandeddate       INTEGER NOT NULL,
+            dateflags           INTEGER NOT NULL,
+            lastreleasedate     INTEGER NOT NULL,
+            lastactivitydate    INTEGER NOT NULL,
+            grouprelations      TEXT NOT NULL
         )",
     )
     .await
@@ -127,13 +127,23 @@ async fn init_database(conn: &Pool<Sqlite>) {
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS anidb_indexed_files (
-            path                TEXT PRIMARY KEY ON CONFLICT REPLACE,
-            filename            TEXT,
-            filesize            INTEGER,
+            path                TEXT NOT NULL PRIMARY KEY ON CONFLICT REPLACE,
+            filename            TEXT NOT NULL,
+            filesize            INTEGER NOT NULL,
             fid                 INTEGER,
-            ed2k                TEXT
+            ed2k                TEXT NOT NULL
 
             -- FOREIGN KEY (fid) REFERENCES anidb_files (fid)
+        )",
+    )
+    .await
+    .unwrap();
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS watch_progress (
+            media_id     TEXT NOT NULL PRIMARY KEY,
+            progress     REAL NOT NULL,
+            last_update  INTEGER NOT NULL
         )",
     )
     .await

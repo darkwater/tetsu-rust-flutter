@@ -2,12 +2,12 @@ use crate::gql::{anime::GroupQuery, GqlContext};
 use juniper::{graphql_object, GraphQLObject};
 
 pub struct FileQuery {
-    pub fid: i32,
-    pub eid: i32,
-    pub aid: i32,
-    pub gid: i32,
-    pub state: i32,
-    pub size: i32,
+    pub fid: i64,
+    pub eid: i64,
+    pub aid: i64,
+    pub gid: i64,
+    pub state: i64,
+    pub size: i64,
     pub ed2k: String,
     pub colour_depth: String,
     pub quality: String,
@@ -19,7 +19,7 @@ pub struct FileQuery {
     pub video_resolution: String,
     pub dub_language: String,
     pub sub_language: String,
-    pub length_in_seconds: i32,
+    pub length_in_seconds: i64,
     pub description: String,
     pub aired_date: i64,
 }
@@ -27,28 +27,28 @@ pub struct FileQuery {
 #[graphql_object(context = GqlContext)]
 impl FileQuery {
     pub fn fid(&self) -> i32 {
-        self.fid
+        self.fid as i32
     }
 
     pub fn eid(&self) -> i32 {
-        self.eid
+        self.eid as i32
     }
 
     pub fn aid(&self) -> i32 {
-        self.aid
+        self.aid as i32
     }
 
     pub fn gid(&self) -> i32 {
-        self.gid
+        self.gid as i32
     }
 
     pub fn state(&self) -> i32 {
-        self.state
+        self.state as i32
     }
 
     /// File size in kilobytes
     pub fn size(&self) -> i32 {
-        self.size
+        self.size as i32
     }
 
     pub fn ed2k(&self) -> String {
@@ -124,7 +124,7 @@ impl FileQuery {
     }
 
     pub fn length_in_seconds(&self) -> i32 {
-        self.length_in_seconds
+        self.length_in_seconds as i32
     }
 
     pub fn description(&self) -> String {
@@ -136,33 +136,18 @@ impl FileQuery {
     }
 
     pub async fn group(&self, context: &GqlContext) -> Option<GroupQuery> {
-        sqlx::query!("SELECT * FROM anidb_groups WHERE gid = ?", self.gid)
-            .fetch_optional(&context.db)
-            .await
-            .unwrap()
-            .map(|row| GroupQuery {
-                gid: row.gid as i32,
-                rating: row.rating.unwrap() as i32,
-                votes: row.votes.unwrap() as i32,
-                acount: row.acount.unwrap() as i32,
-                fcount: row.fcount.unwrap() as i32,
-                name: row.name.unwrap(),
-                short: row.short.unwrap(),
-                irc_channel: row.irc_channel.unwrap(),
-                irc_server: row.irc_server.unwrap(),
-                url: row.url.unwrap(),
-                picname: row.picname.unwrap(),
-                foundeddate: row.foundeddate.unwrap() as i32,
-                disbandeddate: row.disbandeddate.unwrap() as i32,
-                dateflags: row.dateflags.unwrap() as i32,
-                lastreleasedate: row.lastreleasedate.unwrap() as i32,
-                lastactivitydate: row.lastactivitydate.unwrap() as i32,
-                grouprelations: row.grouprelations.unwrap(),
-            })
+        sqlx::query_as!(
+            GroupQuery,
+            "SELECT * FROM anidb_groups WHERE gid = ?",
+            self.gid
+        )
+        .fetch_optional(&context.db)
+        .await
+        .unwrap()
     }
 
     pub async fn on_disk(&self, context: &GqlContext) -> Vec<String> {
-        sqlx::query!(
+        sqlx::query_scalar!(
             "SELECT path FROM anidb_indexed_files WHERE fid = ?",
             self.fid
         )
@@ -170,7 +155,7 @@ impl FileQuery {
         .await
         .unwrap()
         .into_iter()
-        .map(|row| row.path.unwrap())
+        .map(|s| s.unwrap())
         .collect()
     }
 }

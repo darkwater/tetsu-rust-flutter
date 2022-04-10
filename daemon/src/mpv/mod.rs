@@ -1,13 +1,11 @@
-use futures::{future::select, FutureExt};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 use std::{
     collections::HashMap,
     path::Path,
     sync::atomic::{AtomicI64, Ordering},
 };
 use tokio::{
-    io::{self, AsyncBufReadExt, AsyncWriteExt, BufReader, BufStream},
+    io::{self, AsyncBufReadExt, AsyncWriteExt, BufReader},
     net::{
         unix::{OwnedReadHalf, OwnedWriteHalf},
         UnixStream,
@@ -29,7 +27,7 @@ pub struct MpvStream {
     tx_handle: JoinHandle<()>,
     rx_handle: JoinHandle<()>,
     command_sender: mpsc::Sender<MpvCommand>,
-    event_stream: broadcast::Sender<MpvEvent>,
+    // event_stream: broadcast::Sender<MpvEvent>,
     response_stream: broadcast::Sender<MpvResponse>,
     command_counter: AtomicI64,
 }
@@ -41,7 +39,7 @@ impl MpvStream {
         let (command_sender, command_stream) = mpsc::channel(16);
 
         let (event_sender, _) = broadcast::channel(16);
-        let event_stream = event_sender.clone();
+        // let event_stream = event_sender.clone();
 
         let (response_sender, _) = broadcast::channel(16);
         let response_stream = response_sender.clone();
@@ -69,7 +67,7 @@ impl MpvStream {
             tx_handle,
             rx_handle,
             command_sender,
-            event_stream,
+            // event_stream,
             response_stream,
             command_counter,
         })
@@ -92,9 +90,9 @@ impl MpvStream {
         }
     }
 
-    pub fn subscribe_events(&self) -> broadcast::Receiver<MpvEvent> {
-        self.event_stream.subscribe()
-    }
+    // pub fn subscribe_events(&self) -> broadcast::Receiver<MpvEvent> {
+    //     self.event_stream.subscribe()
+    // }
 }
 
 impl Drop for MpvStream {
@@ -158,9 +156,13 @@ pub struct MpvCommand {
 }
 
 impl MpvCommand {
-    pub fn new(command: Vec<serde_json::Value>) -> Self {
+    pub fn new<V, T>(command: T) -> Self
+    where
+        V: Into<serde_json::Value>,
+        T: IntoIterator<Item = V>,
+    {
         MpvCommand {
-            command,
+            command: command.into_iter().map(Into::into).collect(),
             request_id: None,
         }
     }
@@ -169,6 +171,15 @@ impl MpvCommand {
         self.request_id = Some(id);
         self
     }
+}
+
+#[macro_export]
+macro_rules! mpv_command {
+    ($($arg:expr),* $(,)?) => {
+        MpvCommand::new(vec![
+            $(::serde_json::json!($arg)),*
+        ])
+    };
 }
 
 #[derive(Clone, Debug, Deserialize)]

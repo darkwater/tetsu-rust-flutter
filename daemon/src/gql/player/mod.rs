@@ -1,6 +1,10 @@
 use super::GqlContext;
-use crate::mpv::{MpvCommand, MpvStream};
+use crate::{
+    mpv::{MpvCommand, MpvStream},
+    mpv_command,
+};
 use juniper::{graphql_object, graphql_value, FieldError, FieldResult};
+use serde_json::json;
 
 pub struct PlayerQuery {
     mpv: MpvStream,
@@ -16,7 +20,7 @@ impl PlayerQuery {
     async fn prop(&self, name: &str) -> PropResult<serde_json::Value> {
         let res = self
             .mpv
-            .send_command(MpvCommand::new(vec!["get_property".into(), name.into()]))
+            .send_command(MpvCommand::new(["get_property", name]))
             .await;
 
         if let Some(error) = res.error() {
@@ -118,17 +122,53 @@ impl PlayerMutation {
 #[graphql_object(Context = GqlContext)]
 impl PlayerMutation {
     async fn send_command(&self, command: Vec<String>) -> FieldResult<String> {
-        let res = self
-            .mpv
-            .send_command(MpvCommand::new(
-                command.into_iter().map(|s| s.into()).collect(),
-            ))
-            .await;
+        let res = self.mpv.send_command(MpvCommand::new(command)).await;
 
         if let Some(error) = res.error() {
             Err(FieldError::new(error, graphql_value!(None)))
         } else {
             Ok(res.data.to_string())
         }
+    }
+
+    #[graphql(arguments(command(default = 0)))]
+    async fn load_playlist(
+        &self,
+        playlist: Vec<String>,
+        start_at: i32,
+    ) -> FieldResult<&'static str> {
+        if playlist.is_empty() {
+            return Err(FieldError::new("playlist is empty", graphql_value!(None)));
+        }
+
+        if start_at < 0 || start_at >= playlist.len() as i32 {
+            return Err(FieldError::new(
+                "start_at is out of bounds",
+                graphql_value!(None),
+            ));
+        }
+
+        let mut playlist = playlist.into_iter();
+        let first_item = playlist.next().unwrap();
+
+        self.mpv
+            .send_command(MpvCommand::new(["playlist-clear"]))
+            .await;
+
+        self.mpv
+            .send_command(MpvCommand::new(["loadfile", &first_item, "replace"]))
+            .await;
+
+        for item in playlist {
+            self.mpv
+                .send_command(MpvCommand::new(["loadfile", &item, "append"]))
+                .await;
+        }
+
+        self.mpv
+            .send_command(mpv_command!("playlist-play-index", start_at))
+            .await;
+
+        Ok("ok")
     }
 }

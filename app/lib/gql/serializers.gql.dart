@@ -17,9 +17,16 @@ import 'package:tetsu/gql/get_anime_details.req.gql.dart'
 import 'package:tetsu/gql/get_anime_details.var.gql.dart'
     show GGetAnimeDetailsVars;
 import 'package:tetsu/gql/get_anime_shows.data.gql.dart'
-    show GGetAnimeShowsData, GGetAnimeShowsData_animes;
+    show
+        GGetAnimeShowsData,
+        GGetAnimeShowsData_animes,
+        GGetAnimeShowsData_animes_watchProgress;
 import 'package:tetsu/gql/get_anime_shows.req.gql.dart' show GGetAnimeShowsReq;
 import 'package:tetsu/gql/get_anime_shows.var.gql.dart' show GGetAnimeShowsVars;
+import 'package:tetsu/gql/load_playlist.data.gql.dart'
+    show GLoadPlaylistData, GLoadPlaylistData_player;
+import 'package:tetsu/gql/load_playlist.req.gql.dart' show GLoadPlaylistReq;
+import 'package:tetsu/gql/load_playlist.var.gql.dart' show GLoadPlaylistVars;
 import 'package:tetsu/gql/schema.schema.gql.dart'
     show GEpisodeType, GRelatedAnimeType;
 
@@ -41,8 +48,13 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GGetAnimeDetailsVars,
   GGetAnimeShowsData,
   GGetAnimeShowsData_animes,
+  GGetAnimeShowsData_animes_watchProgress,
   GGetAnimeShowsReq,
   GGetAnimeShowsVars,
+  GLoadPlaylistData,
+  GLoadPlaylistData_player,
+  GLoadPlaylistReq,
+  GLoadPlaylistVars,
   GRelatedAnimeType
 ])
 final Serializers serializers = _serializersBuilder.build();

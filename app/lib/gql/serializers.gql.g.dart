@@ -19,8 +19,13 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GGetAnimeDetailsVars.serializer)
       ..add(GGetAnimeShowsData.serializer)
       ..add(GGetAnimeShowsData_animes.serializer)
+      ..add(GGetAnimeShowsData_animes_watchProgress.serializer)
       ..add(GGetAnimeShowsReq.serializer)
       ..add(GGetAnimeShowsVars.serializer)
+      ..add(GLoadPlaylistData.serializer)
+      ..add(GLoadPlaylistData_player.serializer)
+      ..add(GLoadPlaylistReq.serializer)
+      ..add(GLoadPlaylistVars.serializer)
       ..add(GRelatedAnimeType.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [
@@ -31,6 +36,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(GGetAnimeShowsData_animes)]),
           () => new ListBuilder<GGetAnimeShowsData_animes>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

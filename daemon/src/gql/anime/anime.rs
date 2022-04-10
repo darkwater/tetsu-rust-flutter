@@ -1,9 +1,9 @@
-use crate::gql::{anime::episode::EpisodeQuery, GqlContext};
+use crate::gql::{anime::episode::EpisodeQuery, watch_progress::WatchProgressId, GqlContext};
 use juniper::{graphql_object, GraphQLEnum, GraphQLObject};
 
 pub struct AnimeQuery {
-    pub aid: i32,
-    pub dateflags: i32,
+    pub aid: i64,
+    pub dateflags: i64,
     pub year: String,
     pub atype: String,
     pub related_aid_list: String,
@@ -12,28 +12,28 @@ pub struct AnimeQuery {
     pub kanji_name: String,
     pub english_name: String,
     pub short_name_list: String,
-    pub episodes: i32,
-    pub special_ep_count: i32,
+    pub episodes: i64,
+    pub special_ep_count: i64,
     pub air_date: i64,
     pub end_date: i64,
     pub picname: String,
     pub nsfw: bool,
     pub characterid_list: String,
-    pub specials_count: i32,
-    pub credits_count: i32,
-    pub other_count: i32,
-    pub trailer_count: i32,
-    pub parody_count: i32,
+    pub specials_count: i64,
+    pub credits_count: i64,
+    pub other_count: i64,
+    pub trailer_count: i64,
+    pub parody_count: i64,
 }
 
 #[graphql_object(context = GqlContext)]
 impl AnimeQuery {
     pub fn aid(&self) -> i32 {
-        self.aid
+        self.aid as i32
     }
 
     pub fn dateflags(&self) -> i32 {
-        self.dateflags
+        self.dateflags as i32
     }
 
     pub fn year(&self) -> String {
@@ -75,11 +75,11 @@ impl AnimeQuery {
     }
 
     pub fn episode_count(&self) -> i32 {
-        self.episodes
+        self.episodes as i32
     }
 
     pub fn special_ep_count(&self) -> i32 {
-        self.special_ep_count
+        self.special_ep_count as i32
     }
 
     pub fn air_date(&self) -> i32 {
@@ -110,23 +110,23 @@ impl AnimeQuery {
     }
 
     pub fn specials_count(&self) -> i32 {
-        self.specials_count
+        self.specials_count as i32
     }
 
     pub fn credits_count(&self) -> i32 {
-        self.credits_count
+        self.credits_count as i32
     }
 
     pub fn other_count(&self) -> i32 {
-        self.other_count
+        self.other_count as i32
     }
 
     pub fn trailer_count(&self) -> i32 {
-        self.trailer_count
+        self.trailer_count as i32
     }
 
     pub fn parody_count(&self) -> i32 {
-        self.parody_count
+        self.parody_count as i32
     }
 
     pub async fn episodes(
@@ -135,7 +135,8 @@ impl AnimeQuery {
         limit: i32,
         offset: i32,
     ) -> Vec<EpisodeQuery> {
-        sqlx::query!(
+        sqlx::query_as!(
+            EpisodeQuery,
             "SELECT * FROM anidb_episodes WHERE aid = ? LIMIT ? OFFSET ?",
             self.aid,
             limit,
@@ -144,21 +145,40 @@ impl AnimeQuery {
         .fetch_all(&context.db)
         .await
         .unwrap()
-        .into_iter()
-        .map(|row| EpisodeQuery {
-            eid: row.eid as i32,
-            aid: row.aid.unwrap() as i32,
-            length: row.length.unwrap() as i32,
-            rating: row.rating.unwrap() as i32,
-            votes: row.votes.unwrap() as i32,
-            epno: row.epno.unwrap(),
-            eng: row.eng.unwrap(),
-            romaji: row.romaji.unwrap(),
-            kanji: row.kanji.unwrap(),
-            aired: row.aired.unwrap(),
-            etype: row.etype.unwrap() as i32,
-        })
-        .collect()
+    }
+
+    pub async fn watch_progress(&self, context: &GqlContext) -> Option<WatchProgressQuery> {
+        let media_id = WatchProgressId::AnidbAnime(self.aid).to_string();
+
+        sqlx::query_as!(
+            WatchProgressQuery,
+            "SELECT * FROM watch_progress WHERE media_id = ?",
+            media_id,
+        )
+        .fetch_optional(&context.db)
+        .await
+        .unwrap()
+    }
+}
+
+pub struct WatchProgressQuery {
+    pub media_id: String,
+    pub progress: f32,
+    pub last_update: i64,
+}
+
+#[graphql_object(context = GqlContext)]
+impl WatchProgressQuery {
+    pub fn media_id(&self) -> String {
+        self.media_id.clone()
+    }
+
+    pub fn progress(&self) -> f64 {
+        self.progress as f64
+    }
+
+    pub fn last_update(&self) -> i32 {
+        self.last_update as i32
     }
 }
 
@@ -166,23 +186,6 @@ pub struct RelatedAnimeQuery {
     pub aids: String,
     pub types: String,
 }
-
-// Related aid type (Byte 1, Bit 2):
-
-// value      meaning
-
-//     1      sequel
-//     2      prequel
-//    11      same setting
-//    12      alternative setting
-//    32      alternative version
-//    41      music video
-//    42      character
-//    51      side story
-//    52      parent story
-//    61      summary
-//    62      full story
-//   100      other
 
 #[graphql_object(context = GqlContext)]
 impl RelatedAnimeQuery {
