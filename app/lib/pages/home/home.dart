@@ -8,7 +8,8 @@ import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.req.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.var.gql.dart';
 import 'package:tetsu/pages/anime/details/anime_details.dart';
-import 'package:tetsu/widgets/player_popup_button.dart';
+import 'package:tetsu/widgets/player_drawer.dart';
+import 'package:tetsu/widgets/player_drawer_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -41,7 +42,8 @@ class HomePage extends StatelessWidget {
           AnimeGallery(),
         ],
       ),
-      floatingActionButton: const PlayerPopupButton(),
+      floatingActionButton: const PlayerDrawerButton(),
+      endDrawer: const PlayerDrawer(),
     );
   }
 }

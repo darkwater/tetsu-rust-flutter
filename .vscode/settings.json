@@ -1,7 +1,8 @@
 {
     "editor.formatOnSave": true,
     "explorer.experimental.fileNesting.enabled": true,
+    "explorer.experimental.fileNesting.expand": false,
     "explorer.experimental.fileNesting.patterns": {
         "*.graphql": "${capture}.*.gql.dart, ${capture}.*.gql.g.dart",
-    }
+    },
 }

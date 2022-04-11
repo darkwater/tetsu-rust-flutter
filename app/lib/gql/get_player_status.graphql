@@ -1,0 +1,13 @@
+query GetPlayerStatus {
+    player {
+        paused
+        mediaTitle
+        playlistPos
+        playlistCount
+        chapter
+        chapters
+        timePos
+        timeRemaining
+        seekable
+    }
+}

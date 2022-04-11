@@ -105,7 +105,8 @@ type Mutation {
 
 type PlayerMutation {
   sendCommand(command: [String!]!): String!
-  loadPlaylist(playlist: [String!]!): String!
+  loadPlaylist(playlist: [String!]!, startAt: Int = 0): String!
+  seek(to: Float, by: Float): Float
 }
 
 type PlayerQuery {

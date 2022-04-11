@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ferry/ferry.dart' as ferry;
 import 'package:ferry_flutter/ferry_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,8 @@ import 'package:tetsu/gql/get_anime_details.var.gql.dart';
 import 'package:tetsu/gql/get_anime_shows.data.gql.dart';
 import 'package:tetsu/gql/load_playlist.req.gql.dart';
 import 'package:tetsu/gql/schema.schema.gql.dart';
-import 'package:tetsu/widgets/player_popup_button.dart';
+import 'package:tetsu/widgets/player_drawer.dart';
+import 'package:tetsu/widgets/player_drawer_button.dart';
 
 const _subColor = Color(0xAF3F51B5); // indigo
 const _videoColor = Color(0xAF9C27B0); // purple
@@ -22,6 +24,8 @@ const _audioColor = Color(0xAFD32F2F); // red shade700
 const _subIcon = Icons.subtitles_outlined;
 const _videoIcon = Icons.movie_outlined;
 const _audioIcon = Icons.volume_up_outlined;
+
+const _tabletThreshold = 800;
 
 class AnimeDetailsPage extends StatelessWidget {
   final GGetAnimeShowsData_animes initialData;
@@ -42,14 +46,15 @@ class AnimeDetailsPage extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth > 800) {
+          if (constraints.maxWidth > _tabletThreshold) {
             return buildTabletLayout(context);
           } else {
             return buildPhoneLayout(context);
           }
         },
       ),
-      floatingActionButton: const PlayerPopupButton(),
+      floatingActionButton: const PlayerDrawerButton(),
+      endDrawer: const PlayerDrawer(),
     );
   }
 
@@ -234,6 +239,12 @@ class AnimeDetailsPage extends StatelessWidget {
                 child: buildHeroCoverImage(),
               ),
             ),
+            const Positioned(
+              left: 0,
+              bottom: 0,
+              right: 0,
+              child: LinearProgressIndicator(),
+            ),
           ],
         );
       },
@@ -245,6 +256,50 @@ class AnimeDetailsPage extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 opacity: 0.08,
                 child: buildHeroCoverImage(),
+              ),
+            ),
+            Positioned.fill(
+              child: ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      anime.romajiName,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  ),
+                  buildWatchButton(context, episodes),
+                  const SizedBox(height: 20),
+                  Column(
+                    children: [
+                      Text(anime.year),
+                      Text(anime.atype),
+                      Text("${anime.episodeCount} episodes"),
+                      Text("${anime.specialEpCount} specials"),
+                      Text("${anime.parodyCount} parodies"),
+                      Text("${anime.creditsCount} credits"),
+                      Text("${anime.otherCount} other"),
+                      Text("${anime.trailerCount} trailers"),
+                      Text(anime.nsfw ? "NSFW" : "SFW"),
+                    ],
+                  ),
+                  ...episodes.expand(
+                    (episode) {
+                      if (episode.episodeType == GEpisodeType.CREDIT) {
+                        return <Widget>[];
+                      }
+
+                      return episode.files.map(
+                        (file) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: _EpisodeRow(anime, episode, file),
+                          );
+                        },
+                      ).toList();
+                    },
+                  ).toList(),
+                ],
               ),
             ),
           ],
@@ -374,76 +429,107 @@ class _EpisodeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tablet = MediaQuery.of(context).size.width > _tabletThreshold;
+
+    final buttonHeight = Theme.of(context).buttonTheme.height;
+    final height = tablet ? buttonHeight : buttonHeight * 2;
+
+    final firstHalf = [
+      const SizedBox(width: 16),
+      Container(
+        constraints: const BoxConstraints(
+          minWidth: 20,
+        ),
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(episode.epno),
+        ),
+      ),
+      const SizedBox(width: 16),
+      Expanded(
+        child: ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+          child: Text(
+            episode.romaji.isNotEmpty
+                ? episode.romaji
+                : file.onDisk.first
+                    .split("/")
+                    .last
+                    .replaceAll("_", " ")
+                    .replaceAll(RegExp(r"\.\w{3,4}$"), ""),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    ];
+
+    final secondHalf = [
+      const SizedBox(width: 16),
+      for (final sub in file.subLanguages.toSet())
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Container(
+            child: Row(
+              children: [
+                const Icon(_subIcon, size: 16),
+                const SizedBox(width: 4),
+                Text(sub.substring(0, 2).toUpperCase()),
+              ],
+            ),
+            color: _subColor,
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          ),
+        ),
+      for (final sub in file.audioTracks.map((a) => a.language).toSet())
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Container(
+            child: Row(
+              children: [
+                const Icon(_audioIcon, size: 16),
+                const SizedBox(width: 4),
+                Text(sub.substring(0, 2).toUpperCase()),
+              ],
+            ),
+            color: _audioColor,
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          ),
+        ),
+      if (!tablet) const Spacer(),
+      Opacity(
+        opacity: 0.5,
+        child: Text(file.group?.name ?? ""),
+      ),
+      const SizedBox(width: 16),
+    ];
+
     return Material(
       color: Colors.black38,
       child: InkWell(
         onTap: () {},
         onLongPress: () => showFileDetails(context),
         child: SizedBox(
-          height: Theme.of(context).buttonTheme.height,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+          height: height,
+          child: Column(
             children: [
-              const SizedBox(width: 16),
-              Container(
-                constraints: const BoxConstraints(
-                  minWidth: 20,
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(episode.epno),
-                ),
-              ),
-              const SizedBox(width: 16),
               Expanded(
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                  child: Text(
-                    episode.romaji.isNotEmpty
-                        ? episode.romaji
-                        : file.onDisk.first.split("/").last,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    ...firstHalf,
+                    if (tablet) ...secondHalf,
+                  ],
                 ),
               ),
-              for (final sub in file.subLanguages.toSet())
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        const Icon(_subIcon, size: 16),
-                        const SizedBox(width: 4),
-                        Text(sub.substring(0, 2).toUpperCase()),
-                      ],
-                    ),
-                    color: _subColor,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+              if (!tablet)
+                Expanded(
+                  child: Row(
+                    children: [
+                      ...secondHalf,
+                    ],
                   ),
                 ),
-              for (final sub in file.audioTracks.map((a) => a.language).toSet())
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        const Icon(_audioIcon, size: 16),
-                        const SizedBox(width: 4),
-                        Text(sub.substring(0, 2).toUpperCase()),
-                      ],
-                    ),
-                    color: _audioColor,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                  ),
-                ),
-              Opacity(
-                opacity: 0.5,
-                child: Text(file.group?.name ?? ""),
-              ),
-              const SizedBox(width: 16),
             ],
           ),
         ),

@@ -4,7 +4,6 @@ use crate::{
     mpv_command,
 };
 use juniper::{graphql_object, graphql_value, FieldError, FieldResult};
-use serde_json::json;
 
 pub struct PlayerQuery {
     mpv: MpvStream,
@@ -16,96 +15,71 @@ impl PlayerQuery {
     pub fn new(mpv: MpvStream) -> Self {
         Self { mpv }
     }
+}
 
-    async fn prop(&self, name: &str) -> PropResult<serde_json::Value> {
-        let res = self
+macro_rules! prop {
+    ($self:ident, $name:expr, i32)    => { prop!(@call $self, get_property_i32($name)) };
+    ($self:ident, $name:expr, f64)    => { prop!(@call $self, get_property_f64($name)) };
+    ($self:ident, $name:expr, bool)   => { prop!(@call $self, get_property_bool($name)) };
+    ($self:ident, $name:expr, String) => { prop!(@call $self, get_property_string($name)) };
+
+    (@call $self:ident, $fun:ident($name:expr)) => {
+        $self
             .mpv
-            .send_command(MpvCommand::new(["get_property", name]))
-            .await;
-
-        if let Some(error) = res.error() {
-            match error {
-                "property unavailable" => Ok(None),
-                _ => Err(FieldError::new(error, graphql_value!(None))),
-            }
-        } else if res.data.is_null() {
-            Ok(None)
-        } else {
-            Ok(Some(res.data))
-        }
-    }
-
-    async fn prop_bool(&self, name: &str) -> PropResult<bool> {
-        self.prop(name)
+            .$fun($name)
             .await
-            .map(|r| r.map(|o| o.as_bool().unwrap()))
-    }
-
-    async fn prop_i32(&self, name: &str) -> PropResult<i32> {
-        self.prop(name)
-            .await
-            .map(|r| r.map(|o| o.as_i64().unwrap() as i32))
-    }
-
-    async fn prop_f64(&self, name: &str) -> PropResult<f64> {
-        self.prop(name)
-            .await
-            .map(|r| r.map(|o| o.as_f64().unwrap()))
-    }
-
-    async fn prop_string(&self, name: &str) -> PropResult<String> {
-        self.prop(name)
-            .await
-            .map(|r| r.map(|o| o.as_str().unwrap().to_string()))
-    }
+            .map_err(|e| FieldError::new(&e, graphql_value!(None)))
+    };
 }
 
 #[graphql_object(Context = GqlContext)]
 impl PlayerQuery {
     async fn property(&self, name: String) -> PropResult<String> {
-        self.prop(&name)
+        self.mpv
+            .get_property(&name)
             .await
             .map(|res| res.map(|opt| opt.to_string()))
+            .map_err(|e| FieldError::new(&e, graphql_value!(None)))
     }
 
     async fn paused(&self) -> PropResult<bool> {
-        self.prop_bool("pause").await
+        prop!(self, "pause", bool)
     }
 
     async fn media_title(&self) -> PropResult<String> {
-        self.prop_string("media-title").await
+        prop!(self, "media-title", String)
     }
 
     async fn playlist_pos(&self) -> PropResult<i32> {
-        self.prop_i32("playlist-pos").await
+        prop!(self, "playlist-pos", i32)
     }
 
     async fn playlist_count(&self) -> PropResult<i32> {
-        self.prop_i32("playlist-count").await
+        prop!(self, "playlist-count", i32)
     }
 
     async fn chapter(&self) -> PropResult<i32> {
-        self.prop_i32("chapter").await
+        prop!(self, "chapter", i32)
     }
 
     async fn chapters(&self) -> PropResult<i32> {
-        self.prop_i32("chapters").await
+        prop!(self, "chapters", i32)
     }
 
     async fn time_pos(&self) -> PropResult<f64> {
-        self.prop_f64("time-pos").await
+        prop!(self, "time-pos", f64)
     }
 
     async fn time_remaining(&self) -> PropResult<f64> {
-        self.prop_f64("time-remaining").await
+        prop!(self, "time-remaining", f64)
     }
 
     async fn seekable(&self) -> PropResult<bool> {
-        self.prop_bool("seekable").await
+        prop!(self, "seekable", bool)
     }
 
     async fn seeking(&self) -> PropResult<bool> {
-        self.prop_bool("seeking").await
+        prop!(self, "seeking", bool)
     }
 }
 
@@ -131,7 +105,7 @@ impl PlayerMutation {
         }
     }
 
-    #[graphql(arguments(command(default = 0)))]
+    #[graphql(arguments(start_at(default = 0)))]
     async fn load_playlist(
         &self,
         playlist: Vec<String>,
@@ -170,5 +144,21 @@ impl PlayerMutation {
             .await;
 
         Ok("ok")
+    }
+
+    async fn seek(&self, to: Option<f64>, by: Option<f64>) -> PropResult<f64> {
+        if let Some(to) = to {
+            self.mpv
+                .send_command(mpv_command!("seek", to, "absolute"))
+                .await;
+        }
+
+        if let Some(by) = by {
+            self.mpv
+                .send_command(mpv_command!("seek", by, "relative"))
+                .await;
+        }
+
+        prop!(self, "time-pos", f64)
     }
 }

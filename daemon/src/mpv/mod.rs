@@ -93,6 +93,47 @@ impl MpvStream {
     // pub fn subscribe_events(&self) -> broadcast::Receiver<MpvEvent> {
     //     self.event_stream.subscribe()
     // }
+
+    pub async fn get_property(&self, name: &str) -> Result<Option<serde_json::Value>, String> {
+        let res = self
+            .send_command(MpvCommand::new(["get_property", name]))
+            .await;
+
+        if let Some(error) = res.error() {
+            match error {
+                "property unavailable" => Ok(None),
+                _ => Err(error.to_owned()),
+            }
+        } else if res.data.is_null() {
+            Ok(None)
+        } else {
+            Ok(Some(res.data))
+        }
+    }
+
+    pub async fn get_property_bool(&self, name: &str) -> Result<Option<bool>, String> {
+        self.get_property(name)
+            .await
+            .map(|v| v.map(|v| v.as_bool().unwrap()))
+    }
+
+    pub async fn get_property_i32(&self, name: &str) -> Result<Option<i32>, String> {
+        self.get_property(name)
+            .await
+            .map(|v| v.map(|v| v.as_i64().unwrap() as i32))
+    }
+
+    pub async fn get_property_f64(&self, name: &str) -> Result<Option<f64>, String> {
+        self.get_property(name)
+            .await
+            .map(|v| v.map(|v| v.as_f64().unwrap()))
+    }
+
+    pub async fn get_property_string(&self, name: &str) -> Result<Option<String>, String> {
+        self.get_property(name)
+            .await
+            .map(|v| v.map(|v| v.as_str().unwrap().to_owned()))
+    }
 }
 
 impl Drop for MpvStream {

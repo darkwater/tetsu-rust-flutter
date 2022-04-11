@@ -1,0 +1,8 @@
+mutation PlayerSeek($to: Float, $by: Float) {
+    player {
+        seek(
+            to: $to,
+            by: $by,
+        )
+    }
+}

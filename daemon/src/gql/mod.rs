@@ -114,9 +114,6 @@ pub async fn handle(
     payload: web::Payload,
     req: HttpRequest,
 ) -> Result<HttpResponse, Error> {
-    let delay = Duration::from_secs_f64(rand::random());
-    actix_web::rt::time::sleep(delay).await;
-
     let context = GqlContext { db, mpv };
     graphql_handler(schema, &context, req, payload).await
 }

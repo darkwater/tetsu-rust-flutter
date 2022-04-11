@@ -583,10 +583,35 @@ const PlayerMutation = _i1.ObjectTypeDefinitionNode(
                     type: _i1.NamedTypeNode(
                         name: _i1.NameNode(value: 'String'), isNonNull: true),
                     isNonNull: true),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'startAt'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Int'), isNonNull: false),
+                defaultValue: _i1.IntValueNode(value: '0'))
+          ],
+          type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'String'), isNonNull: true)),
+      _i1.FieldDefinitionNode(
+          name: _i1.NameNode(value: 'seek'),
+          directives: [],
+          args: [
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'to'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Float'), isNonNull: false),
+                defaultValue: null),
+            _i1.InputValueDefinitionNode(
+                name: _i1.NameNode(value: 'by'),
+                directives: [],
+                type: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'Float'), isNonNull: false),
                 defaultValue: null)
           ],
           type: _i1.NamedTypeNode(
-              name: _i1.NameNode(value: 'String'), isNonNull: true))
+              name: _i1.NameNode(value: 'Float'), isNonNull: false))
     ]);
 const PlayerQuery = _i1.ObjectTypeDefinitionNode(
     name: _i1.NameNode(value: 'PlayerQuery'),
