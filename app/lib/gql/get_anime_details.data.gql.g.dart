@@ -10,21 +10,21 @@ Serializer<GGetAnimeDetailsData> _$gGetAnimeDetailsDataSerializer =
     new _$GGetAnimeDetailsDataSerializer();
 Serializer<GGetAnimeDetailsData_anime> _$gGetAnimeDetailsDataAnimeSerializer =
     new _$GGetAnimeDetailsData_animeSerializer();
-Serializer<GGetAnimeDetailsData_anime_episodes>
-    _$gGetAnimeDetailsDataAnimeEpisodesSerializer =
-    new _$GGetAnimeDetailsData_anime_episodesSerializer();
-Serializer<GGetAnimeDetailsData_anime_episodes_files>
-    _$gGetAnimeDetailsDataAnimeEpisodesFilesSerializer =
-    new _$GGetAnimeDetailsData_anime_episodes_filesSerializer();
-Serializer<GGetAnimeDetailsData_anime_episodes_files_videoTracks>
-    _$gGetAnimeDetailsDataAnimeEpisodesFilesVideoTracksSerializer =
-    new _$GGetAnimeDetailsData_anime_episodes_files_videoTracksSerializer();
-Serializer<GGetAnimeDetailsData_anime_episodes_files_audioTracks>
-    _$gGetAnimeDetailsDataAnimeEpisodesFilesAudioTracksSerializer =
-    new _$GGetAnimeDetailsData_anime_episodes_files_audioTracksSerializer();
-Serializer<GGetAnimeDetailsData_anime_episodes_files_group>
-    _$gGetAnimeDetailsDataAnimeEpisodesFilesGroupSerializer =
-    new _$GGetAnimeDetailsData_anime_episodes_files_groupSerializer();
+Serializer<GGetAnimeDetailsData_anime_files>
+    _$gGetAnimeDetailsDataAnimeFilesSerializer =
+    new _$GGetAnimeDetailsData_anime_filesSerializer();
+Serializer<GGetAnimeDetailsData_anime_files_videoTracks>
+    _$gGetAnimeDetailsDataAnimeFilesVideoTracksSerializer =
+    new _$GGetAnimeDetailsData_anime_files_videoTracksSerializer();
+Serializer<GGetAnimeDetailsData_anime_files_audioTracks>
+    _$gGetAnimeDetailsDataAnimeFilesAudioTracksSerializer =
+    new _$GGetAnimeDetailsData_anime_files_audioTracksSerializer();
+Serializer<GGetAnimeDetailsData_anime_files_episode>
+    _$gGetAnimeDetailsDataAnimeFilesEpisodeSerializer =
+    new _$GGetAnimeDetailsData_anime_files_episodeSerializer();
+Serializer<GGetAnimeDetailsData_anime_files_group>
+    _$gGetAnimeDetailsDataAnimeFilesGroupSerializer =
+    new _$GGetAnimeDetailsData_anime_files_groupSerializer();
 
 class _$GGetAnimeDetailsDataSerializer
     implements StructuredSerializer<GGetAnimeDetailsData> {
@@ -156,10 +156,10 @@ class _$GGetAnimeDetailsData_animeSerializer
       'parodyCount',
       serializers.serialize(object.parodyCount,
           specifiedType: const FullType(int)),
-      'episodes',
-      serializers.serialize(object.episodes,
+      'files',
+      serializers.serialize(object.files,
           specifiedType: const FullType(BuiltList,
-              const [const FullType(GGetAnimeDetailsData_anime_episodes)])),
+              const [const FullType(GGetAnimeDetailsData_anime_files)])),
     ];
 
     return result;
@@ -261,10 +261,10 @@ class _$GGetAnimeDetailsData_animeSerializer
           result.parodyCount = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
-        case 'episodes':
-          result.episodes.replace(serializers.deserialize(value,
+        case 'files':
+          result.files.replace(serializers.deserialize(value,
               specifiedType: const FullType(BuiltList, const [
-                const FullType(GGetAnimeDetailsData_anime_episodes)
+                const FullType(GGetAnimeDetailsData_anime_files)
               ]))! as BuiltList<Object?>);
           break;
       }
@@ -274,19 +274,328 @@ class _$GGetAnimeDetailsData_animeSerializer
   }
 }
 
-class _$GGetAnimeDetailsData_anime_episodesSerializer
-    implements StructuredSerializer<GGetAnimeDetailsData_anime_episodes> {
+class _$GGetAnimeDetailsData_anime_filesSerializer
+    implements StructuredSerializer<GGetAnimeDetailsData_anime_files> {
   @override
   final Iterable<Type> types = const [
-    GGetAnimeDetailsData_anime_episodes,
-    _$GGetAnimeDetailsData_anime_episodes
+    GGetAnimeDetailsData_anime_files,
+    _$GGetAnimeDetailsData_anime_files
   ];
   @override
-  final String wireName = 'GGetAnimeDetailsData_anime_episodes';
+  final String wireName = 'GGetAnimeDetailsData_anime_files';
 
   @override
   Iterable<Object?> serialize(
-      Serializers serializers, GGetAnimeDetailsData_anime_episodes object,
+      Serializers serializers, GGetAnimeDetailsData_anime_files object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
+      '__typename',
+      serializers.serialize(object.G__typename,
+          specifiedType: const FullType(String)),
+      'fid',
+      serializers.serialize(object.fid, specifiedType: const FullType(int)),
+      'state',
+      serializers.serialize(object.state, specifiedType: const FullType(int)),
+      'size',
+      serializers.serialize(object.size, specifiedType: const FullType(int)),
+      'quality',
+      serializers.serialize(object.quality,
+          specifiedType: const FullType(String)),
+      'source',
+      serializers.serialize(object.source,
+          specifiedType: const FullType(String)),
+      'subLanguages',
+      serializers.serialize(object.subLanguages,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
+      'videoTracks',
+      serializers.serialize(object.videoTracks,
+          specifiedType: const FullType(BuiltList, const [
+            const FullType(GGetAnimeDetailsData_anime_files_videoTracks)
+          ])),
+      'audioTracks',
+      serializers.serialize(object.audioTracks,
+          specifiedType: const FullType(BuiltList, const [
+            const FullType(GGetAnimeDetailsData_anime_files_audioTracks)
+          ])),
+      'lengthInSeconds',
+      serializers.serialize(object.lengthInSeconds,
+          specifiedType: const FullType(int)),
+      'description',
+      serializers.serialize(object.description,
+          specifiedType: const FullType(String)),
+      'airedDate',
+      serializers.serialize(object.airedDate,
+          specifiedType: const FullType(int)),
+      'onDisk',
+      serializers.serialize(object.onDisk,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
+    ];
+    Object? value;
+    value = object.episode;
+    if (value != null) {
+      result
+        ..add('episode')
+        ..add(serializers.serialize(value,
+            specifiedType:
+                const FullType(GGetAnimeDetailsData_anime_files_episode)));
+    }
+    value = object.group;
+    if (value != null) {
+      result
+        ..add('group')
+        ..add(serializers.serialize(value,
+            specifiedType:
+                const FullType(GGetAnimeDetailsData_anime_files_group)));
+    }
+    return result;
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new GGetAnimeDetailsData_anime_filesBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case '__typename':
+          result.G__typename = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'fid':
+          result.fid = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'state':
+          result.state = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'size':
+          result.size = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'quality':
+          result.quality = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'source':
+          result.source = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'subLanguages':
+          result.subLanguages.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
+        case 'videoTracks':
+          result.videoTracks.replace(serializers.deserialize(value,
+              specifiedType: const FullType(BuiltList, const [
+                const FullType(GGetAnimeDetailsData_anime_files_videoTracks)
+              ]))! as BuiltList<Object?>);
+          break;
+        case 'audioTracks':
+          result.audioTracks.replace(serializers.deserialize(value,
+              specifiedType: const FullType(BuiltList, const [
+                const FullType(GGetAnimeDetailsData_anime_files_audioTracks)
+              ]))! as BuiltList<Object?>);
+          break;
+        case 'lengthInSeconds':
+          result.lengthInSeconds = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'description':
+          result.description = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'airedDate':
+          result.airedDate = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'onDisk':
+          result.onDisk.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
+        case 'episode':
+          result.episode.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(GGetAnimeDetailsData_anime_files_episode))!
+              as GGetAnimeDetailsData_anime_files_episode);
+          break;
+        case 'group':
+          result.group.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(GGetAnimeDetailsData_anime_files_group))!
+              as GGetAnimeDetailsData_anime_files_group);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_videoTracksSerializer
+    implements
+        StructuredSerializer<GGetAnimeDetailsData_anime_files_videoTracks> {
+  @override
+  final Iterable<Type> types = const [
+    GGetAnimeDetailsData_anime_files_videoTracks,
+    _$GGetAnimeDetailsData_anime_files_videoTracks
+  ];
+  @override
+  final String wireName = 'GGetAnimeDetailsData_anime_files_videoTracks';
+
+  @override
+  Iterable<Object?> serialize(Serializers serializers,
+      GGetAnimeDetailsData_anime_files_videoTracks object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
+      '__typename',
+      serializers.serialize(object.G__typename,
+          specifiedType: const FullType(String)),
+      'codec',
+      serializers.serialize(object.codec,
+          specifiedType: const FullType(String)),
+      'bitrate',
+      serializers.serialize(object.bitrate,
+          specifiedType: const FullType(String)),
+    ];
+    Object? value;
+    value = object.colourDepth;
+    if (value != null) {
+      result
+        ..add('colourDepth')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    return result;
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files_videoTracks deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new GGetAnimeDetailsData_anime_files_videoTracksBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case '__typename':
+          result.G__typename = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'colourDepth':
+          result.colourDepth = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'codec':
+          result.codec = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'bitrate':
+          result.bitrate = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_audioTracksSerializer
+    implements
+        StructuredSerializer<GGetAnimeDetailsData_anime_files_audioTracks> {
+  @override
+  final Iterable<Type> types = const [
+    GGetAnimeDetailsData_anime_files_audioTracks,
+    _$GGetAnimeDetailsData_anime_files_audioTracks
+  ];
+  @override
+  final String wireName = 'GGetAnimeDetailsData_anime_files_audioTracks';
+
+  @override
+  Iterable<Object?> serialize(Serializers serializers,
+      GGetAnimeDetailsData_anime_files_audioTracks object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
+      '__typename',
+      serializers.serialize(object.G__typename,
+          specifiedType: const FullType(String)),
+      'codec',
+      serializers.serialize(object.codec,
+          specifiedType: const FullType(String)),
+      'bitrate',
+      serializers.serialize(object.bitrate,
+          specifiedType: const FullType(String)),
+      'language',
+      serializers.serialize(object.language,
+          specifiedType: const FullType(String)),
+    ];
+
+    return result;
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files_audioTracks deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new GGetAnimeDetailsData_anime_files_audioTracksBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case '__typename':
+          result.G__typename = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'codec':
+          result.codec = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'bitrate':
+          result.bitrate = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'language':
+          result.language = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_episodeSerializer
+    implements StructuredSerializer<GGetAnimeDetailsData_anime_files_episode> {
+  @override
+  final Iterable<Type> types = const [
+    GGetAnimeDetailsData_anime_files_episode,
+    _$GGetAnimeDetailsData_anime_files_episode
+  ];
+  @override
+  final String wireName = 'GGetAnimeDetailsData_anime_files_episode';
+
+  @override
+  Iterable<Object?> serialize(
+      Serializers serializers, GGetAnimeDetailsData_anime_files_episode object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       '__typename',
@@ -315,21 +624,16 @@ class _$GGetAnimeDetailsData_anime_episodesSerializer
       'episodeType',
       serializers.serialize(object.episodeType,
           specifiedType: const FullType(_i2.GEpisodeType)),
-      'files',
-      serializers.serialize(object.files,
-          specifiedType: const FullType(BuiltList, const [
-            const FullType(GGetAnimeDetailsData_anime_episodes_files)
-          ])),
     ];
 
     return result;
   }
 
   @override
-  GGetAnimeDetailsData_anime_episodes deserialize(
+  GGetAnimeDetailsData_anime_files_episode deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new GGetAnimeDetailsData_anime_episodesBuilder();
+    final result = new GGetAnimeDetailsData_anime_files_episodeBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -382,12 +686,6 @@ class _$GGetAnimeDetailsData_anime_episodesSerializer
                   specifiedType: const FullType(_i2.GEpisodeType))
               as _i2.GEpisodeType;
           break;
-        case 'files':
-          result.files.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, const [
-                const FullType(GGetAnimeDetailsData_anime_episodes_files)
-              ]))! as BuiltList<Object?>);
-          break;
       }
     }
 
@@ -395,325 +693,19 @@ class _$GGetAnimeDetailsData_anime_episodesSerializer
   }
 }
 
-class _$GGetAnimeDetailsData_anime_episodes_filesSerializer
-    implements StructuredSerializer<GGetAnimeDetailsData_anime_episodes_files> {
+class _$GGetAnimeDetailsData_anime_files_groupSerializer
+    implements StructuredSerializer<GGetAnimeDetailsData_anime_files_group> {
   @override
   final Iterable<Type> types = const [
-    GGetAnimeDetailsData_anime_episodes_files,
-    _$GGetAnimeDetailsData_anime_episodes_files
+    GGetAnimeDetailsData_anime_files_group,
+    _$GGetAnimeDetailsData_anime_files_group
   ];
   @override
-  final String wireName = 'GGetAnimeDetailsData_anime_episodes_files';
+  final String wireName = 'GGetAnimeDetailsData_anime_files_group';
 
   @override
   Iterable<Object?> serialize(
-      Serializers serializers, GGetAnimeDetailsData_anime_episodes_files object,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[
-      '__typename',
-      serializers.serialize(object.G__typename,
-          specifiedType: const FullType(String)),
-      'fid',
-      serializers.serialize(object.fid, specifiedType: const FullType(int)),
-      'state',
-      serializers.serialize(object.state, specifiedType: const FullType(int)),
-      'size',
-      serializers.serialize(object.size, specifiedType: const FullType(int)),
-      'quality',
-      serializers.serialize(object.quality,
-          specifiedType: const FullType(String)),
-      'source',
-      serializers.serialize(object.source,
-          specifiedType: const FullType(String)),
-      'subLanguages',
-      serializers.serialize(object.subLanguages,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
-      'videoTracks',
-      serializers.serialize(object.videoTracks,
-          specifiedType: const FullType(BuiltList, const [
-            const FullType(
-                GGetAnimeDetailsData_anime_episodes_files_videoTracks)
-          ])),
-      'audioTracks',
-      serializers.serialize(object.audioTracks,
-          specifiedType: const FullType(BuiltList, const [
-            const FullType(
-                GGetAnimeDetailsData_anime_episodes_files_audioTracks)
-          ])),
-      'lengthInSeconds',
-      serializers.serialize(object.lengthInSeconds,
-          specifiedType: const FullType(int)),
-      'description',
-      serializers.serialize(object.description,
-          specifiedType: const FullType(String)),
-      'airedDate',
-      serializers.serialize(object.airedDate,
-          specifiedType: const FullType(int)),
-      'onDisk',
-      serializers.serialize(object.onDisk,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
-    ];
-    Object? value;
-    value = object.group;
-    if (value != null) {
-      result
-        ..add('group')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(
-                GGetAnimeDetailsData_anime_episodes_files_group)));
-    }
-    return result;
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files deserialize(
-      Serializers serializers, Iterable<Object?> serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = new GGetAnimeDetailsData_anime_episodes_filesBuilder();
-
-    final iterator = serialized.iterator;
-    while (iterator.moveNext()) {
-      final key = iterator.current as String;
-      iterator.moveNext();
-      final Object? value = iterator.current;
-      switch (key) {
-        case '__typename':
-          result.G__typename = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'fid':
-          result.fid = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'state':
-          result.state = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'size':
-          result.size = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'quality':
-          result.quality = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'source':
-          result.source = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'subLanguages':
-          result.subLanguages.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
-          break;
-        case 'videoTracks':
-          result.videoTracks.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, const [
-                const FullType(
-                    GGetAnimeDetailsData_anime_episodes_files_videoTracks)
-              ]))! as BuiltList<Object?>);
-          break;
-        case 'audioTracks':
-          result.audioTracks.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, const [
-                const FullType(
-                    GGetAnimeDetailsData_anime_episodes_files_audioTracks)
-              ]))! as BuiltList<Object?>);
-          break;
-        case 'lengthInSeconds':
-          result.lengthInSeconds = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'description':
-          result.description = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'airedDate':
-          result.airedDate = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'onDisk':
-          result.onDisk.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
-          break;
-        case 'group':
-          result.group.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      GGetAnimeDetailsData_anime_episodes_files_group))!
-              as GGetAnimeDetailsData_anime_episodes_files_group);
-          break;
-      }
-    }
-
-    return result.build();
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files_videoTracksSerializer
-    implements
-        StructuredSerializer<
-            GGetAnimeDetailsData_anime_episodes_files_videoTracks> {
-  @override
-  final Iterable<Type> types = const [
-    GGetAnimeDetailsData_anime_episodes_files_videoTracks,
-    _$GGetAnimeDetailsData_anime_episodes_files_videoTracks
-  ];
-  @override
-  final String wireName =
-      'GGetAnimeDetailsData_anime_episodes_files_videoTracks';
-
-  @override
-  Iterable<Object?> serialize(Serializers serializers,
-      GGetAnimeDetailsData_anime_episodes_files_videoTracks object,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[
-      '__typename',
-      serializers.serialize(object.G__typename,
-          specifiedType: const FullType(String)),
-      'codec',
-      serializers.serialize(object.codec,
-          specifiedType: const FullType(String)),
-      'bitrate',
-      serializers.serialize(object.bitrate,
-          specifiedType: const FullType(String)),
-    ];
-    Object? value;
-    value = object.colourDepth;
-    if (value != null) {
-      result
-        ..add('colourDepth')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    return result;
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_videoTracks deserialize(
-      Serializers serializers, Iterable<Object?> serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result =
-        new GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder();
-
-    final iterator = serialized.iterator;
-    while (iterator.moveNext()) {
-      final key = iterator.current as String;
-      iterator.moveNext();
-      final Object? value = iterator.current;
-      switch (key) {
-        case '__typename':
-          result.G__typename = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'colourDepth':
-          result.colourDepth = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'codec':
-          result.codec = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'bitrate':
-          result.bitrate = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-      }
-    }
-
-    return result.build();
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files_audioTracksSerializer
-    implements
-        StructuredSerializer<
-            GGetAnimeDetailsData_anime_episodes_files_audioTracks> {
-  @override
-  final Iterable<Type> types = const [
-    GGetAnimeDetailsData_anime_episodes_files_audioTracks,
-    _$GGetAnimeDetailsData_anime_episodes_files_audioTracks
-  ];
-  @override
-  final String wireName =
-      'GGetAnimeDetailsData_anime_episodes_files_audioTracks';
-
-  @override
-  Iterable<Object?> serialize(Serializers serializers,
-      GGetAnimeDetailsData_anime_episodes_files_audioTracks object,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[
-      '__typename',
-      serializers.serialize(object.G__typename,
-          specifiedType: const FullType(String)),
-      'codec',
-      serializers.serialize(object.codec,
-          specifiedType: const FullType(String)),
-      'bitrate',
-      serializers.serialize(object.bitrate,
-          specifiedType: const FullType(String)),
-      'language',
-      serializers.serialize(object.language,
-          specifiedType: const FullType(String)),
-    ];
-
-    return result;
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_audioTracks deserialize(
-      Serializers serializers, Iterable<Object?> serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result =
-        new GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder();
-
-    final iterator = serialized.iterator;
-    while (iterator.moveNext()) {
-      final key = iterator.current as String;
-      iterator.moveNext();
-      final Object? value = iterator.current;
-      switch (key) {
-        case '__typename':
-          result.G__typename = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'codec':
-          result.codec = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'bitrate':
-          result.bitrate = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'language':
-          result.language = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-      }
-    }
-
-    return result.build();
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files_groupSerializer
-    implements
-        StructuredSerializer<GGetAnimeDetailsData_anime_episodes_files_group> {
-  @override
-  final Iterable<Type> types = const [
-    GGetAnimeDetailsData_anime_episodes_files_group,
-    _$GGetAnimeDetailsData_anime_episodes_files_group
-  ];
-  @override
-  final String wireName = 'GGetAnimeDetailsData_anime_episodes_files_group';
-
-  @override
-  Iterable<Object?> serialize(Serializers serializers,
-      GGetAnimeDetailsData_anime_episodes_files_group object,
+      Serializers serializers, GGetAnimeDetailsData_anime_files_group object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       '__typename',
@@ -769,10 +761,10 @@ class _$GGetAnimeDetailsData_anime_episodes_files_groupSerializer
   }
 
   @override
-  GGetAnimeDetailsData_anime_episodes_files_group deserialize(
+  GGetAnimeDetailsData_anime_files_group deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new GGetAnimeDetailsData_anime_episodes_files_groupBuilder();
+    final result = new GGetAnimeDetailsData_anime_files_groupBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -1011,7 +1003,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
   @override
   final int parodyCount;
   @override
-  final BuiltList<GGetAnimeDetailsData_anime_episodes> episodes;
+  final BuiltList<GGetAnimeDetailsData_anime_files> files;
 
   factory _$GGetAnimeDetailsData_anime(
           [void Function(GGetAnimeDetailsData_animeBuilder)? updates]) =>
@@ -1038,7 +1030,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
       required this.otherCount,
       required this.trailerCount,
       required this.parodyCount,
-      required this.episodes})
+      required this.files})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         G__typename, 'GGetAnimeDetailsData_anime', 'G__typename');
@@ -1081,7 +1073,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
     BuiltValueNullFieldError.checkNotNull(
         parodyCount, 'GGetAnimeDetailsData_anime', 'parodyCount');
     BuiltValueNullFieldError.checkNotNull(
-        episodes, 'GGetAnimeDetailsData_anime', 'episodes');
+        files, 'GGetAnimeDetailsData_anime', 'files');
   }
 
   @override
@@ -1117,7 +1109,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
         otherCount == other.otherCount &&
         trailerCount == other.trailerCount &&
         parodyCount == other.parodyCount &&
-        episodes == other.episodes;
+        files == other.files;
   }
 
   @override
@@ -1159,7 +1151,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
                     otherCount.hashCode),
                 trailerCount.hashCode),
             parodyCount.hashCode),
-        episodes.hashCode));
+        files.hashCode));
   }
 
   @override
@@ -1185,7 +1177,7 @@ class _$GGetAnimeDetailsData_anime extends GGetAnimeDetailsData_anime {
           ..add('otherCount', otherCount)
           ..add('trailerCount', trailerCount)
           ..add('parodyCount', parodyCount)
-          ..add('episodes', episodes))
+          ..add('files', files))
         .toString();
   }
 }
@@ -1281,12 +1273,11 @@ class GGetAnimeDetailsData_animeBuilder
   int? get parodyCount => _$this._parodyCount;
   set parodyCount(int? parodyCount) => _$this._parodyCount = parodyCount;
 
-  ListBuilder<GGetAnimeDetailsData_anime_episodes>? _episodes;
-  ListBuilder<GGetAnimeDetailsData_anime_episodes> get episodes =>
-      _$this._episodes ??=
-          new ListBuilder<GGetAnimeDetailsData_anime_episodes>();
-  set episodes(ListBuilder<GGetAnimeDetailsData_anime_episodes>? episodes) =>
-      _$this._episodes = episodes;
+  ListBuilder<GGetAnimeDetailsData_anime_files>? _files;
+  ListBuilder<GGetAnimeDetailsData_anime_files> get files =>
+      _$this._files ??= new ListBuilder<GGetAnimeDetailsData_anime_files>();
+  set files(ListBuilder<GGetAnimeDetailsData_anime_files>? files) =>
+      _$this._files = files;
 
   GGetAnimeDetailsData_animeBuilder() {
     GGetAnimeDetailsData_anime._initializeBuilder(this);
@@ -1315,7 +1306,7 @@ class GGetAnimeDetailsData_animeBuilder
       _otherCount = $v.otherCount;
       _trailerCount = $v.trailerCount;
       _parodyCount = $v.parodyCount;
-      _episodes = $v.episodes.toBuilder();
+      _files = $v.files.toBuilder();
       _$v = null;
     }
     return this;
@@ -1366,7 +1357,7 @@ class GGetAnimeDetailsData_animeBuilder
               otherCount: BuiltValueNullFieldError.checkNotNull(otherCount, 'GGetAnimeDetailsData_anime', 'otherCount'),
               trailerCount: BuiltValueNullFieldError.checkNotNull(trailerCount, 'GGetAnimeDetailsData_anime', 'trailerCount'),
               parodyCount: BuiltValueNullFieldError.checkNotNull(parodyCount, 'GGetAnimeDetailsData_anime', 'parodyCount'),
-              episodes: episodes.build());
+              files: files.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -1376,8 +1367,8 @@ class GGetAnimeDetailsData_animeBuilder
         _$failedField = 'characteridList';
         characteridList.build();
 
-        _$failedField = 'episodes';
-        episodes.build();
+        _$failedField = 'files';
+        files.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'GGetAnimeDetailsData_anime', _$failedField, e.toString());
@@ -1389,8 +1380,637 @@ class GGetAnimeDetailsData_animeBuilder
   }
 }
 
-class _$GGetAnimeDetailsData_anime_episodes
-    extends GGetAnimeDetailsData_anime_episodes {
+class _$GGetAnimeDetailsData_anime_files
+    extends GGetAnimeDetailsData_anime_files {
+  @override
+  final String G__typename;
+  @override
+  final int fid;
+  @override
+  final int state;
+  @override
+  final int size;
+  @override
+  final String quality;
+  @override
+  final String source;
+  @override
+  final BuiltList<String> subLanguages;
+  @override
+  final BuiltList<GGetAnimeDetailsData_anime_files_videoTracks> videoTracks;
+  @override
+  final BuiltList<GGetAnimeDetailsData_anime_files_audioTracks> audioTracks;
+  @override
+  final int lengthInSeconds;
+  @override
+  final String description;
+  @override
+  final int airedDate;
+  @override
+  final BuiltList<String> onDisk;
+  @override
+  final GGetAnimeDetailsData_anime_files_episode? episode;
+  @override
+  final GGetAnimeDetailsData_anime_files_group? group;
+
+  factory _$GGetAnimeDetailsData_anime_files(
+          [void Function(GGetAnimeDetailsData_anime_filesBuilder)? updates]) =>
+      (new GGetAnimeDetailsData_anime_filesBuilder()..update(updates)).build();
+
+  _$GGetAnimeDetailsData_anime_files._(
+      {required this.G__typename,
+      required this.fid,
+      required this.state,
+      required this.size,
+      required this.quality,
+      required this.source,
+      required this.subLanguages,
+      required this.videoTracks,
+      required this.audioTracks,
+      required this.lengthInSeconds,
+      required this.description,
+      required this.airedDate,
+      required this.onDisk,
+      this.episode,
+      this.group})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        G__typename, 'GGetAnimeDetailsData_anime_files', 'G__typename');
+    BuiltValueNullFieldError.checkNotNull(
+        fid, 'GGetAnimeDetailsData_anime_files', 'fid');
+    BuiltValueNullFieldError.checkNotNull(
+        state, 'GGetAnimeDetailsData_anime_files', 'state');
+    BuiltValueNullFieldError.checkNotNull(
+        size, 'GGetAnimeDetailsData_anime_files', 'size');
+    BuiltValueNullFieldError.checkNotNull(
+        quality, 'GGetAnimeDetailsData_anime_files', 'quality');
+    BuiltValueNullFieldError.checkNotNull(
+        source, 'GGetAnimeDetailsData_anime_files', 'source');
+    BuiltValueNullFieldError.checkNotNull(
+        subLanguages, 'GGetAnimeDetailsData_anime_files', 'subLanguages');
+    BuiltValueNullFieldError.checkNotNull(
+        videoTracks, 'GGetAnimeDetailsData_anime_files', 'videoTracks');
+    BuiltValueNullFieldError.checkNotNull(
+        audioTracks, 'GGetAnimeDetailsData_anime_files', 'audioTracks');
+    BuiltValueNullFieldError.checkNotNull(
+        lengthInSeconds, 'GGetAnimeDetailsData_anime_files', 'lengthInSeconds');
+    BuiltValueNullFieldError.checkNotNull(
+        description, 'GGetAnimeDetailsData_anime_files', 'description');
+    BuiltValueNullFieldError.checkNotNull(
+        airedDate, 'GGetAnimeDetailsData_anime_files', 'airedDate');
+    BuiltValueNullFieldError.checkNotNull(
+        onDisk, 'GGetAnimeDetailsData_anime_files', 'onDisk');
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files rebuild(
+          void Function(GGetAnimeDetailsData_anime_filesBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  GGetAnimeDetailsData_anime_filesBuilder toBuilder() =>
+      new GGetAnimeDetailsData_anime_filesBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is GGetAnimeDetailsData_anime_files &&
+        G__typename == other.G__typename &&
+        fid == other.fid &&
+        state == other.state &&
+        size == other.size &&
+        quality == other.quality &&
+        source == other.source &&
+        subLanguages == other.subLanguages &&
+        videoTracks == other.videoTracks &&
+        audioTracks == other.audioTracks &&
+        lengthInSeconds == other.lengthInSeconds &&
+        description == other.description &&
+        airedDate == other.airedDate &&
+        onDisk == other.onDisk &&
+        episode == other.episode &&
+        group == other.group;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc(
+                                                $jc(
+                                                    $jc(
+                                                        $jc(
+                                                            $jc(
+                                                                0,
+                                                                G__typename
+                                                                    .hashCode),
+                                                            fid.hashCode),
+                                                        state.hashCode),
+                                                    size.hashCode),
+                                                quality.hashCode),
+                                            source.hashCode),
+                                        subLanguages.hashCode),
+                                    videoTracks.hashCode),
+                                audioTracks.hashCode),
+                            lengthInSeconds.hashCode),
+                        description.hashCode),
+                    airedDate.hashCode),
+                onDisk.hashCode),
+            episode.hashCode),
+        group.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('GGetAnimeDetailsData_anime_files')
+          ..add('G__typename', G__typename)
+          ..add('fid', fid)
+          ..add('state', state)
+          ..add('size', size)
+          ..add('quality', quality)
+          ..add('source', source)
+          ..add('subLanguages', subLanguages)
+          ..add('videoTracks', videoTracks)
+          ..add('audioTracks', audioTracks)
+          ..add('lengthInSeconds', lengthInSeconds)
+          ..add('description', description)
+          ..add('airedDate', airedDate)
+          ..add('onDisk', onDisk)
+          ..add('episode', episode)
+          ..add('group', group))
+        .toString();
+  }
+}
+
+class GGetAnimeDetailsData_anime_filesBuilder
+    implements
+        Builder<GGetAnimeDetailsData_anime_files,
+            GGetAnimeDetailsData_anime_filesBuilder> {
+  _$GGetAnimeDetailsData_anime_files? _$v;
+
+  String? _G__typename;
+  String? get G__typename => _$this._G__typename;
+  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
+
+  int? _fid;
+  int? get fid => _$this._fid;
+  set fid(int? fid) => _$this._fid = fid;
+
+  int? _state;
+  int? get state => _$this._state;
+  set state(int? state) => _$this._state = state;
+
+  int? _size;
+  int? get size => _$this._size;
+  set size(int? size) => _$this._size = size;
+
+  String? _quality;
+  String? get quality => _$this._quality;
+  set quality(String? quality) => _$this._quality = quality;
+
+  String? _source;
+  String? get source => _$this._source;
+  set source(String? source) => _$this._source = source;
+
+  ListBuilder<String>? _subLanguages;
+  ListBuilder<String> get subLanguages =>
+      _$this._subLanguages ??= new ListBuilder<String>();
+  set subLanguages(ListBuilder<String>? subLanguages) =>
+      _$this._subLanguages = subLanguages;
+
+  ListBuilder<GGetAnimeDetailsData_anime_files_videoTracks>? _videoTracks;
+  ListBuilder<GGetAnimeDetailsData_anime_files_videoTracks> get videoTracks =>
+      _$this._videoTracks ??=
+          new ListBuilder<GGetAnimeDetailsData_anime_files_videoTracks>();
+  set videoTracks(
+          ListBuilder<GGetAnimeDetailsData_anime_files_videoTracks>?
+              videoTracks) =>
+      _$this._videoTracks = videoTracks;
+
+  ListBuilder<GGetAnimeDetailsData_anime_files_audioTracks>? _audioTracks;
+  ListBuilder<GGetAnimeDetailsData_anime_files_audioTracks> get audioTracks =>
+      _$this._audioTracks ??=
+          new ListBuilder<GGetAnimeDetailsData_anime_files_audioTracks>();
+  set audioTracks(
+          ListBuilder<GGetAnimeDetailsData_anime_files_audioTracks>?
+              audioTracks) =>
+      _$this._audioTracks = audioTracks;
+
+  int? _lengthInSeconds;
+  int? get lengthInSeconds => _$this._lengthInSeconds;
+  set lengthInSeconds(int? lengthInSeconds) =>
+      _$this._lengthInSeconds = lengthInSeconds;
+
+  String? _description;
+  String? get description => _$this._description;
+  set description(String? description) => _$this._description = description;
+
+  int? _airedDate;
+  int? get airedDate => _$this._airedDate;
+  set airedDate(int? airedDate) => _$this._airedDate = airedDate;
+
+  ListBuilder<String>? _onDisk;
+  ListBuilder<String> get onDisk =>
+      _$this._onDisk ??= new ListBuilder<String>();
+  set onDisk(ListBuilder<String>? onDisk) => _$this._onDisk = onDisk;
+
+  GGetAnimeDetailsData_anime_files_episodeBuilder? _episode;
+  GGetAnimeDetailsData_anime_files_episodeBuilder get episode =>
+      _$this._episode ??= new GGetAnimeDetailsData_anime_files_episodeBuilder();
+  set episode(GGetAnimeDetailsData_anime_files_episodeBuilder? episode) =>
+      _$this._episode = episode;
+
+  GGetAnimeDetailsData_anime_files_groupBuilder? _group;
+  GGetAnimeDetailsData_anime_files_groupBuilder get group =>
+      _$this._group ??= new GGetAnimeDetailsData_anime_files_groupBuilder();
+  set group(GGetAnimeDetailsData_anime_files_groupBuilder? group) =>
+      _$this._group = group;
+
+  GGetAnimeDetailsData_anime_filesBuilder() {
+    GGetAnimeDetailsData_anime_files._initializeBuilder(this);
+  }
+
+  GGetAnimeDetailsData_anime_filesBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _G__typename = $v.G__typename;
+      _fid = $v.fid;
+      _state = $v.state;
+      _size = $v.size;
+      _quality = $v.quality;
+      _source = $v.source;
+      _subLanguages = $v.subLanguages.toBuilder();
+      _videoTracks = $v.videoTracks.toBuilder();
+      _audioTracks = $v.audioTracks.toBuilder();
+      _lengthInSeconds = $v.lengthInSeconds;
+      _description = $v.description;
+      _airedDate = $v.airedDate;
+      _onDisk = $v.onDisk.toBuilder();
+      _episode = $v.episode?.toBuilder();
+      _group = $v.group?.toBuilder();
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(GGetAnimeDetailsData_anime_files other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$GGetAnimeDetailsData_anime_files;
+  }
+
+  @override
+  void update(void Function(GGetAnimeDetailsData_anime_filesBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$GGetAnimeDetailsData_anime_files build() {
+    _$GGetAnimeDetailsData_anime_files _$result;
+    try {
+      _$result = _$v ??
+          new _$GGetAnimeDetailsData_anime_files._(
+              G__typename: BuiltValueNullFieldError.checkNotNull(
+                  G__typename, 'GGetAnimeDetailsData_anime_files', 'G__typename'),
+              fid: BuiltValueNullFieldError.checkNotNull(
+                  fid, 'GGetAnimeDetailsData_anime_files', 'fid'),
+              state: BuiltValueNullFieldError.checkNotNull(
+                  state, 'GGetAnimeDetailsData_anime_files', 'state'),
+              size: BuiltValueNullFieldError.checkNotNull(
+                  size, 'GGetAnimeDetailsData_anime_files', 'size'),
+              quality: BuiltValueNullFieldError.checkNotNull(
+                  quality, 'GGetAnimeDetailsData_anime_files', 'quality'),
+              source: BuiltValueNullFieldError.checkNotNull(
+                  source, 'GGetAnimeDetailsData_anime_files', 'source'),
+              subLanguages: subLanguages.build(),
+              videoTracks: videoTracks.build(),
+              audioTracks: audioTracks.build(),
+              lengthInSeconds: BuiltValueNullFieldError.checkNotNull(
+                  lengthInSeconds, 'GGetAnimeDetailsData_anime_files', 'lengthInSeconds'),
+              description: BuiltValueNullFieldError.checkNotNull(
+                  description, 'GGetAnimeDetailsData_anime_files', 'description'),
+              airedDate: BuiltValueNullFieldError.checkNotNull(airedDate, 'GGetAnimeDetailsData_anime_files', 'airedDate'),
+              onDisk: onDisk.build(),
+              episode: _episode?.build(),
+              group: _group?.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'subLanguages';
+        subLanguages.build();
+        _$failedField = 'videoTracks';
+        videoTracks.build();
+        _$failedField = 'audioTracks';
+        audioTracks.build();
+
+        _$failedField = 'onDisk';
+        onDisk.build();
+        _$failedField = 'episode';
+        _episode?.build();
+        _$failedField = 'group';
+        _group?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'GGetAnimeDetailsData_anime_files', _$failedField, e.toString());
+      }
+      rethrow;
+    }
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_videoTracks
+    extends GGetAnimeDetailsData_anime_files_videoTracks {
+  @override
+  final String G__typename;
+  @override
+  final String? colourDepth;
+  @override
+  final String codec;
+  @override
+  final String bitrate;
+
+  factory _$GGetAnimeDetailsData_anime_files_videoTracks(
+          [void Function(GGetAnimeDetailsData_anime_files_videoTracksBuilder)?
+              updates]) =>
+      (new GGetAnimeDetailsData_anime_files_videoTracksBuilder()
+            ..update(updates))
+          .build();
+
+  _$GGetAnimeDetailsData_anime_files_videoTracks._(
+      {required this.G__typename,
+      this.colourDepth,
+      required this.codec,
+      required this.bitrate})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(G__typename,
+        'GGetAnimeDetailsData_anime_files_videoTracks', 'G__typename');
+    BuiltValueNullFieldError.checkNotNull(
+        codec, 'GGetAnimeDetailsData_anime_files_videoTracks', 'codec');
+    BuiltValueNullFieldError.checkNotNull(
+        bitrate, 'GGetAnimeDetailsData_anime_files_videoTracks', 'bitrate');
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files_videoTracks rebuild(
+          void Function(GGetAnimeDetailsData_anime_files_videoTracksBuilder)
+              updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  GGetAnimeDetailsData_anime_files_videoTracksBuilder toBuilder() =>
+      new GGetAnimeDetailsData_anime_files_videoTracksBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is GGetAnimeDetailsData_anime_files_videoTracks &&
+        G__typename == other.G__typename &&
+        colourDepth == other.colourDepth &&
+        codec == other.codec &&
+        bitrate == other.bitrate;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc(0, G__typename.hashCode), colourDepth.hashCode),
+            codec.hashCode),
+        bitrate.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(
+            'GGetAnimeDetailsData_anime_files_videoTracks')
+          ..add('G__typename', G__typename)
+          ..add('colourDepth', colourDepth)
+          ..add('codec', codec)
+          ..add('bitrate', bitrate))
+        .toString();
+  }
+}
+
+class GGetAnimeDetailsData_anime_files_videoTracksBuilder
+    implements
+        Builder<GGetAnimeDetailsData_anime_files_videoTracks,
+            GGetAnimeDetailsData_anime_files_videoTracksBuilder> {
+  _$GGetAnimeDetailsData_anime_files_videoTracks? _$v;
+
+  String? _G__typename;
+  String? get G__typename => _$this._G__typename;
+  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
+
+  String? _colourDepth;
+  String? get colourDepth => _$this._colourDepth;
+  set colourDepth(String? colourDepth) => _$this._colourDepth = colourDepth;
+
+  String? _codec;
+  String? get codec => _$this._codec;
+  set codec(String? codec) => _$this._codec = codec;
+
+  String? _bitrate;
+  String? get bitrate => _$this._bitrate;
+  set bitrate(String? bitrate) => _$this._bitrate = bitrate;
+
+  GGetAnimeDetailsData_anime_files_videoTracksBuilder() {
+    GGetAnimeDetailsData_anime_files_videoTracks._initializeBuilder(this);
+  }
+
+  GGetAnimeDetailsData_anime_files_videoTracksBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _G__typename = $v.G__typename;
+      _colourDepth = $v.colourDepth;
+      _codec = $v.codec;
+      _bitrate = $v.bitrate;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(GGetAnimeDetailsData_anime_files_videoTracks other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$GGetAnimeDetailsData_anime_files_videoTracks;
+  }
+
+  @override
+  void update(
+      void Function(GGetAnimeDetailsData_anime_files_videoTracksBuilder)?
+          updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$GGetAnimeDetailsData_anime_files_videoTracks build() {
+    final _$result = _$v ??
+        new _$GGetAnimeDetailsData_anime_files_videoTracks._(
+            G__typename: BuiltValueNullFieldError.checkNotNull(G__typename,
+                'GGetAnimeDetailsData_anime_files_videoTracks', 'G__typename'),
+            colourDepth: colourDepth,
+            codec: BuiltValueNullFieldError.checkNotNull(
+                codec, 'GGetAnimeDetailsData_anime_files_videoTracks', 'codec'),
+            bitrate: BuiltValueNullFieldError.checkNotNull(bitrate,
+                'GGetAnimeDetailsData_anime_files_videoTracks', 'bitrate'));
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_audioTracks
+    extends GGetAnimeDetailsData_anime_files_audioTracks {
+  @override
+  final String G__typename;
+  @override
+  final String codec;
+  @override
+  final String bitrate;
+  @override
+  final String language;
+
+  factory _$GGetAnimeDetailsData_anime_files_audioTracks(
+          [void Function(GGetAnimeDetailsData_anime_files_audioTracksBuilder)?
+              updates]) =>
+      (new GGetAnimeDetailsData_anime_files_audioTracksBuilder()
+            ..update(updates))
+          .build();
+
+  _$GGetAnimeDetailsData_anime_files_audioTracks._(
+      {required this.G__typename,
+      required this.codec,
+      required this.bitrate,
+      required this.language})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(G__typename,
+        'GGetAnimeDetailsData_anime_files_audioTracks', 'G__typename');
+    BuiltValueNullFieldError.checkNotNull(
+        codec, 'GGetAnimeDetailsData_anime_files_audioTracks', 'codec');
+    BuiltValueNullFieldError.checkNotNull(
+        bitrate, 'GGetAnimeDetailsData_anime_files_audioTracks', 'bitrate');
+    BuiltValueNullFieldError.checkNotNull(
+        language, 'GGetAnimeDetailsData_anime_files_audioTracks', 'language');
+  }
+
+  @override
+  GGetAnimeDetailsData_anime_files_audioTracks rebuild(
+          void Function(GGetAnimeDetailsData_anime_files_audioTracksBuilder)
+              updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  GGetAnimeDetailsData_anime_files_audioTracksBuilder toBuilder() =>
+      new GGetAnimeDetailsData_anime_files_audioTracksBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is GGetAnimeDetailsData_anime_files_audioTracks &&
+        G__typename == other.G__typename &&
+        codec == other.codec &&
+        bitrate == other.bitrate &&
+        language == other.language;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(
+        $jc($jc($jc(0, G__typename.hashCode), codec.hashCode),
+            bitrate.hashCode),
+        language.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(
+            'GGetAnimeDetailsData_anime_files_audioTracks')
+          ..add('G__typename', G__typename)
+          ..add('codec', codec)
+          ..add('bitrate', bitrate)
+          ..add('language', language))
+        .toString();
+  }
+}
+
+class GGetAnimeDetailsData_anime_files_audioTracksBuilder
+    implements
+        Builder<GGetAnimeDetailsData_anime_files_audioTracks,
+            GGetAnimeDetailsData_anime_files_audioTracksBuilder> {
+  _$GGetAnimeDetailsData_anime_files_audioTracks? _$v;
+
+  String? _G__typename;
+  String? get G__typename => _$this._G__typename;
+  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
+
+  String? _codec;
+  String? get codec => _$this._codec;
+  set codec(String? codec) => _$this._codec = codec;
+
+  String? _bitrate;
+  String? get bitrate => _$this._bitrate;
+  set bitrate(String? bitrate) => _$this._bitrate = bitrate;
+
+  String? _language;
+  String? get language => _$this._language;
+  set language(String? language) => _$this._language = language;
+
+  GGetAnimeDetailsData_anime_files_audioTracksBuilder() {
+    GGetAnimeDetailsData_anime_files_audioTracks._initializeBuilder(this);
+  }
+
+  GGetAnimeDetailsData_anime_files_audioTracksBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _G__typename = $v.G__typename;
+      _codec = $v.codec;
+      _bitrate = $v.bitrate;
+      _language = $v.language;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(GGetAnimeDetailsData_anime_files_audioTracks other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$GGetAnimeDetailsData_anime_files_audioTracks;
+  }
+
+  @override
+  void update(
+      void Function(GGetAnimeDetailsData_anime_files_audioTracksBuilder)?
+          updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$GGetAnimeDetailsData_anime_files_audioTracks build() {
+    final _$result = _$v ??
+        new _$GGetAnimeDetailsData_anime_files_audioTracks._(
+            G__typename: BuiltValueNullFieldError.checkNotNull(G__typename,
+                'GGetAnimeDetailsData_anime_files_audioTracks', 'G__typename'),
+            codec: BuiltValueNullFieldError.checkNotNull(
+                codec, 'GGetAnimeDetailsData_anime_files_audioTracks', 'codec'),
+            bitrate: BuiltValueNullFieldError.checkNotNull(bitrate,
+                'GGetAnimeDetailsData_anime_files_audioTracks', 'bitrate'),
+            language: BuiltValueNullFieldError.checkNotNull(language,
+                'GGetAnimeDetailsData_anime_files_audioTracks', 'language'));
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$GGetAnimeDetailsData_anime_files_episode
+    extends GGetAnimeDetailsData_anime_files_episode {
   @override
   final String G__typename;
   @override
@@ -1413,16 +2033,14 @@ class _$GGetAnimeDetailsData_anime_episodes
   final int aired;
   @override
   final _i2.GEpisodeType episodeType;
-  @override
-  final BuiltList<GGetAnimeDetailsData_anime_episodes_files> files;
 
-  factory _$GGetAnimeDetailsData_anime_episodes(
-          [void Function(GGetAnimeDetailsData_anime_episodesBuilder)?
+  factory _$GGetAnimeDetailsData_anime_files_episode(
+          [void Function(GGetAnimeDetailsData_anime_files_episodeBuilder)?
               updates]) =>
-      (new GGetAnimeDetailsData_anime_episodesBuilder()..update(updates))
+      (new GGetAnimeDetailsData_anime_files_episodeBuilder()..update(updates))
           .build();
 
-  _$GGetAnimeDetailsData_anime_episodes._(
+  _$GGetAnimeDetailsData_anime_files_episode._(
       {required this.G__typename,
       required this.eid,
       required this.length,
@@ -1433,48 +2051,46 @@ class _$GGetAnimeDetailsData_anime_episodes
       required this.romaji,
       required this.kanji,
       required this.aired,
-      required this.episodeType,
-      required this.files})
+      required this.episodeType})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        G__typename, 'GGetAnimeDetailsData_anime_episodes', 'G__typename');
+        G__typename, 'GGetAnimeDetailsData_anime_files_episode', 'G__typename');
     BuiltValueNullFieldError.checkNotNull(
-        eid, 'GGetAnimeDetailsData_anime_episodes', 'eid');
+        eid, 'GGetAnimeDetailsData_anime_files_episode', 'eid');
     BuiltValueNullFieldError.checkNotNull(
-        length, 'GGetAnimeDetailsData_anime_episodes', 'length');
+        length, 'GGetAnimeDetailsData_anime_files_episode', 'length');
     BuiltValueNullFieldError.checkNotNull(
-        rating, 'GGetAnimeDetailsData_anime_episodes', 'rating');
+        rating, 'GGetAnimeDetailsData_anime_files_episode', 'rating');
     BuiltValueNullFieldError.checkNotNull(
-        votes, 'GGetAnimeDetailsData_anime_episodes', 'votes');
+        votes, 'GGetAnimeDetailsData_anime_files_episode', 'votes');
     BuiltValueNullFieldError.checkNotNull(
-        epno, 'GGetAnimeDetailsData_anime_episodes', 'epno');
+        epno, 'GGetAnimeDetailsData_anime_files_episode', 'epno');
     BuiltValueNullFieldError.checkNotNull(
-        eng, 'GGetAnimeDetailsData_anime_episodes', 'eng');
+        eng, 'GGetAnimeDetailsData_anime_files_episode', 'eng');
     BuiltValueNullFieldError.checkNotNull(
-        romaji, 'GGetAnimeDetailsData_anime_episodes', 'romaji');
+        romaji, 'GGetAnimeDetailsData_anime_files_episode', 'romaji');
     BuiltValueNullFieldError.checkNotNull(
-        kanji, 'GGetAnimeDetailsData_anime_episodes', 'kanji');
+        kanji, 'GGetAnimeDetailsData_anime_files_episode', 'kanji');
     BuiltValueNullFieldError.checkNotNull(
-        aired, 'GGetAnimeDetailsData_anime_episodes', 'aired');
+        aired, 'GGetAnimeDetailsData_anime_files_episode', 'aired');
     BuiltValueNullFieldError.checkNotNull(
-        episodeType, 'GGetAnimeDetailsData_anime_episodes', 'episodeType');
-    BuiltValueNullFieldError.checkNotNull(
-        files, 'GGetAnimeDetailsData_anime_episodes', 'files');
+        episodeType, 'GGetAnimeDetailsData_anime_files_episode', 'episodeType');
   }
 
   @override
-  GGetAnimeDetailsData_anime_episodes rebuild(
-          void Function(GGetAnimeDetailsData_anime_episodesBuilder) updates) =>
+  GGetAnimeDetailsData_anime_files_episode rebuild(
+          void Function(GGetAnimeDetailsData_anime_files_episodeBuilder)
+              updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GGetAnimeDetailsData_anime_episodesBuilder toBuilder() =>
-      new GGetAnimeDetailsData_anime_episodesBuilder()..replace(this);
+  GGetAnimeDetailsData_anime_files_episodeBuilder toBuilder() =>
+      new GGetAnimeDetailsData_anime_files_episodeBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is GGetAnimeDetailsData_anime_episodes &&
+    return other is GGetAnimeDetailsData_anime_files_episode &&
         G__typename == other.G__typename &&
         eid == other.eid &&
         length == other.length &&
@@ -1485,8 +2101,7 @@ class _$GGetAnimeDetailsData_anime_episodes
         romaji == other.romaji &&
         kanji == other.kanji &&
         aired == other.aired &&
-        episodeType == other.episodeType &&
-        files == other.files;
+        episodeType == other.episodeType;
   }
 
   @override
@@ -1500,24 +2115,23 @@ class _$GGetAnimeDetailsData_anime_episodes
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc(
-                                            $jc($jc(0, G__typename.hashCode),
-                                                eid.hashCode),
-                                            length.hashCode),
-                                        rating.hashCode),
-                                    votes.hashCode),
-                                epno.hashCode),
-                            eng.hashCode),
-                        romaji.hashCode),
-                    kanji.hashCode),
-                aired.hashCode),
-            episodeType.hashCode),
-        files.hashCode));
+                                        $jc($jc(0, G__typename.hashCode),
+                                            eid.hashCode),
+                                        length.hashCode),
+                                    rating.hashCode),
+                                votes.hashCode),
+                            epno.hashCode),
+                        eng.hashCode),
+                    romaji.hashCode),
+                kanji.hashCode),
+            aired.hashCode),
+        episodeType.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GGetAnimeDetailsData_anime_episodes')
+    return (newBuiltValueToStringHelper(
+            'GGetAnimeDetailsData_anime_files_episode')
           ..add('G__typename', G__typename)
           ..add('eid', eid)
           ..add('length', length)
@@ -1528,17 +2142,16 @@ class _$GGetAnimeDetailsData_anime_episodes
           ..add('romaji', romaji)
           ..add('kanji', kanji)
           ..add('aired', aired)
-          ..add('episodeType', episodeType)
-          ..add('files', files))
+          ..add('episodeType', episodeType))
         .toString();
   }
 }
 
-class GGetAnimeDetailsData_anime_episodesBuilder
+class GGetAnimeDetailsData_anime_files_episodeBuilder
     implements
-        Builder<GGetAnimeDetailsData_anime_episodes,
-            GGetAnimeDetailsData_anime_episodesBuilder> {
-  _$GGetAnimeDetailsData_anime_episodes? _$v;
+        Builder<GGetAnimeDetailsData_anime_files_episode,
+            GGetAnimeDetailsData_anime_files_episodeBuilder> {
+  _$GGetAnimeDetailsData_anime_files_episode? _$v;
 
   String? _G__typename;
   String? get G__typename => _$this._G__typename;
@@ -1585,18 +2198,11 @@ class GGetAnimeDetailsData_anime_episodesBuilder
   set episodeType(_i2.GEpisodeType? episodeType) =>
       _$this._episodeType = episodeType;
 
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files>? _files;
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files> get files =>
-      _$this._files ??=
-          new ListBuilder<GGetAnimeDetailsData_anime_episodes_files>();
-  set files(ListBuilder<GGetAnimeDetailsData_anime_episodes_files>? files) =>
-      _$this._files = files;
-
-  GGetAnimeDetailsData_anime_episodesBuilder() {
-    GGetAnimeDetailsData_anime_episodes._initializeBuilder(this);
+  GGetAnimeDetailsData_anime_files_episodeBuilder() {
+    GGetAnimeDetailsData_anime_files_episode._initializeBuilder(this);
   }
 
-  GGetAnimeDetailsData_anime_episodesBuilder get _$this {
+  GGetAnimeDetailsData_anime_files_episodeBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _G__typename = $v.G__typename;
@@ -1610,715 +2216,52 @@ class GGetAnimeDetailsData_anime_episodesBuilder
       _kanji = $v.kanji;
       _aired = $v.aired;
       _episodeType = $v.episodeType;
-      _files = $v.files.toBuilder();
       _$v = null;
     }
     return this;
   }
 
   @override
-  void replace(GGetAnimeDetailsData_anime_episodes other) {
+  void replace(GGetAnimeDetailsData_anime_files_episode other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GGetAnimeDetailsData_anime_episodes;
+    _$v = other as _$GGetAnimeDetailsData_anime_files_episode;
   }
 
   @override
   void update(
-      void Function(GGetAnimeDetailsData_anime_episodesBuilder)? updates) {
+      void Function(GGetAnimeDetailsData_anime_files_episodeBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GGetAnimeDetailsData_anime_episodes build() {
-    _$GGetAnimeDetailsData_anime_episodes _$result;
-    try {
-      _$result = _$v ??
-          new _$GGetAnimeDetailsData_anime_episodes._(
-              G__typename: BuiltValueNullFieldError.checkNotNull(G__typename,
-                  'GGetAnimeDetailsData_anime_episodes', 'G__typename'),
-              eid: BuiltValueNullFieldError.checkNotNull(
-                  eid, 'GGetAnimeDetailsData_anime_episodes', 'eid'),
-              length: BuiltValueNullFieldError.checkNotNull(
-                  length, 'GGetAnimeDetailsData_anime_episodes', 'length'),
-              rating: BuiltValueNullFieldError.checkNotNull(
-                  rating, 'GGetAnimeDetailsData_anime_episodes', 'rating'),
-              votes: BuiltValueNullFieldError.checkNotNull(
-                  votes, 'GGetAnimeDetailsData_anime_episodes', 'votes'),
-              epno: BuiltValueNullFieldError.checkNotNull(
-                  epno, 'GGetAnimeDetailsData_anime_episodes', 'epno'),
-              eng: BuiltValueNullFieldError.checkNotNull(
-                  eng, 'GGetAnimeDetailsData_anime_episodes', 'eng'),
-              romaji: BuiltValueNullFieldError.checkNotNull(romaji, 'GGetAnimeDetailsData_anime_episodes', 'romaji'),
-              kanji: BuiltValueNullFieldError.checkNotNull(kanji, 'GGetAnimeDetailsData_anime_episodes', 'kanji'),
-              aired: BuiltValueNullFieldError.checkNotNull(aired, 'GGetAnimeDetailsData_anime_episodes', 'aired'),
-              episodeType: BuiltValueNullFieldError.checkNotNull(episodeType, 'GGetAnimeDetailsData_anime_episodes', 'episodeType'),
-              files: files.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'files';
-        files.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'GGetAnimeDetailsData_anime_episodes', _$failedField, e.toString());
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files
-    extends GGetAnimeDetailsData_anime_episodes_files {
-  @override
-  final String G__typename;
-  @override
-  final int fid;
-  @override
-  final int state;
-  @override
-  final int size;
-  @override
-  final String quality;
-  @override
-  final String source;
-  @override
-  final BuiltList<String> subLanguages;
-  @override
-  final BuiltList<GGetAnimeDetailsData_anime_episodes_files_videoTracks>
-      videoTracks;
-  @override
-  final BuiltList<GGetAnimeDetailsData_anime_episodes_files_audioTracks>
-      audioTracks;
-  @override
-  final int lengthInSeconds;
-  @override
-  final String description;
-  @override
-  final int airedDate;
-  @override
-  final BuiltList<String> onDisk;
-  @override
-  final GGetAnimeDetailsData_anime_episodes_files_group? group;
-
-  factory _$GGetAnimeDetailsData_anime_episodes_files(
-          [void Function(GGetAnimeDetailsData_anime_episodes_filesBuilder)?
-              updates]) =>
-      (new GGetAnimeDetailsData_anime_episodes_filesBuilder()..update(updates))
-          .build();
-
-  _$GGetAnimeDetailsData_anime_episodes_files._(
-      {required this.G__typename,
-      required this.fid,
-      required this.state,
-      required this.size,
-      required this.quality,
-      required this.source,
-      required this.subLanguages,
-      required this.videoTracks,
-      required this.audioTracks,
-      required this.lengthInSeconds,
-      required this.description,
-      required this.airedDate,
-      required this.onDisk,
-      this.group})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(G__typename,
-        'GGetAnimeDetailsData_anime_episodes_files', 'G__typename');
-    BuiltValueNullFieldError.checkNotNull(
-        fid, 'GGetAnimeDetailsData_anime_episodes_files', 'fid');
-    BuiltValueNullFieldError.checkNotNull(
-        state, 'GGetAnimeDetailsData_anime_episodes_files', 'state');
-    BuiltValueNullFieldError.checkNotNull(
-        size, 'GGetAnimeDetailsData_anime_episodes_files', 'size');
-    BuiltValueNullFieldError.checkNotNull(
-        quality, 'GGetAnimeDetailsData_anime_episodes_files', 'quality');
-    BuiltValueNullFieldError.checkNotNull(
-        source, 'GGetAnimeDetailsData_anime_episodes_files', 'source');
-    BuiltValueNullFieldError.checkNotNull(subLanguages,
-        'GGetAnimeDetailsData_anime_episodes_files', 'subLanguages');
-    BuiltValueNullFieldError.checkNotNull(videoTracks,
-        'GGetAnimeDetailsData_anime_episodes_files', 'videoTracks');
-    BuiltValueNullFieldError.checkNotNull(audioTracks,
-        'GGetAnimeDetailsData_anime_episodes_files', 'audioTracks');
-    BuiltValueNullFieldError.checkNotNull(lengthInSeconds,
-        'GGetAnimeDetailsData_anime_episodes_files', 'lengthInSeconds');
-    BuiltValueNullFieldError.checkNotNull(description,
-        'GGetAnimeDetailsData_anime_episodes_files', 'description');
-    BuiltValueNullFieldError.checkNotNull(
-        airedDate, 'GGetAnimeDetailsData_anime_episodes_files', 'airedDate');
-    BuiltValueNullFieldError.checkNotNull(
-        onDisk, 'GGetAnimeDetailsData_anime_episodes_files', 'onDisk');
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files rebuild(
-          void Function(GGetAnimeDetailsData_anime_episodes_filesBuilder)
-              updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_filesBuilder toBuilder() =>
-      new GGetAnimeDetailsData_anime_episodes_filesBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is GGetAnimeDetailsData_anime_episodes_files &&
-        G__typename == other.G__typename &&
-        fid == other.fid &&
-        state == other.state &&
-        size == other.size &&
-        quality == other.quality &&
-        source == other.source &&
-        subLanguages == other.subLanguages &&
-        videoTracks == other.videoTracks &&
-        audioTracks == other.audioTracks &&
-        lengthInSeconds == other.lengthInSeconds &&
-        description == other.description &&
-        airedDate == other.airedDate &&
-        onDisk == other.onDisk &&
-        group == other.group;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            0,
-                                                            G__typename
-                                                                .hashCode),
-                                                        fid.hashCode),
-                                                    state.hashCode),
-                                                size.hashCode),
-                                            quality.hashCode),
-                                        source.hashCode),
-                                    subLanguages.hashCode),
-                                videoTracks.hashCode),
-                            audioTracks.hashCode),
-                        lengthInSeconds.hashCode),
-                    description.hashCode),
-                airedDate.hashCode),
-            onDisk.hashCode),
-        group.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(
-            'GGetAnimeDetailsData_anime_episodes_files')
-          ..add('G__typename', G__typename)
-          ..add('fid', fid)
-          ..add('state', state)
-          ..add('size', size)
-          ..add('quality', quality)
-          ..add('source', source)
-          ..add('subLanguages', subLanguages)
-          ..add('videoTracks', videoTracks)
-          ..add('audioTracks', audioTracks)
-          ..add('lengthInSeconds', lengthInSeconds)
-          ..add('description', description)
-          ..add('airedDate', airedDate)
-          ..add('onDisk', onDisk)
-          ..add('group', group))
-        .toString();
-  }
-}
-
-class GGetAnimeDetailsData_anime_episodes_filesBuilder
-    implements
-        Builder<GGetAnimeDetailsData_anime_episodes_files,
-            GGetAnimeDetailsData_anime_episodes_filesBuilder> {
-  _$GGetAnimeDetailsData_anime_episodes_files? _$v;
-
-  String? _G__typename;
-  String? get G__typename => _$this._G__typename;
-  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
-
-  int? _fid;
-  int? get fid => _$this._fid;
-  set fid(int? fid) => _$this._fid = fid;
-
-  int? _state;
-  int? get state => _$this._state;
-  set state(int? state) => _$this._state = state;
-
-  int? _size;
-  int? get size => _$this._size;
-  set size(int? size) => _$this._size = size;
-
-  String? _quality;
-  String? get quality => _$this._quality;
-  set quality(String? quality) => _$this._quality = quality;
-
-  String? _source;
-  String? get source => _$this._source;
-  set source(String? source) => _$this._source = source;
-
-  ListBuilder<String>? _subLanguages;
-  ListBuilder<String> get subLanguages =>
-      _$this._subLanguages ??= new ListBuilder<String>();
-  set subLanguages(ListBuilder<String>? subLanguages) =>
-      _$this._subLanguages = subLanguages;
-
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files_videoTracks>?
-      _videoTracks;
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files_videoTracks>
-      get videoTracks => _$this._videoTracks ??= new ListBuilder<
-          GGetAnimeDetailsData_anime_episodes_files_videoTracks>();
-  set videoTracks(
-          ListBuilder<GGetAnimeDetailsData_anime_episodes_files_videoTracks>?
-              videoTracks) =>
-      _$this._videoTracks = videoTracks;
-
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files_audioTracks>?
-      _audioTracks;
-  ListBuilder<GGetAnimeDetailsData_anime_episodes_files_audioTracks>
-      get audioTracks => _$this._audioTracks ??= new ListBuilder<
-          GGetAnimeDetailsData_anime_episodes_files_audioTracks>();
-  set audioTracks(
-          ListBuilder<GGetAnimeDetailsData_anime_episodes_files_audioTracks>?
-              audioTracks) =>
-      _$this._audioTracks = audioTracks;
-
-  int? _lengthInSeconds;
-  int? get lengthInSeconds => _$this._lengthInSeconds;
-  set lengthInSeconds(int? lengthInSeconds) =>
-      _$this._lengthInSeconds = lengthInSeconds;
-
-  String? _description;
-  String? get description => _$this._description;
-  set description(String? description) => _$this._description = description;
-
-  int? _airedDate;
-  int? get airedDate => _$this._airedDate;
-  set airedDate(int? airedDate) => _$this._airedDate = airedDate;
-
-  ListBuilder<String>? _onDisk;
-  ListBuilder<String> get onDisk =>
-      _$this._onDisk ??= new ListBuilder<String>();
-  set onDisk(ListBuilder<String>? onDisk) => _$this._onDisk = onDisk;
-
-  GGetAnimeDetailsData_anime_episodes_files_groupBuilder? _group;
-  GGetAnimeDetailsData_anime_episodes_files_groupBuilder get group =>
-      _$this._group ??=
-          new GGetAnimeDetailsData_anime_episodes_files_groupBuilder();
-  set group(GGetAnimeDetailsData_anime_episodes_files_groupBuilder? group) =>
-      _$this._group = group;
-
-  GGetAnimeDetailsData_anime_episodes_filesBuilder() {
-    GGetAnimeDetailsData_anime_episodes_files._initializeBuilder(this);
-  }
-
-  GGetAnimeDetailsData_anime_episodes_filesBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _G__typename = $v.G__typename;
-      _fid = $v.fid;
-      _state = $v.state;
-      _size = $v.size;
-      _quality = $v.quality;
-      _source = $v.source;
-      _subLanguages = $v.subLanguages.toBuilder();
-      _videoTracks = $v.videoTracks.toBuilder();
-      _audioTracks = $v.audioTracks.toBuilder();
-      _lengthInSeconds = $v.lengthInSeconds;
-      _description = $v.description;
-      _airedDate = $v.airedDate;
-      _onDisk = $v.onDisk.toBuilder();
-      _group = $v.group?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(GGetAnimeDetailsData_anime_episodes_files other) {
-    ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GGetAnimeDetailsData_anime_episodes_files;
-  }
-
-  @override
-  void update(
-      void Function(GGetAnimeDetailsData_anime_episodes_filesBuilder)?
-          updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  _$GGetAnimeDetailsData_anime_episodes_files build() {
-    _$GGetAnimeDetailsData_anime_episodes_files _$result;
-    try {
-      _$result = _$v ??
-          new _$GGetAnimeDetailsData_anime_episodes_files._(
-              G__typename: BuiltValueNullFieldError.checkNotNull(
-                  G__typename, 'GGetAnimeDetailsData_anime_episodes_files', 'G__typename'),
-              fid: BuiltValueNullFieldError.checkNotNull(
-                  fid, 'GGetAnimeDetailsData_anime_episodes_files', 'fid'),
-              state: BuiltValueNullFieldError.checkNotNull(
-                  state, 'GGetAnimeDetailsData_anime_episodes_files', 'state'),
-              size: BuiltValueNullFieldError.checkNotNull(
-                  size, 'GGetAnimeDetailsData_anime_episodes_files', 'size'),
-              quality: BuiltValueNullFieldError.checkNotNull(
-                  quality, 'GGetAnimeDetailsData_anime_episodes_files', 'quality'),
-              source: BuiltValueNullFieldError.checkNotNull(
-                  source, 'GGetAnimeDetailsData_anime_episodes_files', 'source'),
-              subLanguages: subLanguages.build(),
-              videoTracks: videoTracks.build(),
-              audioTracks: audioTracks.build(),
-              lengthInSeconds: BuiltValueNullFieldError.checkNotNull(
-                  lengthInSeconds, 'GGetAnimeDetailsData_anime_episodes_files', 'lengthInSeconds'),
-              description: BuiltValueNullFieldError.checkNotNull(description, 'GGetAnimeDetailsData_anime_episodes_files', 'description'),
-              airedDate: BuiltValueNullFieldError.checkNotNull(airedDate, 'GGetAnimeDetailsData_anime_episodes_files', 'airedDate'),
-              onDisk: onDisk.build(),
-              group: _group?.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'subLanguages';
-        subLanguages.build();
-        _$failedField = 'videoTracks';
-        videoTracks.build();
-        _$failedField = 'audioTracks';
-        audioTracks.build();
-
-        _$failedField = 'onDisk';
-        onDisk.build();
-        _$failedField = 'group';
-        _group?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'GGetAnimeDetailsData_anime_episodes_files',
-            _$failedField,
-            e.toString());
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files_videoTracks
-    extends GGetAnimeDetailsData_anime_episodes_files_videoTracks {
-  @override
-  final String G__typename;
-  @override
-  final String? colourDepth;
-  @override
-  final String codec;
-  @override
-  final String bitrate;
-
-  factory _$GGetAnimeDetailsData_anime_episodes_files_videoTracks(
-          [void Function(
-                  GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder)?
-              updates]) =>
-      (new GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder()
-            ..update(updates))
-          .build();
-
-  _$GGetAnimeDetailsData_anime_episodes_files_videoTracks._(
-      {required this.G__typename,
-      this.colourDepth,
-      required this.codec,
-      required this.bitrate})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(G__typename,
-        'GGetAnimeDetailsData_anime_episodes_files_videoTracks', 'G__typename');
-    BuiltValueNullFieldError.checkNotNull(codec,
-        'GGetAnimeDetailsData_anime_episodes_files_videoTracks', 'codec');
-    BuiltValueNullFieldError.checkNotNull(bitrate,
-        'GGetAnimeDetailsData_anime_episodes_files_videoTracks', 'bitrate');
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_videoTracks rebuild(
-          void Function(
-                  GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder)
-              updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder toBuilder() =>
-      new GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder()
-        ..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is GGetAnimeDetailsData_anime_episodes_files_videoTracks &&
-        G__typename == other.G__typename &&
-        colourDepth == other.colourDepth &&
-        codec == other.codec &&
-        bitrate == other.bitrate;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, G__typename.hashCode), colourDepth.hashCode),
-            codec.hashCode),
-        bitrate.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(
-            'GGetAnimeDetailsData_anime_episodes_files_videoTracks')
-          ..add('G__typename', G__typename)
-          ..add('colourDepth', colourDepth)
-          ..add('codec', codec)
-          ..add('bitrate', bitrate))
-        .toString();
-  }
-}
-
-class GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder
-    implements
-        Builder<GGetAnimeDetailsData_anime_episodes_files_videoTracks,
-            GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder> {
-  _$GGetAnimeDetailsData_anime_episodes_files_videoTracks? _$v;
-
-  String? _G__typename;
-  String? get G__typename => _$this._G__typename;
-  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
-
-  String? _colourDepth;
-  String? get colourDepth => _$this._colourDepth;
-  set colourDepth(String? colourDepth) => _$this._colourDepth = colourDepth;
-
-  String? _codec;
-  String? get codec => _$this._codec;
-  set codec(String? codec) => _$this._codec = codec;
-
-  String? _bitrate;
-  String? get bitrate => _$this._bitrate;
-  set bitrate(String? bitrate) => _$this._bitrate = bitrate;
-
-  GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder() {
-    GGetAnimeDetailsData_anime_episodes_files_videoTracks._initializeBuilder(
-        this);
-  }
-
-  GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _G__typename = $v.G__typename;
-      _colourDepth = $v.colourDepth;
-      _codec = $v.codec;
-      _bitrate = $v.bitrate;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(GGetAnimeDetailsData_anime_episodes_files_videoTracks other) {
-    ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GGetAnimeDetailsData_anime_episodes_files_videoTracks;
-  }
-
-  @override
-  void update(
-      void Function(
-              GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder)?
-          updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  _$GGetAnimeDetailsData_anime_episodes_files_videoTracks build() {
+  _$GGetAnimeDetailsData_anime_files_episode build() {
     final _$result = _$v ??
-        new _$GGetAnimeDetailsData_anime_episodes_files_videoTracks._(
-            G__typename: BuiltValueNullFieldError.checkNotNull(
-                G__typename,
-                'GGetAnimeDetailsData_anime_episodes_files_videoTracks',
-                'G__typename'),
-            colourDepth: colourDepth,
-            codec: BuiltValueNullFieldError.checkNotNull(
-                codec,
-                'GGetAnimeDetailsData_anime_episodes_files_videoTracks',
-                'codec'),
-            bitrate: BuiltValueNullFieldError.checkNotNull(
-                bitrate,
-                'GGetAnimeDetailsData_anime_episodes_files_videoTracks',
-                'bitrate'));
+        new _$GGetAnimeDetailsData_anime_files_episode._(
+            G__typename: BuiltValueNullFieldError.checkNotNull(G__typename,
+                'GGetAnimeDetailsData_anime_files_episode', 'G__typename'),
+            eid: BuiltValueNullFieldError.checkNotNull(
+                eid, 'GGetAnimeDetailsData_anime_files_episode', 'eid'),
+            length: BuiltValueNullFieldError.checkNotNull(
+                length, 'GGetAnimeDetailsData_anime_files_episode', 'length'),
+            rating: BuiltValueNullFieldError.checkNotNull(
+                rating, 'GGetAnimeDetailsData_anime_files_episode', 'rating'),
+            votes: BuiltValueNullFieldError.checkNotNull(
+                votes, 'GGetAnimeDetailsData_anime_files_episode', 'votes'),
+            epno: BuiltValueNullFieldError.checkNotNull(
+                epno, 'GGetAnimeDetailsData_anime_files_episode', 'epno'),
+            eng: BuiltValueNullFieldError.checkNotNull(
+                eng, 'GGetAnimeDetailsData_anime_files_episode', 'eng'),
+            romaji: BuiltValueNullFieldError.checkNotNull(romaji, 'GGetAnimeDetailsData_anime_files_episode', 'romaji'),
+            kanji: BuiltValueNullFieldError.checkNotNull(kanji, 'GGetAnimeDetailsData_anime_files_episode', 'kanji'),
+            aired: BuiltValueNullFieldError.checkNotNull(aired, 'GGetAnimeDetailsData_anime_files_episode', 'aired'),
+            episodeType: BuiltValueNullFieldError.checkNotNull(episodeType, 'GGetAnimeDetailsData_anime_files_episode', 'episodeType'));
     replace(_$result);
     return _$result;
   }
 }
 
-class _$GGetAnimeDetailsData_anime_episodes_files_audioTracks
-    extends GGetAnimeDetailsData_anime_episodes_files_audioTracks {
-  @override
-  final String G__typename;
-  @override
-  final String codec;
-  @override
-  final String bitrate;
-  @override
-  final String language;
-
-  factory _$GGetAnimeDetailsData_anime_episodes_files_audioTracks(
-          [void Function(
-                  GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder)?
-              updates]) =>
-      (new GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder()
-            ..update(updates))
-          .build();
-
-  _$GGetAnimeDetailsData_anime_episodes_files_audioTracks._(
-      {required this.G__typename,
-      required this.codec,
-      required this.bitrate,
-      required this.language})
-      : super._() {
-    BuiltValueNullFieldError.checkNotNull(G__typename,
-        'GGetAnimeDetailsData_anime_episodes_files_audioTracks', 'G__typename');
-    BuiltValueNullFieldError.checkNotNull(codec,
-        'GGetAnimeDetailsData_anime_episodes_files_audioTracks', 'codec');
-    BuiltValueNullFieldError.checkNotNull(bitrate,
-        'GGetAnimeDetailsData_anime_episodes_files_audioTracks', 'bitrate');
-    BuiltValueNullFieldError.checkNotNull(language,
-        'GGetAnimeDetailsData_anime_episodes_files_audioTracks', 'language');
-  }
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_audioTracks rebuild(
-          void Function(
-                  GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder)
-              updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder toBuilder() =>
-      new GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder()
-        ..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is GGetAnimeDetailsData_anime_episodes_files_audioTracks &&
-        G__typename == other.G__typename &&
-        codec == other.codec &&
-        bitrate == other.bitrate &&
-        language == other.language;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, G__typename.hashCode), codec.hashCode),
-            bitrate.hashCode),
-        language.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(
-            'GGetAnimeDetailsData_anime_episodes_files_audioTracks')
-          ..add('G__typename', G__typename)
-          ..add('codec', codec)
-          ..add('bitrate', bitrate)
-          ..add('language', language))
-        .toString();
-  }
-}
-
-class GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder
-    implements
-        Builder<GGetAnimeDetailsData_anime_episodes_files_audioTracks,
-            GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder> {
-  _$GGetAnimeDetailsData_anime_episodes_files_audioTracks? _$v;
-
-  String? _G__typename;
-  String? get G__typename => _$this._G__typename;
-  set G__typename(String? G__typename) => _$this._G__typename = G__typename;
-
-  String? _codec;
-  String? get codec => _$this._codec;
-  set codec(String? codec) => _$this._codec = codec;
-
-  String? _bitrate;
-  String? get bitrate => _$this._bitrate;
-  set bitrate(String? bitrate) => _$this._bitrate = bitrate;
-
-  String? _language;
-  String? get language => _$this._language;
-  set language(String? language) => _$this._language = language;
-
-  GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder() {
-    GGetAnimeDetailsData_anime_episodes_files_audioTracks._initializeBuilder(
-        this);
-  }
-
-  GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _G__typename = $v.G__typename;
-      _codec = $v.codec;
-      _bitrate = $v.bitrate;
-      _language = $v.language;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(GGetAnimeDetailsData_anime_episodes_files_audioTracks other) {
-    ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GGetAnimeDetailsData_anime_episodes_files_audioTracks;
-  }
-
-  @override
-  void update(
-      void Function(
-              GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder)?
-          updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  _$GGetAnimeDetailsData_anime_episodes_files_audioTracks build() {
-    final _$result = _$v ??
-        new _$GGetAnimeDetailsData_anime_episodes_files_audioTracks._(
-            G__typename: BuiltValueNullFieldError.checkNotNull(
-                G__typename,
-                'GGetAnimeDetailsData_anime_episodes_files_audioTracks',
-                'G__typename'),
-            codec: BuiltValueNullFieldError.checkNotNull(
-                codec,
-                'GGetAnimeDetailsData_anime_episodes_files_audioTracks',
-                'codec'),
-            bitrate: BuiltValueNullFieldError.checkNotNull(
-                bitrate,
-                'GGetAnimeDetailsData_anime_episodes_files_audioTracks',
-                'bitrate'),
-            language: BuiltValueNullFieldError.checkNotNull(
-                language,
-                'GGetAnimeDetailsData_anime_episodes_files_audioTracks',
-                'language'));
-    replace(_$result);
-    return _$result;
-  }
-}
-
-class _$GGetAnimeDetailsData_anime_episodes_files_group
-    extends GGetAnimeDetailsData_anime_episodes_files_group {
+class _$GGetAnimeDetailsData_anime_files_group
+    extends GGetAnimeDetailsData_anime_files_group {
   @override
   final String G__typename;
   @override
@@ -2356,15 +2299,13 @@ class _$GGetAnimeDetailsData_anime_episodes_files_group
   @override
   final String grouprelations;
 
-  factory _$GGetAnimeDetailsData_anime_episodes_files_group(
-          [void Function(
-                  GGetAnimeDetailsData_anime_episodes_files_groupBuilder)?
+  factory _$GGetAnimeDetailsData_anime_files_group(
+          [void Function(GGetAnimeDetailsData_anime_files_groupBuilder)?
               updates]) =>
-      (new GGetAnimeDetailsData_anime_episodes_files_groupBuilder()
-            ..update(updates))
+      (new GGetAnimeDetailsData_anime_files_groupBuilder()..update(updates))
           .build();
 
-  _$GGetAnimeDetailsData_anime_episodes_files_group._(
+  _$GGetAnimeDetailsData_anime_files_group._(
       {required this.G__typename,
       required this.gid,
       required this.rating,
@@ -2384,59 +2325,58 @@ class _$GGetAnimeDetailsData_anime_episodes_files_group
       required this.lastactivitydate,
       required this.grouprelations})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(G__typename,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'G__typename');
     BuiltValueNullFieldError.checkNotNull(
-        gid, 'GGetAnimeDetailsData_anime_episodes_files_group', 'gid');
+        G__typename, 'GGetAnimeDetailsData_anime_files_group', 'G__typename');
     BuiltValueNullFieldError.checkNotNull(
-        rating, 'GGetAnimeDetailsData_anime_episodes_files_group', 'rating');
+        gid, 'GGetAnimeDetailsData_anime_files_group', 'gid');
     BuiltValueNullFieldError.checkNotNull(
-        votes, 'GGetAnimeDetailsData_anime_episodes_files_group', 'votes');
+        rating, 'GGetAnimeDetailsData_anime_files_group', 'rating');
     BuiltValueNullFieldError.checkNotNull(
-        acount, 'GGetAnimeDetailsData_anime_episodes_files_group', 'acount');
+        votes, 'GGetAnimeDetailsData_anime_files_group', 'votes');
     BuiltValueNullFieldError.checkNotNull(
-        fcount, 'GGetAnimeDetailsData_anime_episodes_files_group', 'fcount');
+        acount, 'GGetAnimeDetailsData_anime_files_group', 'acount');
     BuiltValueNullFieldError.checkNotNull(
-        name, 'GGetAnimeDetailsData_anime_episodes_files_group', 'name');
+        fcount, 'GGetAnimeDetailsData_anime_files_group', 'fcount');
     BuiltValueNullFieldError.checkNotNull(
-        short, 'GGetAnimeDetailsData_anime_episodes_files_group', 'short');
-    BuiltValueNullFieldError.checkNotNull(ircChannel,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'ircChannel');
-    BuiltValueNullFieldError.checkNotNull(ircServer,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'ircServer');
+        name, 'GGetAnimeDetailsData_anime_files_group', 'name');
     BuiltValueNullFieldError.checkNotNull(
-        url, 'GGetAnimeDetailsData_anime_episodes_files_group', 'url');
+        short, 'GGetAnimeDetailsData_anime_files_group', 'short');
     BuiltValueNullFieldError.checkNotNull(
-        picname, 'GGetAnimeDetailsData_anime_episodes_files_group', 'picname');
-    BuiltValueNullFieldError.checkNotNull(foundeddate,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'foundeddate');
+        ircChannel, 'GGetAnimeDetailsData_anime_files_group', 'ircChannel');
+    BuiltValueNullFieldError.checkNotNull(
+        ircServer, 'GGetAnimeDetailsData_anime_files_group', 'ircServer');
+    BuiltValueNullFieldError.checkNotNull(
+        url, 'GGetAnimeDetailsData_anime_files_group', 'url');
+    BuiltValueNullFieldError.checkNotNull(
+        picname, 'GGetAnimeDetailsData_anime_files_group', 'picname');
+    BuiltValueNullFieldError.checkNotNull(
+        foundeddate, 'GGetAnimeDetailsData_anime_files_group', 'foundeddate');
     BuiltValueNullFieldError.checkNotNull(disbandeddate,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'disbandeddate');
-    BuiltValueNullFieldError.checkNotNull(dateflags,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'dateflags');
+        'GGetAnimeDetailsData_anime_files_group', 'disbandeddate');
+    BuiltValueNullFieldError.checkNotNull(
+        dateflags, 'GGetAnimeDetailsData_anime_files_group', 'dateflags');
     BuiltValueNullFieldError.checkNotNull(lastreleasedate,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'lastreleasedate');
+        'GGetAnimeDetailsData_anime_files_group', 'lastreleasedate');
     BuiltValueNullFieldError.checkNotNull(lastactivitydate,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'lastactivitydate');
+        'GGetAnimeDetailsData_anime_files_group', 'lastactivitydate');
     BuiltValueNullFieldError.checkNotNull(grouprelations,
-        'GGetAnimeDetailsData_anime_episodes_files_group', 'grouprelations');
+        'GGetAnimeDetailsData_anime_files_group', 'grouprelations');
   }
 
   @override
-  GGetAnimeDetailsData_anime_episodes_files_group rebuild(
-          void Function(GGetAnimeDetailsData_anime_episodes_files_groupBuilder)
+  GGetAnimeDetailsData_anime_files_group rebuild(
+          void Function(GGetAnimeDetailsData_anime_files_groupBuilder)
               updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GGetAnimeDetailsData_anime_episodes_files_groupBuilder toBuilder() =>
-      new GGetAnimeDetailsData_anime_episodes_files_groupBuilder()
-        ..replace(this);
+  GGetAnimeDetailsData_anime_files_groupBuilder toBuilder() =>
+      new GGetAnimeDetailsData_anime_files_groupBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is GGetAnimeDetailsData_anime_episodes_files_group &&
+    return other is GGetAnimeDetailsData_anime_files_group &&
         G__typename == other.G__typename &&
         gid == other.gid &&
         rating == other.rating &&
@@ -2504,7 +2444,7 @@ class _$GGetAnimeDetailsData_anime_episodes_files_group
   @override
   String toString() {
     return (newBuiltValueToStringHelper(
-            'GGetAnimeDetailsData_anime_episodes_files_group')
+            'GGetAnimeDetailsData_anime_files_group')
           ..add('G__typename', G__typename)
           ..add('gid', gid)
           ..add('rating', rating)
@@ -2527,11 +2467,11 @@ class _$GGetAnimeDetailsData_anime_episodes_files_group
   }
 }
 
-class GGetAnimeDetailsData_anime_episodes_files_groupBuilder
+class GGetAnimeDetailsData_anime_files_groupBuilder
     implements
-        Builder<GGetAnimeDetailsData_anime_episodes_files_group,
-            GGetAnimeDetailsData_anime_episodes_files_groupBuilder> {
-  _$GGetAnimeDetailsData_anime_episodes_files_group? _$v;
+        Builder<GGetAnimeDetailsData_anime_files_group,
+            GGetAnimeDetailsData_anime_files_groupBuilder> {
+  _$GGetAnimeDetailsData_anime_files_group? _$v;
 
   String? _G__typename;
   String? get G__typename => _$this._G__typename;
@@ -2609,11 +2549,11 @@ class GGetAnimeDetailsData_anime_episodes_files_groupBuilder
   set grouprelations(String? grouprelations) =>
       _$this._grouprelations = grouprelations;
 
-  GGetAnimeDetailsData_anime_episodes_files_groupBuilder() {
-    GGetAnimeDetailsData_anime_episodes_files_group._initializeBuilder(this);
+  GGetAnimeDetailsData_anime_files_groupBuilder() {
+    GGetAnimeDetailsData_anime_files_group._initializeBuilder(this);
   }
 
-  GGetAnimeDetailsData_anime_episodes_files_groupBuilder get _$this {
+  GGetAnimeDetailsData_anime_files_groupBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _G__typename = $v.G__typename;
@@ -2640,47 +2580,46 @@ class GGetAnimeDetailsData_anime_episodes_files_groupBuilder
   }
 
   @override
-  void replace(GGetAnimeDetailsData_anime_episodes_files_group other) {
+  void replace(GGetAnimeDetailsData_anime_files_group other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GGetAnimeDetailsData_anime_episodes_files_group;
+    _$v = other as _$GGetAnimeDetailsData_anime_files_group;
   }
 
   @override
   void update(
-      void Function(GGetAnimeDetailsData_anime_episodes_files_groupBuilder)?
-          updates) {
+      void Function(GGetAnimeDetailsData_anime_files_groupBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GGetAnimeDetailsData_anime_episodes_files_group build() {
+  _$GGetAnimeDetailsData_anime_files_group build() {
     final _$result = _$v ??
-        new _$GGetAnimeDetailsData_anime_episodes_files_group._(
-            G__typename: BuiltValueNullFieldError.checkNotNull(
-                G__typename, 'GGetAnimeDetailsData_anime_episodes_files_group', 'G__typename'),
+        new _$GGetAnimeDetailsData_anime_files_group._(
+            G__typename: BuiltValueNullFieldError.checkNotNull(G__typename,
+                'GGetAnimeDetailsData_anime_files_group', 'G__typename'),
             gid: BuiltValueNullFieldError.checkNotNull(
-                gid, 'GGetAnimeDetailsData_anime_episodes_files_group', 'gid'),
+                gid, 'GGetAnimeDetailsData_anime_files_group', 'gid'),
             rating: BuiltValueNullFieldError.checkNotNull(
-                rating, 'GGetAnimeDetailsData_anime_episodes_files_group', 'rating'),
+                rating, 'GGetAnimeDetailsData_anime_files_group', 'rating'),
             votes: BuiltValueNullFieldError.checkNotNull(
-                votes, 'GGetAnimeDetailsData_anime_episodes_files_group', 'votes'),
+                votes, 'GGetAnimeDetailsData_anime_files_group', 'votes'),
             acount: BuiltValueNullFieldError.checkNotNull(
-                acount, 'GGetAnimeDetailsData_anime_episodes_files_group', 'acount'),
+                acount, 'GGetAnimeDetailsData_anime_files_group', 'acount'),
             fcount: BuiltValueNullFieldError.checkNotNull(
-                fcount, 'GGetAnimeDetailsData_anime_episodes_files_group', 'fcount'),
+                fcount, 'GGetAnimeDetailsData_anime_files_group', 'fcount'),
             name: BuiltValueNullFieldError.checkNotNull(
-                name, 'GGetAnimeDetailsData_anime_episodes_files_group', 'name'),
-            short: BuiltValueNullFieldError.checkNotNull(short, 'GGetAnimeDetailsData_anime_episodes_files_group', 'short'),
-            ircChannel: BuiltValueNullFieldError.checkNotNull(ircChannel, 'GGetAnimeDetailsData_anime_episodes_files_group', 'ircChannel'),
-            ircServer: BuiltValueNullFieldError.checkNotNull(ircServer, 'GGetAnimeDetailsData_anime_episodes_files_group', 'ircServer'),
-            url: BuiltValueNullFieldError.checkNotNull(url, 'GGetAnimeDetailsData_anime_episodes_files_group', 'url'),
-            picname: BuiltValueNullFieldError.checkNotNull(picname, 'GGetAnimeDetailsData_anime_episodes_files_group', 'picname'),
-            foundeddate: BuiltValueNullFieldError.checkNotNull(foundeddate, 'GGetAnimeDetailsData_anime_episodes_files_group', 'foundeddate'),
-            disbandeddate: BuiltValueNullFieldError.checkNotNull(disbandeddate, 'GGetAnimeDetailsData_anime_episodes_files_group', 'disbandeddate'),
-            dateflags: BuiltValueNullFieldError.checkNotNull(dateflags, 'GGetAnimeDetailsData_anime_episodes_files_group', 'dateflags'),
-            lastreleasedate: BuiltValueNullFieldError.checkNotNull(lastreleasedate, 'GGetAnimeDetailsData_anime_episodes_files_group', 'lastreleasedate'),
-            lastactivitydate: BuiltValueNullFieldError.checkNotNull(lastactivitydate, 'GGetAnimeDetailsData_anime_episodes_files_group', 'lastactivitydate'),
-            grouprelations: BuiltValueNullFieldError.checkNotNull(grouprelations, 'GGetAnimeDetailsData_anime_episodes_files_group', 'grouprelations'));
+                name, 'GGetAnimeDetailsData_anime_files_group', 'name'),
+            short: BuiltValueNullFieldError.checkNotNull(short, 'GGetAnimeDetailsData_anime_files_group', 'short'),
+            ircChannel: BuiltValueNullFieldError.checkNotNull(ircChannel, 'GGetAnimeDetailsData_anime_files_group', 'ircChannel'),
+            ircServer: BuiltValueNullFieldError.checkNotNull(ircServer, 'GGetAnimeDetailsData_anime_files_group', 'ircServer'),
+            url: BuiltValueNullFieldError.checkNotNull(url, 'GGetAnimeDetailsData_anime_files_group', 'url'),
+            picname: BuiltValueNullFieldError.checkNotNull(picname, 'GGetAnimeDetailsData_anime_files_group', 'picname'),
+            foundeddate: BuiltValueNullFieldError.checkNotNull(foundeddate, 'GGetAnimeDetailsData_anime_files_group', 'foundeddate'),
+            disbandeddate: BuiltValueNullFieldError.checkNotNull(disbandeddate, 'GGetAnimeDetailsData_anime_files_group', 'disbandeddate'),
+            dateflags: BuiltValueNullFieldError.checkNotNull(dateflags, 'GGetAnimeDetailsData_anime_files_group', 'dateflags'),
+            lastreleasedate: BuiltValueNullFieldError.checkNotNull(lastreleasedate, 'GGetAnimeDetailsData_anime_files_group', 'lastreleasedate'),
+            lastactivitydate: BuiltValueNullFieldError.checkNotNull(lastactivitydate, 'GGetAnimeDetailsData_anime_files_group', 'lastactivitydate'),
+            grouprelations: BuiltValueNullFieldError.checkNotNull(grouprelations, 'GGetAnimeDetailsData_anime_files_group', 'grouprelations'));
     replace(_$result);
     return _$result;
   }

@@ -62,7 +62,7 @@ abstract class GGetAnimeDetailsData_anime
   int get otherCount;
   int get trailerCount;
   int get parodyCount;
-  BuiltList<GGetAnimeDetailsData_anime_episodes> get episodes;
+  BuiltList<GGetAnimeDetailsData_anime_files> get files;
   static Serializer<GGetAnimeDetailsData_anime> get serializer =>
       _$gGetAnimeDetailsDataAnimeSerializer;
   Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
@@ -72,18 +72,115 @@ abstract class GGetAnimeDetailsData_anime
           .deserializeWith(GGetAnimeDetailsData_anime.serializer, json);
 }
 
-abstract class GGetAnimeDetailsData_anime_episodes
+abstract class GGetAnimeDetailsData_anime_files
     implements
-        Built<GGetAnimeDetailsData_anime_episodes,
-            GGetAnimeDetailsData_anime_episodesBuilder> {
-  GGetAnimeDetailsData_anime_episodes._();
+        Built<GGetAnimeDetailsData_anime_files,
+            GGetAnimeDetailsData_anime_filesBuilder> {
+  GGetAnimeDetailsData_anime_files._();
 
-  factory GGetAnimeDetailsData_anime_episodes(
-          [Function(GGetAnimeDetailsData_anime_episodesBuilder b) updates]) =
-      _$GGetAnimeDetailsData_anime_episodes;
+  factory GGetAnimeDetailsData_anime_files(
+          [Function(GGetAnimeDetailsData_anime_filesBuilder b) updates]) =
+      _$GGetAnimeDetailsData_anime_files;
+
+  static void _initializeBuilder(GGetAnimeDetailsData_anime_filesBuilder b) =>
+      b..G__typename = 'FileQuery';
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  int get fid;
+  int get state;
+  int get size;
+  String get quality;
+  String get source;
+  BuiltList<String> get subLanguages;
+  BuiltList<GGetAnimeDetailsData_anime_files_videoTracks> get videoTracks;
+  BuiltList<GGetAnimeDetailsData_anime_files_audioTracks> get audioTracks;
+  int get lengthInSeconds;
+  String get description;
+  int get airedDate;
+  BuiltList<String> get onDisk;
+  GGetAnimeDetailsData_anime_files_episode? get episode;
+  GGetAnimeDetailsData_anime_files_group? get group;
+  static Serializer<GGetAnimeDetailsData_anime_files> get serializer =>
+      _$gGetAnimeDetailsDataAnimeFilesSerializer;
+  Map<String, dynamic> toJson() => (_i1.serializers
+          .serializeWith(GGetAnimeDetailsData_anime_files.serializer, this)
+      as Map<String, dynamic>);
+  static GGetAnimeDetailsData_anime_files? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers
+          .deserializeWith(GGetAnimeDetailsData_anime_files.serializer, json);
+}
+
+abstract class GGetAnimeDetailsData_anime_files_videoTracks
+    implements
+        Built<GGetAnimeDetailsData_anime_files_videoTracks,
+            GGetAnimeDetailsData_anime_files_videoTracksBuilder> {
+  GGetAnimeDetailsData_anime_files_videoTracks._();
+
+  factory GGetAnimeDetailsData_anime_files_videoTracks(
+      [Function(GGetAnimeDetailsData_anime_files_videoTracksBuilder b)
+          updates]) = _$GGetAnimeDetailsData_anime_files_videoTracks;
 
   static void _initializeBuilder(
-          GGetAnimeDetailsData_anime_episodesBuilder b) =>
+          GGetAnimeDetailsData_anime_files_videoTracksBuilder b) =>
+      b..G__typename = 'VideoTrack';
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  String? get colourDepth;
+  String get codec;
+  String get bitrate;
+  static Serializer<GGetAnimeDetailsData_anime_files_videoTracks>
+      get serializer => _$gGetAnimeDetailsDataAnimeFilesVideoTracksSerializer;
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+          GGetAnimeDetailsData_anime_files_videoTracks.serializer, this)
+      as Map<String, dynamic>);
+  static GGetAnimeDetailsData_anime_files_videoTracks? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+          GGetAnimeDetailsData_anime_files_videoTracks.serializer, json);
+}
+
+abstract class GGetAnimeDetailsData_anime_files_audioTracks
+    implements
+        Built<GGetAnimeDetailsData_anime_files_audioTracks,
+            GGetAnimeDetailsData_anime_files_audioTracksBuilder> {
+  GGetAnimeDetailsData_anime_files_audioTracks._();
+
+  factory GGetAnimeDetailsData_anime_files_audioTracks(
+      [Function(GGetAnimeDetailsData_anime_files_audioTracksBuilder b)
+          updates]) = _$GGetAnimeDetailsData_anime_files_audioTracks;
+
+  static void _initializeBuilder(
+          GGetAnimeDetailsData_anime_files_audioTracksBuilder b) =>
+      b..G__typename = 'AudioTrack';
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  String get codec;
+  String get bitrate;
+  String get language;
+  static Serializer<GGetAnimeDetailsData_anime_files_audioTracks>
+      get serializer => _$gGetAnimeDetailsDataAnimeFilesAudioTracksSerializer;
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+          GGetAnimeDetailsData_anime_files_audioTracks.serializer, this)
+      as Map<String, dynamic>);
+  static GGetAnimeDetailsData_anime_files_audioTracks? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+          GGetAnimeDetailsData_anime_files_audioTracks.serializer, json);
+}
+
+abstract class GGetAnimeDetailsData_anime_files_episode
+    implements
+        Built<GGetAnimeDetailsData_anime_files_episode,
+            GGetAnimeDetailsData_anime_files_episodeBuilder> {
+  GGetAnimeDetailsData_anime_files_episode._();
+
+  factory GGetAnimeDetailsData_anime_files_episode(
+      [Function(GGetAnimeDetailsData_anime_files_episodeBuilder b)
+          updates]) = _$GGetAnimeDetailsData_anime_files_episode;
+
+  static void _initializeBuilder(
+          GGetAnimeDetailsData_anime_files_episodeBuilder b) =>
       b..G__typename = 'EpisodeQuery';
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
@@ -97,133 +194,29 @@ abstract class GGetAnimeDetailsData_anime_episodes
   String get kanji;
   int get aired;
   _i2.GEpisodeType get episodeType;
-  BuiltList<GGetAnimeDetailsData_anime_episodes_files> get files;
-  static Serializer<GGetAnimeDetailsData_anime_episodes> get serializer =>
-      _$gGetAnimeDetailsDataAnimeEpisodesSerializer;
-  Map<String, dynamic> toJson() => (_i1.serializers
-          .serializeWith(GGetAnimeDetailsData_anime_episodes.serializer, this)
+  static Serializer<GGetAnimeDetailsData_anime_files_episode> get serializer =>
+      _$gGetAnimeDetailsDataAnimeFilesEpisodeSerializer;
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+          GGetAnimeDetailsData_anime_files_episode.serializer, this)
       as Map<String, dynamic>);
-  static GGetAnimeDetailsData_anime_episodes? fromJson(
+  static GGetAnimeDetailsData_anime_files_episode? fromJson(
           Map<String, dynamic> json) =>
       _i1.serializers.deserializeWith(
-          GGetAnimeDetailsData_anime_episodes.serializer, json);
+          GGetAnimeDetailsData_anime_files_episode.serializer, json);
 }
 
-abstract class GGetAnimeDetailsData_anime_episodes_files
+abstract class GGetAnimeDetailsData_anime_files_group
     implements
-        Built<GGetAnimeDetailsData_anime_episodes_files,
-            GGetAnimeDetailsData_anime_episodes_filesBuilder> {
-  GGetAnimeDetailsData_anime_episodes_files._();
+        Built<GGetAnimeDetailsData_anime_files_group,
+            GGetAnimeDetailsData_anime_files_groupBuilder> {
+  GGetAnimeDetailsData_anime_files_group._();
 
-  factory GGetAnimeDetailsData_anime_episodes_files(
-      [Function(GGetAnimeDetailsData_anime_episodes_filesBuilder b)
-          updates]) = _$GGetAnimeDetailsData_anime_episodes_files;
+  factory GGetAnimeDetailsData_anime_files_group(
+          [Function(GGetAnimeDetailsData_anime_files_groupBuilder b) updates]) =
+      _$GGetAnimeDetailsData_anime_files_group;
 
   static void _initializeBuilder(
-          GGetAnimeDetailsData_anime_episodes_filesBuilder b) =>
-      b..G__typename = 'FileQuery';
-  @BuiltValueField(wireName: '__typename')
-  String get G__typename;
-  int get fid;
-  int get state;
-  int get size;
-  String get quality;
-  String get source;
-  BuiltList<String> get subLanguages;
-  BuiltList<GGetAnimeDetailsData_anime_episodes_files_videoTracks>
-      get videoTracks;
-  BuiltList<GGetAnimeDetailsData_anime_episodes_files_audioTracks>
-      get audioTracks;
-  int get lengthInSeconds;
-  String get description;
-  int get airedDate;
-  BuiltList<String> get onDisk;
-  GGetAnimeDetailsData_anime_episodes_files_group? get group;
-  static Serializer<GGetAnimeDetailsData_anime_episodes_files> get serializer =>
-      _$gGetAnimeDetailsDataAnimeEpisodesFilesSerializer;
-  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
-          GGetAnimeDetailsData_anime_episodes_files.serializer, this)
-      as Map<String, dynamic>);
-  static GGetAnimeDetailsData_anime_episodes_files? fromJson(
-          Map<String, dynamic> json) =>
-      _i1.serializers.deserializeWith(
-          GGetAnimeDetailsData_anime_episodes_files.serializer, json);
-}
-
-abstract class GGetAnimeDetailsData_anime_episodes_files_videoTracks
-    implements
-        Built<GGetAnimeDetailsData_anime_episodes_files_videoTracks,
-            GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder> {
-  GGetAnimeDetailsData_anime_episodes_files_videoTracks._();
-
-  factory GGetAnimeDetailsData_anime_episodes_files_videoTracks(
-      [Function(GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder b)
-          updates]) = _$GGetAnimeDetailsData_anime_episodes_files_videoTracks;
-
-  static void _initializeBuilder(
-          GGetAnimeDetailsData_anime_episodes_files_videoTracksBuilder b) =>
-      b..G__typename = 'VideoTrack';
-  @BuiltValueField(wireName: '__typename')
-  String get G__typename;
-  String? get colourDepth;
-  String get codec;
-  String get bitrate;
-  static Serializer<GGetAnimeDetailsData_anime_episodes_files_videoTracks>
-      get serializer =>
-          _$gGetAnimeDetailsDataAnimeEpisodesFilesVideoTracksSerializer;
-  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
-      GGetAnimeDetailsData_anime_episodes_files_videoTracks.serializer,
-      this) as Map<String, dynamic>);
-  static GGetAnimeDetailsData_anime_episodes_files_videoTracks? fromJson(
-          Map<String, dynamic> json) =>
-      _i1.serializers.deserializeWith(
-          GGetAnimeDetailsData_anime_episodes_files_videoTracks.serializer,
-          json);
-}
-
-abstract class GGetAnimeDetailsData_anime_episodes_files_audioTracks
-    implements
-        Built<GGetAnimeDetailsData_anime_episodes_files_audioTracks,
-            GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder> {
-  GGetAnimeDetailsData_anime_episodes_files_audioTracks._();
-
-  factory GGetAnimeDetailsData_anime_episodes_files_audioTracks(
-      [Function(GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder b)
-          updates]) = _$GGetAnimeDetailsData_anime_episodes_files_audioTracks;
-
-  static void _initializeBuilder(
-          GGetAnimeDetailsData_anime_episodes_files_audioTracksBuilder b) =>
-      b..G__typename = 'AudioTrack';
-  @BuiltValueField(wireName: '__typename')
-  String get G__typename;
-  String get codec;
-  String get bitrate;
-  String get language;
-  static Serializer<GGetAnimeDetailsData_anime_episodes_files_audioTracks>
-      get serializer =>
-          _$gGetAnimeDetailsDataAnimeEpisodesFilesAudioTracksSerializer;
-  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
-      GGetAnimeDetailsData_anime_episodes_files_audioTracks.serializer,
-      this) as Map<String, dynamic>);
-  static GGetAnimeDetailsData_anime_episodes_files_audioTracks? fromJson(
-          Map<String, dynamic> json) =>
-      _i1.serializers.deserializeWith(
-          GGetAnimeDetailsData_anime_episodes_files_audioTracks.serializer,
-          json);
-}
-
-abstract class GGetAnimeDetailsData_anime_episodes_files_group
-    implements
-        Built<GGetAnimeDetailsData_anime_episodes_files_group,
-            GGetAnimeDetailsData_anime_episodes_files_groupBuilder> {
-  GGetAnimeDetailsData_anime_episodes_files_group._();
-
-  factory GGetAnimeDetailsData_anime_episodes_files_group(
-      [Function(GGetAnimeDetailsData_anime_episodes_files_groupBuilder b)
-          updates]) = _$GGetAnimeDetailsData_anime_episodes_files_group;
-
-  static void _initializeBuilder(
-          GGetAnimeDetailsData_anime_episodes_files_groupBuilder b) =>
+          GGetAnimeDetailsData_anime_files_groupBuilder b) =>
       b..G__typename = 'GroupQuery';
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
@@ -244,13 +237,13 @@ abstract class GGetAnimeDetailsData_anime_episodes_files_group
   int get lastreleasedate;
   int get lastactivitydate;
   String get grouprelations;
-  static Serializer<GGetAnimeDetailsData_anime_episodes_files_group>
-      get serializer => _$gGetAnimeDetailsDataAnimeEpisodesFilesGroupSerializer;
+  static Serializer<GGetAnimeDetailsData_anime_files_group> get serializer =>
+      _$gGetAnimeDetailsDataAnimeFilesGroupSerializer;
   Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
-          GGetAnimeDetailsData_anime_episodes_files_group.serializer, this)
+          GGetAnimeDetailsData_anime_files_group.serializer, this)
       as Map<String, dynamic>);
-  static GGetAnimeDetailsData_anime_episodes_files_group? fromJson(
+  static GGetAnimeDetailsData_anime_files_group? fromJson(
           Map<String, dynamic> json) =>
       _i1.serializers.deserializeWith(
-          GGetAnimeDetailsData_anime_episodes_files_group.serializer, json);
+          GGetAnimeDetailsData_anime_files_group.serializer, json);
 }

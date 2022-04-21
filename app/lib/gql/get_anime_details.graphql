@@ -20,60 +20,60 @@ query GetAnimeDetails($aid: Int!) {
         trailerCount
         parodyCount
 
-        episodes(limit: 999, offset: 0) {
-            eid
-            length
-            rating
-            votes
-            epno
-            eng
-            romaji
-            kanji
-            aired
-            episodeType
+        files(limit: 99999, offset: 0) {
+            fid
+            state
+            size
+            quality
+            source
+            subLanguages
+            videoTracks {
+                colourDepth
+                codec
+                bitrate
+            }
+            audioTracks {
+                codec
+                bitrate
+                language
+            }
+            lengthInSeconds
+            description
+            airedDate
 
-            files(limit: 20, offset: 0) {
-                fid
-                state
-                size
-                quality
-                source
-                subLanguages
-                videoTracks {
-                    colourDepth
-                    codec
-                    bitrate
-                }
-                audioTracks {
-                    codec
-                    bitrate
-                    language
-                }
-                lengthInSeconds
-                description
-                airedDate
+            onDisk
 
-                onDisk
+            episode {
+                eid
+                length
+                rating
+                votes
+                epno
+                eng
+                romaji
+                kanji
+                aired
+                episodeType
+            }
 
-                group {
-                    gid
-                    rating
-                    votes
-                    acount
-                    fcount
-                    name
-                    short
-                    ircChannel
-                    ircServer
-                    url
-                    picname
-                    foundeddate
-                    disbandeddate
-                    dateflags
-                    lastreleasedate
-                    lastactivitydate
-                    grouprelations
-                }
+            group {
+                gid
+                rating
+                votes
+                acount
+                fcount
+                name
+                short
+                ircChannel
+                ircServer
+                url
+                picname
+                foundeddate
+                disbandeddate
+                dateflags
+                lastreleasedate
+                lastactivitydate
+                grouprelations
             }
         }
     }

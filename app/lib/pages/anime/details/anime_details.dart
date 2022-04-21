@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ferry/ferry.dart' as ferry;
 import 'package:ferry_flutter/ferry_flutter.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -137,12 +136,12 @@ class AnimeDetailsPage extends StatelessWidget {
     final contents = _DetailsBuilder(
       initialData: initialData,
       loadingBuilder: (context) => const LinearProgressIndicator(),
-      builder: (result, anime, episodes) {
+      builder: (result, anime, files) {
         final sidebar = Column(
           children: [
             SizedBox(
               width: double.infinity,
-              child: buildWatchButton(context, episodes),
+              child: buildWatchButton(context, files),
             ),
             const SizedBox(height: coverBottomPadding),
             Column(
@@ -161,22 +160,19 @@ class AnimeDetailsPage extends StatelessWidget {
           ],
         );
 
-        final episodeWidgets = episodes
-            .map(
-              (episode) {
-                if (episode.episodeType == GEpisodeType.CREDIT) {
-                  return [];
-                }
+        final episodeWidgets = files.expand(
+          (file) {
+            if (file.episode == null) {
+              return [];
+            }
 
-                return episode.files.map(
-                  (file) {
-                    return _EpisodeRow(anime, episode, file);
-                  },
-                ).toList();
-              },
-            )
-            .toList()
-            .expand((v) => v);
+            if (file.episode!.episodeType == GEpisodeType.CREDIT) {
+              return [];
+            }
+
+            return [_EpisodeRow(anime, file, file.episode!)];
+          },
+        ).toList();
 
         final mainColumn = Column(
           children: [
@@ -248,7 +244,7 @@ class AnimeDetailsPage extends StatelessWidget {
           ],
         );
       },
-      builder: (context, anime, episodes) {
+      builder: (context, anime, files) {
         return Stack(
           children: [
             Positioned.fill(
@@ -268,7 +264,7 @@ class AnimeDetailsPage extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
-                  buildWatchButton(context, episodes),
+                  buildWatchButton(context, files),
                   const SizedBox(height: 20),
                   Column(
                     children: [
@@ -283,20 +279,22 @@ class AnimeDetailsPage extends StatelessWidget {
                       Text(anime.nsfw ? "NSFW" : "SFW"),
                     ],
                   ),
-                  ...episodes.expand(
-                    (episode) {
-                      if (episode.episodeType == GEpisodeType.CREDIT) {
+                  ...files.expand(
+                    (file) {
+                      if (file.episode == null) {
                         return <Widget>[];
                       }
 
-                      return episode.files.map(
-                        (file) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: _EpisodeRow(anime, episode, file),
-                          );
-                        },
-                      ).toList();
+                      if (file.episode!.episodeType == GEpisodeType.CREDIT) {
+                        return <Widget>[];
+                      }
+
+                      return [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: _EpisodeRow(anime, file, file.episode!),
+                        ),
+                      ];
                     },
                   ).toList(),
                 ],
@@ -310,7 +308,7 @@ class AnimeDetailsPage extends StatelessWidget {
 
   ElevatedButton buildWatchButton(
     BuildContext context,
-    List<GGetAnimeDetailsData_anime_episodes> episodes,
+    List<GGetAnimeDetailsData_anime_files> files,
   ) {
     return ElevatedButton.icon(
       icon: const Icon(Icons.play_arrow),
@@ -319,13 +317,13 @@ class AnimeDetailsPage extends StatelessWidget {
         final request = GLoadPlaylistReq(
           (b) => b
             ..vars.playlist.addAll(
-              episodes.expand(
-                (ep) {
-                  if (ep.episodeType == GEpisodeType.CREDIT) {
+              files.expand(
+                (file) {
+                  if (file.episode?.episodeType == GEpisodeType.CREDIT) {
                     return [];
                   }
 
-                  return ep.files.map((f) => f.onDisk.first);
+                  return [file.onDisk.first];
                 },
               ),
             ),
@@ -354,7 +352,7 @@ class _DetailsBuilder extends StatelessWidget {
   final Widget Function(
     BuildContext context,
     GGetAnimeDetailsData_anime data,
-    List<GGetAnimeDetailsData_anime_episodes> episodes,
+    List<GGetAnimeDetailsData_anime_files> files,
   ) builder;
 
   final Widget Function(
@@ -380,6 +378,10 @@ class _DetailsBuilder extends StatelessWidget {
           return Text(error.toString());
         }
 
+        if (res?.linkException != null) {
+          return Text(res!.linkException.toString());
+        }
+
         if (res?.hasErrors ?? false) {
           return Text(res!.graphqlErrors.toString());
         }
@@ -389,12 +391,9 @@ class _DetailsBuilder extends StatelessWidget {
         }
 
         final anime = res.data!.anime;
-        final episodes = anime!.episodes.toList();
+        final files = anime!.files.where((f) => f.onDisk.isNotEmpty).toList();
 
-        episodes.sort(
-          (a, b) =>
-              a.files.first.onDisk.first.compareTo(b.files.first.onDisk.first),
-        );
+        files.sort((a, b) => a.onDisk.first.compareTo(b.onDisk.first));
 
         // episodes.sort((a, b) => a.epno.compareTo(b.epno));
 
@@ -409,7 +408,7 @@ class _DetailsBuilder extends StatelessWidget {
         //     int.parse(a.epno.replaceAll(RegExp("[^0-9]"), ""))
         //         .compareTo(int.parse(b.epno.replaceAll(RegExp("[^0-9]"), ""))));
 
-        return builder(context, anime, episodes);
+        return builder(context, anime, files);
       },
     );
   }
@@ -417,13 +416,13 @@ class _DetailsBuilder extends StatelessWidget {
 
 class _EpisodeRow extends StatelessWidget {
   final GGetAnimeDetailsData_anime anime;
-  final GGetAnimeDetailsData_anime_episodes episode;
-  final GGetAnimeDetailsData_anime_episodes_files file;
+  final GGetAnimeDetailsData_anime_files file;
+  final GGetAnimeDetailsData_anime_files_episode episode;
 
   const _EpisodeRow(
     this.anime,
-    this.episode,
-    this.file, {
+    this.file,
+    this.episode, {
     Key? key,
   }) : super(key: key);
 
@@ -449,23 +448,33 @@ class _EpisodeRow extends StatelessWidget {
       Expanded(
         child: ImageFiltered(
           imageFilter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-          child: Text(
-            episode.romaji.isNotEmpty
-                ? episode.romaji
-                : file.onDisk.first
-                    .split("/")
-                    .last
-                    .replaceAll("_", " ")
-                    .replaceAll(RegExp(r"\.\w{3,4}$"), ""),
-            overflow: TextOverflow.ellipsis,
+          child: Row(
+            children: [
+              Text(
+                episode.romaji.isNotEmpty
+                    ? episode.romaji
+                    : file.onDisk.first
+                        .split("/")
+                        .last
+                        .replaceAll("_", " ")
+                        .replaceAll(RegExp(r"\.\w{3,4}$"), ""),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ),
     ];
 
+    const limit = 2;
+    final subs = file.subLanguages.toSet();
+    final dubs = file.audioTracks.map((a) => a.language).toSet();
+    final extraSubs = subs.length - limit;
+    final extraDubs = dubs.length - limit;
+
     final secondHalf = [
       const SizedBox(width: 16),
-      for (final sub in file.subLanguages.toSet())
+      for (final sub in subs.take(limit))
         Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Container(
@@ -480,7 +489,20 @@ class _EpisodeRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
           ),
         ),
-      for (final sub in file.audioTracks.map((a) => a.language).toSet())
+      if (extraSubs > 0)
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Container(
+            child: Row(
+              children: [
+                Text("+${extraSubs}"),
+              ],
+            ),
+            color: _subColor,
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          ),
+        ),
+      for (final sub in dubs.take(limit))
         Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Container(

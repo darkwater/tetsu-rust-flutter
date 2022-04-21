@@ -140,12 +140,12 @@ const GetAnimeDetails = _i1.OperationDefinitionNode(
                 directives: [],
                 selectionSet: null),
             _i1.FieldNode(
-                name: _i1.NameNode(value: 'episodes'),
+                name: _i1.NameNode(value: 'files'),
                 alias: null,
                 arguments: [
                   _i1.ArgumentNode(
                       name: _i1.NameNode(value: 'limit'),
-                      value: _i1.IntValueNode(value: '999')),
+                      value: _i1.IntValueNode(value: '99999')),
                   _i1.ArgumentNode(
                       name: _i1.NameNode(value: 'offset'),
                       value: _i1.IntValueNode(value: '0'))
@@ -153,297 +153,290 @@ const GetAnimeDetails = _i1.OperationDefinitionNode(
                 directives: [],
                 selectionSet: _i1.SelectionSetNode(selections: [
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'eid'),
+                      name: _i1.NameNode(value: 'fid'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'length'),
+                      name: _i1.NameNode(value: 'state'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'rating'),
+                      name: _i1.NameNode(value: 'size'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'votes'),
+                      name: _i1.NameNode(value: 'quality'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'epno'),
+                      name: _i1.NameNode(value: 'source'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'eng'),
+                      name: _i1.NameNode(value: 'subLanguages'),
                       alias: null,
                       arguments: [],
                       directives: [],
                       selectionSet: null),
                   _i1.FieldNode(
-                      name: _i1.NameNode(value: 'romaji'),
+                      name: _i1.NameNode(value: 'videoTracks'),
                       alias: null,
                       arguments: [],
-                      directives: [],
-                      selectionSet: null),
-                  _i1.FieldNode(
-                      name: _i1.NameNode(value: 'kanji'),
-                      alias: null,
-                      arguments: [],
-                      directives: [],
-                      selectionSet: null),
-                  _i1.FieldNode(
-                      name: _i1.NameNode(value: 'aired'),
-                      alias: null,
-                      arguments: [],
-                      directives: [],
-                      selectionSet: null),
-                  _i1.FieldNode(
-                      name: _i1.NameNode(value: 'episodeType'),
-                      alias: null,
-                      arguments: [],
-                      directives: [],
-                      selectionSet: null),
-                  _i1.FieldNode(
-                      name: _i1.NameNode(value: 'files'),
-                      alias: null,
-                      arguments: [
-                        _i1.ArgumentNode(
-                            name: _i1.NameNode(value: 'limit'),
-                            value: _i1.IntValueNode(value: '20')),
-                        _i1.ArgumentNode(
-                            name: _i1.NameNode(value: 'offset'),
-                            value: _i1.IntValueNode(value: '0'))
-                      ],
                       directives: [],
                       selectionSet: _i1.SelectionSetNode(selections: [
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'fid'),
+                            name: _i1.NameNode(value: 'colourDepth'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'state'),
+                            name: _i1.NameNode(value: 'codec'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'size'),
+                            name: _i1.NameNode(value: 'bitrate'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null)
+                      ])),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'audioTracks'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: _i1.SelectionSetNode(selections: [
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'codec'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'quality'),
+                            name: _i1.NameNode(value: 'bitrate'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'source'),
+                            name: _i1.NameNode(value: 'language'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null)
+                      ])),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'lengthInSeconds'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'description'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'airedDate'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'onDisk'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'episode'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: _i1.SelectionSetNode(selections: [
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'eid'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'subLanguages'),
+                            name: _i1.NameNode(value: 'length'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'videoTracks'),
-                            alias: null,
-                            arguments: [],
-                            directives: [],
-                            selectionSet: _i1.SelectionSetNode(selections: [
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'colourDepth'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'codec'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'bitrate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null)
-                            ])),
-                        _i1.FieldNode(
-                            name: _i1.NameNode(value: 'audioTracks'),
-                            alias: null,
-                            arguments: [],
-                            directives: [],
-                            selectionSet: _i1.SelectionSetNode(selections: [
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'codec'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'bitrate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'language'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null)
-                            ])),
-                        _i1.FieldNode(
-                            name: _i1.NameNode(value: 'lengthInSeconds'),
+                            name: _i1.NameNode(value: 'rating'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'description'),
+                            name: _i1.NameNode(value: 'votes'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'airedDate'),
+                            name: _i1.NameNode(value: 'epno'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'onDisk'),
+                            name: _i1.NameNode(value: 'eng'),
                             alias: null,
                             arguments: [],
                             directives: [],
                             selectionSet: null),
                         _i1.FieldNode(
-                            name: _i1.NameNode(value: 'group'),
+                            name: _i1.NameNode(value: 'romaji'),
                             alias: null,
                             arguments: [],
                             directives: [],
-                            selectionSet: _i1.SelectionSetNode(selections: [
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'gid'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'rating'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'votes'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'acount'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'fcount'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'name'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'short'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'ircChannel'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'ircServer'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'url'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'picname'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'foundeddate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'disbandeddate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'dateflags'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'lastreleasedate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'lastactivitydate'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null),
-                              _i1.FieldNode(
-                                  name: _i1.NameNode(value: 'grouprelations'),
-                                  alias: null,
-                                  arguments: [],
-                                  directives: [],
-                                  selectionSet: null)
-                            ]))
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'kanji'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'aired'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'episodeType'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null)
+                      ])),
+                  _i1.FieldNode(
+                      name: _i1.NameNode(value: 'group'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: _i1.SelectionSetNode(selections: [
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'gid'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'rating'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'votes'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'acount'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'fcount'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'name'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'short'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'ircChannel'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'ircServer'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'url'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'picname'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'foundeddate'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'disbandeddate'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'dateflags'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'lastreleasedate'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'lastactivitydate'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null),
+                        _i1.FieldNode(
+                            name: _i1.NameNode(value: 'grouprelations'),
+                            alias: null,
+                            arguments: [],
+                            directives: [],
+                            selectionSet: null)
                       ]))
                 ]))
           ]))

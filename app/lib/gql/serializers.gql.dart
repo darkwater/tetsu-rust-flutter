@@ -7,11 +7,11 @@ import 'package:tetsu/gql/get_anime_details.data.gql.dart'
     show
         GGetAnimeDetailsData,
         GGetAnimeDetailsData_anime,
-        GGetAnimeDetailsData_anime_episodes,
-        GGetAnimeDetailsData_anime_episodes_files,
-        GGetAnimeDetailsData_anime_episodes_files_audioTracks,
-        GGetAnimeDetailsData_anime_episodes_files_group,
-        GGetAnimeDetailsData_anime_episodes_files_videoTracks;
+        GGetAnimeDetailsData_anime_files,
+        GGetAnimeDetailsData_anime_files_audioTracks,
+        GGetAnimeDetailsData_anime_files_episode,
+        GGetAnimeDetailsData_anime_files_group,
+        GGetAnimeDetailsData_anime_files_videoTracks;
 import 'package:tetsu/gql/get_anime_details.req.gql.dart'
     show GGetAnimeDetailsReq;
 import 'package:tetsu/gql/get_anime_details.var.gql.dart'
@@ -49,11 +49,11 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GEpisodeType,
   GGetAnimeDetailsData,
   GGetAnimeDetailsData_anime,
-  GGetAnimeDetailsData_anime_episodes,
-  GGetAnimeDetailsData_anime_episodes_files,
-  GGetAnimeDetailsData_anime_episodes_files_audioTracks,
-  GGetAnimeDetailsData_anime_episodes_files_group,
-  GGetAnimeDetailsData_anime_episodes_files_videoTracks,
+  GGetAnimeDetailsData_anime_files,
+  GGetAnimeDetailsData_anime_files_audioTracks,
+  GGetAnimeDetailsData_anime_files_episode,
+  GGetAnimeDetailsData_anime_files_group,
+  GGetAnimeDetailsData_anime_files_videoTracks,
   GGetAnimeDetailsReq,
   GGetAnimeDetailsVars,
   GGetAnimeShowsData,

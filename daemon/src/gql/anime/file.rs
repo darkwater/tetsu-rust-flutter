@@ -1,4 +1,7 @@
-use crate::gql::{anime::GroupQuery, GqlContext};
+use crate::gql::{
+    anime::{EpisodeQuery, GroupQuery},
+    GqlContext,
+};
 use juniper::{graphql_object, GraphQLObject};
 
 pub struct FileQuery {
@@ -135,6 +138,17 @@ impl FileQuery {
         self.aired_date as i32 // solve y2k38
     }
 
+    pub async fn episode(&self, context: &GqlContext) -> Option<EpisodeQuery> {
+        sqlx::query_as!(
+            EpisodeQuery,
+            "SELECT * FROM anidb_episodes WHERE eid = ?",
+            self.eid
+        )
+        .fetch_optional(&context.db)
+        .await
+        .unwrap()
+    }
+
     pub async fn group(&self, context: &GqlContext) -> Option<GroupQuery> {
         sqlx::query_as!(
             GroupQuery,
@@ -147,6 +161,7 @@ impl FileQuery {
     }
 
     pub async fn on_disk(&self, context: &GqlContext) -> Vec<String> {
+        log::error!("{}", self.fid);
         sqlx::query_scalar!(
             "SELECT path FROM anidb_indexed_files WHERE fid = ?",
             self.fid

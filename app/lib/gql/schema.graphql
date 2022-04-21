@@ -21,6 +21,7 @@ type AnimeQuery {
   trailerCount: Int!
   parodyCount: Int!
   episodes(limit: Int!, offset: Int!): [EpisodeQuery!]!
+  files(limit: Int!, offset: Int!): [FileQuery!]!
   watchProgress: WatchProgressQuery
 }
 
@@ -74,6 +75,7 @@ type FileQuery {
   lengthInSeconds: Int!
   description: String!
   airedDate: Int!
+  episode: EpisodeQuery
   group: GroupQuery
   onDisk: [String!]!
 }

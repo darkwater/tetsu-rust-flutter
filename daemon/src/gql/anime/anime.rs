@@ -1,4 +1,8 @@
-use crate::gql::{anime::episode::EpisodeQuery, watch_progress::WatchProgressId, GqlContext};
+use crate::gql::{
+    anime::{episode::EpisodeQuery, FileQuery},
+    watch_progress::WatchProgressId,
+    GqlContext,
+};
 use juniper::{graphql_object, GraphQLEnum, GraphQLObject};
 
 pub struct AnimeQuery {
@@ -137,7 +141,20 @@ impl AnimeQuery {
     ) -> Vec<EpisodeQuery> {
         sqlx::query_as!(
             EpisodeQuery,
-            "SELECT * FROM anidb_episodes WHERE aid = ? LIMIT ? OFFSET ?",
+            "SELECT * FROM anidb_episodes WHERE aid = ? ORDER BY epno ASC LIMIT ? OFFSET ?",
+            self.aid,
+            limit,
+            offset
+        )
+        .fetch_all(&context.db)
+        .await
+        .unwrap()
+    }
+
+    pub async fn files(&self, context: &GqlContext, limit: i32, offset: i32) -> Vec<FileQuery> {
+        sqlx::query_as!(
+            FileQuery,
+            "SELECT * FROM anidb_files WHERE aid = ? ORDER BY fid ASC LIMIT ? OFFSET ?",
             self.aid,
             limit,
             offset

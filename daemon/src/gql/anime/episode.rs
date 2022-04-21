@@ -68,7 +68,7 @@ impl EpisodeQuery {
     pub async fn files(&self, context: &GqlContext, limit: i32, offset: i32) -> Vec<FileQuery> {
         sqlx::query_as!(
             FileQuery,
-            "SELECT * FROM anidb_files WHERE eid = ? LIMIT ? OFFSET ?",
+            "SELECT * FROM anidb_files WHERE eid = ? ORDER BY fid ASC LIMIT ? OFFSET ?",
             self.eid,
             limit,
             offset
