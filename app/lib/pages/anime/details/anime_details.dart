@@ -314,6 +314,8 @@ class AnimeDetailsPage extends StatelessWidget {
       icon: const Icon(Icons.play_arrow),
       label: const Text("Watch"),
       onPressed: () async {
+        Scaffold.of(context).openEndDrawer();
+
         final request = GLoadPlaylistReq(
           (b) => b
             ..vars.playlist.addAll(
@@ -495,7 +497,7 @@ class _EpisodeRow extends StatelessWidget {
           child: Container(
             child: Row(
               children: [
-                Text("+${extraSubs}"),
+                Text("+$extraSubs"),
               ],
             ),
             color: _subColor,
@@ -511,6 +513,19 @@ class _EpisodeRow extends StatelessWidget {
                 const Icon(_audioIcon, size: 16),
                 const SizedBox(width: 4),
                 Text(sub.substring(0, 2).toUpperCase()),
+              ],
+            ),
+            color: _audioColor,
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          ),
+        ),
+      if (extraDubs > 0)
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Container(
+            child: Row(
+              children: [
+                Text("+$extraDubs"),
               ],
             ),
             color: _audioColor,

@@ -109,6 +109,7 @@ type PlayerMutation {
   sendCommand(command: [String!]!): String!
   loadPlaylist(playlist: [String!]!, startAt: Int = 0): String!
   seek(to: Float, by: Float): Float
+  set(paused: Boolean, chapter: Int, playlistPlayIndex: Int): Boolean!
 }
 
 type PlayerQuery {

@@ -1,0 +1,9 @@
+mutation PlayerSet($chapter: Int, $paused: Boolean, $playlistPlayIndex: Int) {
+    player {
+        set(
+            chapter: $chapter,
+            paused: $paused,
+            playlistPlayIndex: $playlistPlayIndex,
+        )
+    }
+}

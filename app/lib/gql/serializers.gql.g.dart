@@ -34,6 +34,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GPlayerSeekData_player.serializer)
       ..add(GPlayerSeekReq.serializer)
       ..add(GPlayerSeekVars.serializer)
+      ..add(GPlayerSetData.serializer)
+      ..add(GPlayerSetData_player.serializer)
+      ..add(GPlayerSetReq.serializer)
+      ..add(GPlayerSetVars.serializer)
       ..add(GRelatedAnimeType.serializer)
       ..addBuilderFactory(
           const FullType(

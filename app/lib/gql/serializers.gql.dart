@@ -37,6 +37,10 @@ import 'package:tetsu/gql/player_seek.data.gql.dart'
     show GPlayerSeekData, GPlayerSeekData_player;
 import 'package:tetsu/gql/player_seek.req.gql.dart' show GPlayerSeekReq;
 import 'package:tetsu/gql/player_seek.var.gql.dart' show GPlayerSeekVars;
+import 'package:tetsu/gql/player_set.data.gql.dart'
+    show GPlayerSetData, GPlayerSetData_player;
+import 'package:tetsu/gql/player_set.req.gql.dart' show GPlayerSetReq;
+import 'package:tetsu/gql/player_set.var.gql.dart' show GPlayerSetVars;
 import 'package:tetsu/gql/schema.schema.gql.dart'
     show GEpisodeType, GRelatedAnimeType;
 
@@ -73,6 +77,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GPlayerSeekData_player,
   GPlayerSeekReq,
   GPlayerSeekVars,
+  GPlayerSetData,
+  GPlayerSetData_player,
+  GPlayerSetReq,
+  GPlayerSetVars,
   GRelatedAnimeType
 ])
 final Serializers serializers = _serializersBuilder.build();

@@ -111,7 +111,7 @@ class AnimeGallery extends StatelessWidget {
 
               final animes = res.data!.animes.toList();
 
-              animes.sort((a, b) => b.aid.compareTo(a.aid));
+              animes.sort((a, b) => b.airDate.compareTo(a.airDate));
 
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,6 +119,9 @@ class AnimeGallery extends StatelessWidget {
                   childAspectRatio: 3 / 2,
                 ),
                 scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                ),
                 itemCount: animes.length,
                 itemBuilder: (context, index) {
                   final anime = animes[index];

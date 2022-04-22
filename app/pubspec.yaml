@@ -45,6 +45,7 @@ dependencies:
   ferry: ^0.10.4
   ferry_flutter: ^0.5.4
   intl: ^0.17.0
+  streaming_shared_preferences: ^2.0.0
 
   # cupertino_icons: ^1.0.2
 

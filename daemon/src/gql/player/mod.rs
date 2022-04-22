@@ -161,4 +161,31 @@ impl PlayerMutation {
 
         prop!(self, "time-pos", f64)
     }
+
+    async fn set(
+        &self,
+        paused: Option<bool>,
+        chapter: Option<i32>,
+        playlist_play_index: Option<i32>,
+    ) -> FieldResult<bool> {
+        if let Some(paused) = paused {
+            self.mpv
+                .send_command(mpv_command!("set", "pause", paused.to_string()))
+                .await;
+        }
+
+        if let Some(chapter) = chapter {
+            self.mpv
+                .send_command(mpv_command!("set", "chapter", chapter.to_string()))
+                .await;
+        }
+
+        if let Some(playlist_play_index) = playlist_play_index {
+            self.mpv
+                .send_command(mpv_command!("playlist-play-index", playlist_play_index))
+                .await;
+        }
+
+        Ok(true)
+    }
 }

@@ -59,6 +59,12 @@ const GetAnimeShows = _i1.OperationDefinitionNode(
                 directives: [],
                 selectionSet: null),
             _i1.FieldNode(
+                name: _i1.NameNode(value: 'airDate'),
+                alias: null,
+                arguments: [],
+                directives: [],
+                selectionSet: null),
+            _i1.FieldNode(
                 name: _i1.NameNode(value: 'watchProgress'),
                 alias: null,
                 arguments: [],

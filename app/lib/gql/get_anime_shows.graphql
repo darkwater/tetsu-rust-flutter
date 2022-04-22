@@ -4,6 +4,7 @@ query GetAnimeShows($limit: Int!, $offset: Int!) {
         romajiName
         picname
         year
+        airDate
         watchProgress {
           progress
         }

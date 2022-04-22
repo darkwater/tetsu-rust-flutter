@@ -8,12 +8,15 @@ import 'package:tetsu/cubit/remote_cubit.dart';
 import 'package:tetsu/pages/home/home.dart';
 
 import 'consts.dart';
+import 'preferences.dart';
 import 'remote.dart';
 import 'remote_manager.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RemoteAdapter());
+
+  await Preferences.init();
 
   await Hive.openBox<Remote>(BoxNames.remotes);
 

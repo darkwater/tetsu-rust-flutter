@@ -95,6 +95,8 @@ class _$GGetAnimeShowsData_animesSerializer
           specifiedType: const FullType(String)),
       'year',
       serializers.serialize(object.year, specifiedType: const FullType(String)),
+      'airDate',
+      serializers.serialize(object.airDate, specifiedType: const FullType(int)),
     ];
     Object? value;
     value = object.watchProgress;
@@ -139,6 +141,10 @@ class _$GGetAnimeShowsData_animesSerializer
         case 'year':
           result.year = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
+          break;
+        case 'airDate':
+          result.airDate = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
           break;
         case 'watchProgress':
           result.watchProgress.replace(serializers.deserialize(value,
@@ -331,6 +337,8 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
   @override
   final String year;
   @override
+  final int airDate;
+  @override
   final GGetAnimeShowsData_animes_watchProgress? watchProgress;
 
   factory _$GGetAnimeShowsData_animes(
@@ -343,6 +351,7 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
       required this.romajiName,
       required this.picname,
       required this.year,
+      required this.airDate,
       this.watchProgress})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
@@ -355,6 +364,8 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
         picname, 'GGetAnimeShowsData_animes', 'picname');
     BuiltValueNullFieldError.checkNotNull(
         year, 'GGetAnimeShowsData_animes', 'year');
+    BuiltValueNullFieldError.checkNotNull(
+        airDate, 'GGetAnimeShowsData_animes', 'airDate');
   }
 
   @override
@@ -375,6 +386,7 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
         romajiName == other.romajiName &&
         picname == other.picname &&
         year == other.year &&
+        airDate == other.airDate &&
         watchProgress == other.watchProgress;
   }
 
@@ -383,10 +395,12 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, G__typename.hashCode), aid.hashCode),
-                    romajiName.hashCode),
-                picname.hashCode),
-            year.hashCode),
+                $jc(
+                    $jc($jc($jc(0, G__typename.hashCode), aid.hashCode),
+                        romajiName.hashCode),
+                    picname.hashCode),
+                year.hashCode),
+            airDate.hashCode),
         watchProgress.hashCode));
   }
 
@@ -398,6 +412,7 @@ class _$GGetAnimeShowsData_animes extends GGetAnimeShowsData_animes {
           ..add('romajiName', romajiName)
           ..add('picname', picname)
           ..add('year', year)
+          ..add('airDate', airDate)
           ..add('watchProgress', watchProgress))
         .toString();
   }
@@ -428,6 +443,10 @@ class GGetAnimeShowsData_animesBuilder
   String? get year => _$this._year;
   set year(String? year) => _$this._year = year;
 
+  int? _airDate;
+  int? get airDate => _$this._airDate;
+  set airDate(int? airDate) => _$this._airDate = airDate;
+
   GGetAnimeShowsData_animes_watchProgressBuilder? _watchProgress;
   GGetAnimeShowsData_animes_watchProgressBuilder get watchProgress =>
       _$this._watchProgress ??=
@@ -448,6 +467,7 @@ class GGetAnimeShowsData_animesBuilder
       _romajiName = $v.romajiName;
       _picname = $v.picname;
       _year = $v.year;
+      _airDate = $v.airDate;
       _watchProgress = $v.watchProgress?.toBuilder();
       _$v = null;
     }
@@ -481,6 +501,8 @@ class GGetAnimeShowsData_animesBuilder
                   picname, 'GGetAnimeShowsData_animes', 'picname'),
               year: BuiltValueNullFieldError.checkNotNull(
                   year, 'GGetAnimeShowsData_animes', 'year'),
+              airDate: BuiltValueNullFieldError.checkNotNull(
+                  airDate, 'GGetAnimeShowsData_animes', 'airDate'),
               watchProgress: _watchProgress?.build());
     } catch (_) {
       late String _$failedField;

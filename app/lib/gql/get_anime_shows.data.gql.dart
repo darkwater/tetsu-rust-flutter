@@ -45,6 +45,7 @@ abstract class GGetAnimeShowsData_animes
   String get romajiName;
   String get picname;
   String get year;
+  int get airDate;
   GGetAnimeShowsData_animes_watchProgress? get watchProgress;
   static Serializer<GGetAnimeShowsData_animes> get serializer =>
       _$gGetAnimeShowsDataAnimesSerializer;
